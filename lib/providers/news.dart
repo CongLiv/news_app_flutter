@@ -68,7 +68,12 @@ class News extends ChangeNotifier {
   Future<void> getCategoriesNews(String category) async {
     final url = '$baseUrl/topstories/v2/$category.json?api-key=$apiKey';
     var response = await Dio().get(url);
-    var jsonResponse = json.decode(response.data);
+    var jsonResponse;
+    if(response.data is String) {
+      jsonResponse = json.decode(response.data);
+    } else if(response.data is Map<String, dynamic>) {
+      jsonResponse = response.data;
+    }
     List extractedData = jsonResponse['results'];
     _loadedItems = [];
     extractedData.forEach((item) {
@@ -87,7 +92,12 @@ class News extends ChangeNotifier {
   Future<void> getWorldNews() async {
     final url = '$baseUrl/topstories/v2/world.json?api-key=$apiKey';
     var response = await Dio().get(url);
-    var jsonResponse = json.decode(response.data);
+    var jsonResponse;
+    if(response.data is String) {
+      jsonResponse = json.decode(response.data);
+    } else if(response.data is Map<String, dynamic>) {
+      jsonResponse = response.data;
+    }
     List extractedData = jsonResponse['results'];
     _loadedItems = [];
     extractedData.forEach((item) {
@@ -110,7 +120,6 @@ class News extends ChangeNotifier {
     final url =
         'https://newsapi.org/v2/everything?q=keyword&apiKey=$newsApiKey';
     Response response = await Dio().get(url);
-    // var jsonResponse = json.decode(response.body);
     var jsonResponse = response.data;
     List extractedData = jsonResponse['articles'];
     _loadedItems = [];
