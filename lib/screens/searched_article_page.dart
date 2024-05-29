@@ -19,17 +19,23 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<News>(context).getSearchedNews(widget.searchField).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+      _performSearch();
     }
     _isInit = false;
     super.didChangeDependencies();
+  }
+
+  void _performSearch() {
+    setState(() {
+      _isLoading = true;
+    });
+    Provider.of<News>(context, listen: false)
+        .getSearchedNews(widget.searchField)
+        .then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -63,6 +69,7 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
                       source: news.searchedNews[index].source,
                       webUrl: news.searchedNews[index].webUrl,
                       date: news.searchedNews[index].date,
+                      imageUrl: news.searchedNews[index].imageUrl,
                     );
                   },
                 ),

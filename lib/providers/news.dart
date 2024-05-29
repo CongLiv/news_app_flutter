@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:async';
-import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
@@ -34,7 +33,6 @@ class News extends ChangeNotifier {
   List<SearchedArticle> get searchedNews {
     return [..._searchedNews];
   }
-
   String formatter(String date) {
     DateTime parsedDate = DateTime.parse(date);
     var formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
@@ -42,28 +40,43 @@ class News extends ChangeNotifier {
   }
 
   Future<void> getSearchedNews(String category) async {
-    final url =
-        '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
+    final url = '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
+
     var response = await Dio().get(url);
     var jsonResponse;
-    if(response.data is String) {
+
+    if (response.data is String) {
       jsonResponse = json.decode(response.data);
-    } else if(response.data is Map<String, dynamic>) {
+    } else if (response.data is Map<String, dynamic>) {
       jsonResponse = response.data;
     }
 
+    _loadingItems = [];   // Clear the list before adding new items
+
     List extractedData = jsonResponse['response']['docs'];
-    _loadedItems = [];
     extractedData.forEach((item) {
+      String imageUrl;
+
+      // Check if 'multimedia' list is not empty before accessing its elements
+      if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
+        imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
+      } else {
+        imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+      }
+
       _loadingItems.add(SearchedArticle(
         headline: item['abstract'],
         source: item['source'],
         date: formatter(item['pub_date']),
         webUrl: item['web_url'],
+        imageUrl: imageUrl,
       ));
     });
     _searchedNews = _loadingItems;
   }
+
+
+
 
   Future<void> getCategoriesNews(String category) async {
     final url = '$baseUrl/topstories/v2/$category.json?api-key=$apiKey';
@@ -90,8 +103,10 @@ class News extends ChangeNotifier {
   }
 
   Future<void> getWorldNews() async {
+
     final url = '$baseUrl/topstories/v2/world.json?api-key=$apiKey';
-    var response = await Dio().get(url);
+    Dio dio = Dio();
+    var response = await dio.get(url);
     var jsonResponse;
     if(response.data is String) {
       jsonResponse = json.decode(response.data);

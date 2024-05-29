@@ -66,7 +66,7 @@ class _SearchState extends State<Search> {
                 hintText: 'Search News',
                 hintStyle: TextStyle(fontSize: 18),
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 7, horizontal: 18),
+                EdgeInsets.symmetric(vertical: 7, horizontal: 18),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(50),
@@ -75,29 +75,29 @@ class _SearchState extends State<Search> {
               ),
               controller: myController,
               onSubmitted: (value) {
-                setState(
-                  () {
-                    _searchWord = value;
-                    print(_searchWord);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (ctx) =>
-                            SearchedArticleScreen(searchField: _searchWord),
-                      ),
-                    );
-                  },
+                setState(() {
+                  _searchWord = myController.text;
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) =>
+                        SearchedArticleScreen(searchField: _searchWord.isEmpty ? 'world' : _searchWord)
+                  ),
                 );
-              },
+              }
             ),
           ),
           GestureDetector(
             onTap: () {
+              setState(() {
+                _searchWord = myController.text;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (ctx) =>
-                      SearchedArticleScreen(searchField: _searchWord),
+                      SearchedArticleScreen(searchField: _searchWord.isEmpty ? 'world' : _searchWord)
                 ),
               );
             },

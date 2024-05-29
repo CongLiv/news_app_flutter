@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:transparent_image/transparent_image.dart';
 import '../helpers/urlLauncher.dart';
 
 class SearchedArticle extends StatelessWidget {
@@ -7,7 +8,15 @@ class SearchedArticle extends StatelessWidget {
   final String source;
   final String webUrl;
   final String date;
-  SearchedArticle({required this.headline, required this.source, required this.webUrl, required this.date});
+  final String imageUrl;
+
+  SearchedArticle(
+      {required this.headline,
+      required this.source,
+      required this.webUrl,
+      required this.date,
+      required this.imageUrl});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,6 +40,20 @@ class SearchedArticle extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                    margin: EdgeInsets.only(bottom: 4),
+                    height: 180,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: imageUrl,
+                        fadeInDuration: const Duration(milliseconds: 100),
+                        fadeInCurve: Curves.easeIn,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
                 Text(
                   headline,
                   style: GoogleFonts.montserrat(
