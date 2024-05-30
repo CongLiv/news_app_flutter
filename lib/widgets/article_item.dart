@@ -39,6 +39,19 @@ class ArticleItem extends StatelessWidget {
         );
       },
       child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(0, 1), // changes position of shadow
+            ),
+          ],
+        ),
         margin: EdgeInsets.only(
           bottom: 8,
         ),
@@ -116,9 +129,6 @@ class ArticleItem extends StatelessWidget {
                   )
                 ],
               ),
-            ),
-            Divider(
-              height: 2,
             ),
           ],
         ),

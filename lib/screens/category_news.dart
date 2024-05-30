@@ -55,7 +55,9 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+              ),
             )
           : Consumer<News>(
               builder: (ctx, news, child) => ListView.builder(

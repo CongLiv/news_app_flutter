@@ -33,7 +33,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return _isLoading
         ? Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+            ),
           )
         : Container(
             padding: EdgeInsets.symmetric(

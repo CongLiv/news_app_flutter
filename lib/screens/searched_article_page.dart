@@ -51,7 +51,9 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+              ),
             )
           : Container(
               child: Consumer<News>(
