@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 
 import '../screens/searched_article_page.dart';
@@ -39,7 +38,7 @@ class _SearchState extends State<Search> {
             child: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text('SEARCH FOR NEWS ARTICLES',
+                child: Text('SEARCH NEWS',
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -106,6 +105,7 @@ class _SearchState extends State<Search> {
               padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
               decoration: BoxDecoration(
                 color: redViettel,
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Text('SEARCH',
                   style: TextStyle(

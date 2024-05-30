@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/searched_article.dart';
 import '../providers/news.dart';

@@ -61,7 +61,11 @@ class News extends ChangeNotifier {
       if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
         imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
       } else {
-        imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+        if (item['web_url'] != null) {
+          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+        } else {
+          return;
+        }
       }
 
       _loadingItems.add(SearchedArticle(
@@ -90,43 +94,29 @@ class News extends ChangeNotifier {
     List extractedData = jsonResponse['results'];
     _loadedItems = [];
     extractedData.forEach((item) {
+      String imageUrl;
+      if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
+        imageUrl = item['multimedia'][0]['url'];
+      } else {
+        if (item[url] != null) {
+          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+        } else {
+          return;
+        }
+
+      }
       _loadedItems.add(Article(
         headline: item['title'],
         source: item['byline'],
         description: item['abstract'],
         date: formatter(item['published_date']),
-        imageUrl: item['multimedia'][0]['url'],
+        imageUrl: imageUrl,
         webUrl: item['url'],
       ));
     });
     _categoryNews = _loadedItems;
   }
 
-  Future<void> getWorldNews() async {
-
-    final url = '$baseUrl/topstories/v2/world.json?api-key=$apiKey';
-    Dio dio = Dio();
-    var response = await dio.get(url);
-    var jsonResponse;
-    if(response.data is String) {
-      jsonResponse = json.decode(response.data);
-    } else if(response.data is Map<String, dynamic>) {
-      jsonResponse = response.data;
-    }
-    List extractedData = jsonResponse['results'];
-    _loadedItems = [];
-    extractedData.forEach((item) {
-      _loadedItems.add(Article(
-        headline: item['title'],
-        source: item['byline'],
-        description: item['abstract'],
-        date: formatter(item['published_date']),
-        imageUrl: item['multimedia'][0]['url'],
-        webUrl: item['url'],
-      ));
-    });
-    _worldNews = _loadedItems;
-  }
 
 
   // by newsapi.org

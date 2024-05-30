@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../screens/article_page.dart';
@@ -47,22 +46,20 @@ class ArticleItem extends StatelessWidget {
         width: double.infinity,
         child: Column(
           children: [
-            imageUrl != null
-                ? Container(
-                    margin: EdgeInsets.only(bottom: 4),
-                    height: 180,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: imageUrl,
-                        fadeInDuration: const Duration(milliseconds: 100),
-                        fadeInCurve: Curves.easeIn,
-                        fit: BoxFit.cover,
-                      ),
-                    ))
-                : Container(),
+            Container(
+                margin: EdgeInsets.only(bottom: 4),
+                height: 180,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: imageUrl,
+                    fadeInDuration: const Duration(milliseconds: 100),
+                    fadeInCurve: Curves.easeIn,
+                    fit: BoxFit.cover,
+                  ),
+                )),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Column(

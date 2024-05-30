@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
-import './top_world_news.dart';
 import '../widgets/categories.dart';
 import '../widgets/home.dart';
 import '../widgets/search.dart';
@@ -42,21 +40,28 @@ class _HomepageState extends State<Homepage> {
           iconTheme: IconThemeData(
             color: redViettel,
           ),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.person,
+                size: 30,
+              ),
+              onPressed: () {
+                // navigate to profile page
+              },
+            ),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 5.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.language,
+                  Icons.sunny,
                   size: 30,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (ctx) => TopWorldNews(),
-                    ),
-                  );
+                  // set dark/light mode
                 },
               ),
             ),
@@ -81,7 +86,7 @@ class _HomepageState extends State<Homepage> {
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.article_outlined,
+                Icons.segment,
                 size: 30,
                 color: redViettel,
               ),
