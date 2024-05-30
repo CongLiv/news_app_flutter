@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,17 +37,10 @@ class _TopWorldNewsState extends State<TopWorldNews> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(color: Color(0xFFAC7FFC)),
-        backgroundColor: Color(0xFFF9FAFE),
+        iconTheme: IconThemeData(color: redViettel),
+        backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
-          'World News',
-          style: GoogleFonts.bioRhyme(
-            fontSize: 23,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
-        ),
+        title: TitleName(text: 'World News')
       ),
       body: _isLoading
           ? Center(

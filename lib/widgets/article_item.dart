@@ -20,6 +20,7 @@ class ArticleItem extends StatelessWidget {
     required this.imageUrl,
     required this.date,
   });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -69,11 +70,13 @@ class ArticleItem extends StatelessWidget {
                 children: [
                   Text(
                     headline,
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16,
-                        letterSpacing: 1,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontFamily: 'FS PFBeauSansPro',
+                      fontSize: 18,
+                      letterSpacing: 1,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 5),
@@ -86,11 +89,13 @@ class ArticleItem extends StatelessWidget {
                           child: Text(
                             source,
                             softWrap: true,
-                            style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                letterSpacing: .75,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontFamily: 'FS PFBeauSansPro',
+                              fontSize: 14,
+                              letterSpacing: .75,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                         // Spacer(),
@@ -100,11 +105,13 @@ class ArticleItem extends StatelessWidget {
                             date,
                             softWrap: true,
                             textAlign: TextAlign.right,
-                            style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                letterSpacing: .75,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontFamily: 'FS PFBeauSansPro',
+                              fontSize: 12,
+                              letterSpacing: .75,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ],

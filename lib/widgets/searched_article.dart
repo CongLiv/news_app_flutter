@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../helpers/urlLauncher.dart';
 
@@ -34,7 +35,7 @@ class SearchedArticle extends StatelessWidget {
             IconButton(
                 icon: Icon(
                   Icons.launch,
-                  color: Color(0xFFAC7FFC),
+                  color: redViettel,
                 ),
                 onPressed: () => UrlLauncher.launchUrlLink(webUrl)),
             Column(
@@ -56,11 +57,13 @@ class SearchedArticle extends StatelessWidget {
                     )),
                 Text(
                   headline,
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      letterSpacing: 1,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontFamily: 'FS PFBeauSansPro',
+                    fontSize: 16,
+                    letterSpacing: 1,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
                 SizedBox(
                   height: 8,
@@ -70,19 +73,23 @@ class SearchedArticle extends StatelessWidget {
                   children: [
                     Text(
                       date,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          letterSpacing: .75,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300),
+                      style: TextStyle(
+                        fontFamily: 'FS PFBeauSansPro',
+                        fontSize: 12,
+                        letterSpacing: .5,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
                     Text(
                       source,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          letterSpacing: .5,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300),
+                      style: TextStyle(
+                        fontFamily: 'FS PFBeauSansPro',
+                        fontSize: 12,
+                        letterSpacing: .5,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
                   ],
                 )

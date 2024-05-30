@@ -32,5 +32,22 @@ flutter:
   assets:
     - assets/images/
     - assets/categories/
+  fonts:
+    - family: FS Magistral
+      fonts:
+        - asset: assets/fonts/FS Magistral-Bold.ttf
+        - asset: assets/fonts/FS Magistral-Book.ttf
+        - asset: assets/fonts/FS Magistral-ExtraBold.ttf
+        - asset: assets/fonts/FS Magistral-Light.ttf
+        - asset: assets/fonts/FS Magistral-Medium.ttf
+
+    - family: FS PFBeauSansPro
+      fonts:
+        - asset: assets/fonts/FS PFBeauSansPro-Regular.otf
+        - asset: assets/fonts/FS PFBeauSansPro-Bbook.otf
+        - asset: assets/fonts/FS PFBeauSansPro-Light.otf
+        - asset: assets/fonts/FS PFBeauSansPro-Thin.otf
+        - asset: assets/fonts/FS PFBeauSansPro-SemiBold.otf
+
 
 

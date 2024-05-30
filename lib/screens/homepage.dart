@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import './top_world_news.dart';
 import '../widgets/categories.dart';
 import '../widgets/home.dart';
@@ -36,17 +37,10 @@ class _HomepageState extends State<Homepage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
-            appNameLogo,
-            style: GoogleFonts.bioRhyme(
-              fontSize: 23,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 5,
-              color: iconColor,
-            ),
-          ),
+          title: TitleName(text: appNameLogo),
+          // This is a custom widget that displays the app name
           iconTheme: IconThemeData(
-            color: iconColor,
+            color: redViettel,
           ),
           actions: [
             Padding(
@@ -81,7 +75,7 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(
                 Icons.home,
                 size: 30,
-                color: iconColor,
+                color: redViettel,
               ),
               label: 'Home',
             ),
@@ -89,7 +83,7 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(
                 Icons.article_outlined,
                 size: 30,
-                color: iconColor,
+                color: redViettel,
               ),
               label: 'Articles',
             ),
@@ -97,13 +91,13 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(
                 Icons.search,
                 size: 30,
-                color: iconColor,
+                color: redViettel,
               ),
               label: 'Search',
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
+          selectedItemColor: redViettel,
           onTap: _onItemTapped,
         ),
       ),

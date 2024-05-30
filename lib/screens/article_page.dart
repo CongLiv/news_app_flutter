@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../helpers/urlLauncher.dart';
 
@@ -19,22 +21,16 @@ class ArticlePage extends StatelessWidget {
     required this.imageUrl,
     required this.date,
   });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Color(0xFFAC7FFC)),
-        backgroundColor: Color(0xFFF9FAFE),
+        iconTheme: IconThemeData(color: redViettel),
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          'NEWSCAST',
-          style: GoogleFonts.bioRhyme(
-            fontSize: 23,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
-        ),
+        title: TitleName(text: appNameLogo),
         actions: [
           IconButton(
             icon: Icon(
@@ -69,7 +65,8 @@ class ArticlePage extends StatelessWidget {
                 children: [
                   Text(
                     headline,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
+                        fontFamily: 'FS Magistral',
                         fontSize: 16,
                         letterSpacing: 1,
                         color: Colors.black,
@@ -95,11 +92,13 @@ class ArticlePage extends StatelessWidget {
                   Text(
                     'Published on : $date',
                     textAlign: TextAlign.left,
-                    style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        letterSpacing: .75,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                      fontFamily: 'FS PFBeauSansPro',
+                      color: Colors.black87,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1,
+                    )
                   ),
                   SizedBox(
                     height: 8,
@@ -107,11 +106,13 @@ class ArticlePage extends StatelessWidget {
                   Text(
                     description,
                     textAlign: TextAlign.left,
-                    style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        letterSpacing: 1,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontFamily: 'FS PFBeauSansPro',
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1,
+                    )
                   ),
                   SizedBox(
                     height: 8,
@@ -119,11 +120,13 @@ class ArticlePage extends StatelessWidget {
                   Text(
                     'Source :  $source',
                     textAlign: TextAlign.left,
-                    style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        letterSpacing: .75,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontFamily: 'FS PFBeauSansPro',
+                      color: Colors.black54,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1,
+                    )
                   ),
                   GestureDetector(
                     onTap: () => UrlLauncher.launchUrlLink(webUrl),
@@ -132,15 +135,17 @@ class ArticlePage extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       margin: EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
-                        color: Color(0xFFAC7FFC),
+                        color: redViettel,
                       ),
                       child: Text(
                         'Read Article',
-                        style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            letterSpacing: .75,
-                            color: Colors.yellow,
-                            fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontFamily: 'FS Magistral',
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1,
+                        )
                       ),
                     ),
                   ),

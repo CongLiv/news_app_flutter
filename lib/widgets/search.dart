@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
 
 import '../screens/searched_article_page.dart';
 
@@ -11,6 +12,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   final myController = TextEditingController();
   String _searchWord = "";
+
   @override
   void dispose() {
     myController.dispose();
@@ -37,17 +39,16 @@ class _SearchState extends State<Search> {
             child: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  'SEARCH FOR NEWS ARTICLES',
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.coustard(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 3,
-                  ),
-                ),
+                child: Text('SEARCH FOR NEWS ARTICLES',
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'FS Magistral',
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 3,
+                    )),
               ),
             ),
           ),
@@ -55,38 +56,38 @@ class _SearchState extends State<Search> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             margin: EdgeInsets.only(top: 20, bottom: 10),
             child: TextField(
-              autocorrect: true,
-              style: TextStyle(fontSize: 18),
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search),
-                suffixIconConstraints: BoxConstraints(
-                  minHeight: 32,
-                  minWidth: 60,
-                ),
-                hintText: 'Search News',
-                hintStyle: TextStyle(fontSize: 18),
-                contentPadding:
-                EdgeInsets.symmetric(vertical: 7, horizontal: 18),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(50),
+                autocorrect: true,
+                style: TextStyle(fontSize: 18),
+                decoration: InputDecoration(
+                  suffixIcon: Icon(Icons.search),
+                  suffixIconConstraints: BoxConstraints(
+                    minHeight: 32,
+                    minWidth: 60,
+                  ),
+                  hintText: 'Search News',
+                  hintStyle:
+                      TextStyle(fontFamily: 'FS PFBeauSansPro', fontSize: 18),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 7, horizontal: 18),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
                   ),
                 ),
-              ),
-              controller: myController,
-              onSubmitted: (value) {
-                setState(() {
-                  _searchWord = myController.text;
-                });
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) =>
-                        SearchedArticleScreen(searchField: _searchWord.isEmpty ? 'world' : _searchWord)
-                  ),
-                );
-              }
-            ),
+                controller: myController,
+                onSubmitted: (value) {
+                  setState(() {
+                    _searchWord = myController.text;
+                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => SearchedArticleScreen(
+                            searchField:
+                                _searchWord.isEmpty ? 'world' : _searchWord)),
+                  );
+                }),
           ),
           GestureDetector(
             onTap: () {
@@ -96,24 +97,24 @@ class _SearchState extends State<Search> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) =>
-                      SearchedArticleScreen(searchField: _searchWord.isEmpty ? 'world' : _searchWord)
-                ),
+                    builder: (ctx) => SearchedArticleScreen(
+                        searchField:
+                            _searchWord.isEmpty ? 'world' : _searchWord)),
               );
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
               decoration: BoxDecoration(
-                color: Color(0xFFAC7FFC),
+                color: redViettel,
               ),
-              child: Text(
-                'SEARCH',
-                style: GoogleFonts.montserrat(
+              child: Text('SEARCH',
+                  style: TextStyle(
+                    fontFamily: 'FS PFBeauSansPro',
+                    color: Colors.white,
                     fontSize: 16,
-                    letterSpacing: .75,
-                    color: Colors.yellow,
-                    fontWeight: FontWeight.w500),
-              ),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.75,
+                  )),
             ),
           ),
         ],

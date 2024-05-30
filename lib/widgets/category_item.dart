@@ -45,10 +45,11 @@ class CategoryItem extends StatelessWidget {
         child: Center(
           child: Text(
             name.toUpperCase(),
-            style: GoogleFonts.coustard(
+            style: TextStyle(
+              fontFamily: 'FS PFBeauSansPro',
               color: Colors.grey[200],
-              fontSize: 22,
-              fontWeight: FontWeight.w600,
+              fontSize: 25,
+              fontWeight: FontWeight.w900,
               letterSpacing: 3,
             ),
           ),

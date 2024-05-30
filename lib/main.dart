@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './providers/categories.dart';
 import './providers/news.dart';
 import './screens/homepage.dart';
+import 'helpers/const_data.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,9 +23,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: Color(0xFF93B2FE),
-          primaryColorLight: Color(0xFFCCCFF5),
-          hintColor: Color(0xFFAC7FFC),
+          primaryColor: redViettel,
+          primaryColorLight: redViettel,
+          hintColor: redViettel,
         ),
         home: Homepage(),
       ),
