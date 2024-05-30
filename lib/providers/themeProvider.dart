@@ -16,4 +16,8 @@ class ThemeProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  bool isDarkMode() {
+    return _themeData == darkTheme;
+  }
 }

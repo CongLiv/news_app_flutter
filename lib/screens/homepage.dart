@@ -17,6 +17,8 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+    isDarkMode =
+        Provider.of<ThemeProvider>(context, listen: false).isDarkMode();
   }
 
   int _selectedIndex = 0;
@@ -25,6 +27,8 @@ class _HomepageState extends State<Homepage> {
     Categories(),
     Search(),
   ];
+
+  late bool isDarkMode;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,7 +48,6 @@ class _HomepageState extends State<Homepage> {
             color: redViettel,
           ),
 
-
           leading: Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: IconButton(
@@ -62,18 +65,22 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.only(right: 5.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.sunny,
+                  isDarkMode ? Icons.nightlight_round_sharp : Icons.wb_sunny,
                   size: 30,
                 ),
                 onPressed: () {
-                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme();
+                  isDarkMode = !isDarkMode;
                   // reload homepage
                   Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) => Homepage(),
+                      pageBuilder: (context, animation1, animation2) =>
+                          Homepage(),
                     ),
                   );
+
                 },
               ),
             ),

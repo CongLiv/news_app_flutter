@@ -38,7 +38,7 @@ class _SearchState extends State<Search> {
             child: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text('SEARCH NEWS',
+                child: Text('SEARCH YOUR NEWS',
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -63,7 +63,7 @@ class _SearchState extends State<Search> {
                     minHeight: 32,
                     minWidth: 60,
                   ),
-                  hintText: 'Search News',
+                  hintText: 'eg: vietnam, gpt,...',
                   hintStyle:
                       TextStyle(fontFamily: 'FS PFBeauSansPro', fontSize: 18),
                   contentPadding:
