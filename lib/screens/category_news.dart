@@ -40,7 +40,7 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         title: Text(
           widget.categoryName.toUpperCase(),

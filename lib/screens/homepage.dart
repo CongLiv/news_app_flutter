@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
+import 'package:provider/provider.dart';
+import '../providers/news.dart';
+import '../providers/themeProvider.dart';
 import '../widgets/categories.dart';
 import '../widgets/home.dart';
 import '../widgets/search.dart';
@@ -40,6 +43,8 @@ class _HomepageState extends State<Homepage> {
           iconTheme: IconThemeData(
             color: redViettel,
           ),
+
+
           leading: Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: IconButton(
@@ -61,20 +66,27 @@ class _HomepageState extends State<Homepage> {
                   size: 30,
                 ),
                 onPressed: () {
-                  // set dark/light mode
+                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                  // reload homepage
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) => Homepage(),
+                    ),
+                  );
                 },
               ),
             ),
           ],
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           elevation: .5,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(

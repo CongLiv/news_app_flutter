@@ -40,8 +40,8 @@ class ArticleItem extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey.shade200),
+          color: Theme.of(context).colorScheme.primary,
+          border: Border.all(color: Theme.of(context).colorScheme.secondary),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -84,7 +84,7 @@ class ArticleItem extends StatelessWidget {
                       fontFamily: 'FS PFBeauSansPro',
                       fontSize: 18,
                       letterSpacing: 1,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -103,7 +103,7 @@ class ArticleItem extends StatelessWidget {
                               fontFamily: 'FS PFBeauSansPro',
                               fontSize: 14,
                               letterSpacing: .75,
-                              color: Colors.black,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -119,7 +119,7 @@ class ArticleItem extends StatelessWidget {
                               fontFamily: 'FS PFBeauSansPro',
                               fontSize: 12,
                               letterSpacing: .75,
-                              color: Colors.black,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w400,
                             ),
                           ),

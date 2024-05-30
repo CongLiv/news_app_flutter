@@ -73,6 +73,14 @@ class _SearchState extends State<Search> {
                       Radius.circular(50),
                     ),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                 ),
                 controller: myController,
                 onSubmitted: (value) {

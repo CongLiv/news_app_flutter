@@ -46,7 +46,7 @@ class CategoryItem extends StatelessWidget {
             name.toUpperCase(),
             style: TextStyle(
               fontFamily: 'FS PFBeauSansPro',
-              color: Colors.grey[200],
+              color: Colors.white,
               fontSize: 25,
               fontWeight: FontWeight.w900,
               letterSpacing: 3,

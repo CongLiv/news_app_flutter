@@ -26,7 +26,7 @@ class ArticlePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
@@ -53,7 +53,7 @@ class ArticlePage extends StatelessWidget {
                 vertical: 30,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -68,7 +68,7 @@ class ArticlePage extends StatelessWidget {
                         fontFamily: 'FS Magistral',
                         fontSize: 16,
                         letterSpacing: 1,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
@@ -93,7 +93,7 @@ class ArticlePage extends StatelessWidget {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontFamily: 'FS PFBeauSansPro',
-                      color: Colors.black87,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       letterSpacing: 1,
@@ -107,7 +107,7 @@ class ArticlePage extends StatelessWidget {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontFamily: 'FS PFBeauSansPro',
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 1,
@@ -121,7 +121,7 @@ class ArticlePage extends StatelessWidget {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontFamily: 'FS PFBeauSansPro',
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 1,
@@ -135,6 +135,7 @@ class ArticlePage extends StatelessWidget {
                       margin: EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
                         color: redViettel,
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
                         'Read Article',

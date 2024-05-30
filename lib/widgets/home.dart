@@ -7,6 +7,7 @@ import './article_item.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
+
 }
 
 class _HomeState extends State<Home> {
@@ -57,3 +58,5 @@ class _HomeState extends State<Home> {
           );
   }
 }
+
+typedef ReloadCallback = void Function(BuildContext context);

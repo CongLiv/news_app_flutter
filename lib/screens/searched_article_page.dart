@@ -44,7 +44,7 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo)

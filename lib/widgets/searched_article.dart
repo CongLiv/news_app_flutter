@@ -25,8 +25,8 @@ class SearchedArticle extends StatelessWidget {
         margin: EdgeInsets.fromLTRB(10, 2, 10, 8),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey.shade200),
+          color: Theme.of(context).colorScheme.primary,
+          border: Border.all(color: Theme.of(context).colorScheme.secondary),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -69,7 +69,7 @@ class SearchedArticle extends StatelessWidget {
                     fontFamily: 'FS PFBeauSansPro',
                     fontSize: 16,
                     letterSpacing: 1,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -85,7 +85,7 @@ class SearchedArticle extends StatelessWidget {
                         fontFamily: 'FS PFBeauSansPro',
                         fontSize: 12,
                         letterSpacing: .5,
-                        color: Colors.black54,
+                        color: Theme.of(context).colorScheme.onSecondary,
                         fontWeight: FontWeight.w300,
                       ),
                     ),
@@ -95,7 +95,7 @@ class SearchedArticle extends StatelessWidget {
                         fontFamily: 'FS PFBeauSansPro',
                         fontSize: 12,
                         letterSpacing: .5,
-                        color: Colors.black54,
+                        color: Theme.of(context).colorScheme.onSecondary,
                         fontWeight: FontWeight.w300,
                       ),
                     ),
