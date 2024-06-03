@@ -29,10 +29,7 @@ class ArticlePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .secondary,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
@@ -60,10 +57,7 @@ class ArticlePage extends StatelessWidget {
                   begin: Alignment.bottomCenter,
                   end: Alignment.center,
                   colors: [
-                    Theme
-                        .of(context)
-                        .colorScheme
-                        .secondary,
+                    Theme.of(context).colorScheme.secondary,
                     Colors.transparent,
                   ],
                 ),
@@ -78,10 +72,7 @@ class ArticlePage extends StatelessWidget {
                 vertical: 30,
               ),
               decoration: BoxDecoration(
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -96,10 +87,7 @@ class ArticlePage extends StatelessWidget {
                         fontFamily: 'FS Magistral',
                         fontSize: 16,
                         letterSpacing: 1,
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
@@ -119,75 +107,77 @@ class ArticlePage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                      'Published on : $date',
+                  Text('Published on : $date',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .onSecondary,
+                        color: Theme.of(context).colorScheme.onSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 1,
-                      )
-                  ),
+                      )),
                   SizedBox(
                     height: 8,
                   ),
-                  Text(
-                      description,
+                  Text(description,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 1,
-                      )
-                  ),
+                      )),
                   SizedBox(
                     height: 8,
                   ),
-                  Text(
-                      'Source :  $source',
+                  Text('Source :  $source',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .onSecondary,
+                        color: Theme.of(context).colorScheme.onSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 1,
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => UrlLauncher.launchUrlLink(webUrl),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          margin: EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(
+                            color: redViettel,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text('Read Article',
+                              style: TextStyle(
+                                fontFamily: 'FS Magistral',
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1,
+                              )),
+                        ),
+                      ),
+                      // bookmark button
+                      Container(
+                        margin: EdgeInsets.only(top: 20, right: 20),
+                        child: GestureDetector(
+                          onTap: () {
+                            // TODO: implement bookmark
+                          },
+                          child: Icon(
+                            Icons.bookmark_add_outlined,
+                            color: redViettel,
+                            size: 35,
+                          ),
+                        ),
                       )
-                  ),
-                  GestureDetector(
-                    onTap: () => UrlLauncher.launchUrlLink(webUrl),
-                    child: Container(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      margin: EdgeInsets.only(top: 20),
-                      decoration: BoxDecoration(
-                        color: redViettel,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                          'Read Article',
-                          style: TextStyle(
-                            fontFamily: 'FS Magistral',
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1,
-                          )
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),

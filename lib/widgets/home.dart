@@ -42,6 +42,7 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(
               horizontal: 10,
             ),
+            // list of test news
             child: Consumer<News>(
               builder: (ctx, news, child) => ListView.builder(
                 itemCount: news.topNews.length,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter_demo/screens/personal_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
 import '../providers/news.dart';
@@ -26,6 +27,7 @@ class _HomepageState extends State<Homepage> {
     Home(),
     Categories(),
     Search(),
+    PersonalPage(),
   ];
 
   late bool isDarkMode;
@@ -56,7 +58,12 @@ class _HomepageState extends State<Homepage> {
                 size: 30,
               ),
               onPressed: () {
-                // navigate to profile page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PersonalPage(),
+                  ),
+                );
               },
             ),
           ),
