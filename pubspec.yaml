@@ -18,6 +18,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   dio: ^5.4.3+1
   share_plus: ^9.0.0
+  firebase_core: ^2.32.0
+  firebase_auth: ^4.20.0
+  cloud_firestore: ^4.17.5
 
 dev_dependencies:
   flutter_test:
