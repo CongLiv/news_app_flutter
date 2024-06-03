@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../screens/category_news.dart';
+import '../screens/article/category_news.dart';
 
 class CategoryItem extends StatelessWidget {
   final String imageUrl;

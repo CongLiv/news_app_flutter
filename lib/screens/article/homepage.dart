@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter_demo/screens/personal_page.dart';
+import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
-import '../providers/news.dart';
-import '../providers/themeProvider.dart';
-import '../widgets/categories.dart';
-import '../widgets/home.dart';
-import '../widgets/search.dart';
-import '../helpers/const_data.dart';
+import '../../providers/news.dart';
+import '../../providers/themeProvider.dart';
+import '../../widgets/categories.dart';
+import '../../widgets/home.dart';
+import '../../widgets/search.dart';
+import '../../helpers/const_data.dart';
 
 class Homepage extends StatefulWidget {
   @override

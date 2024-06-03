@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 
-import '../screens/searched_article_page.dart';
+import '../screens/article/searched_article_page.dart';
 
 class Search extends StatefulWidget {
   @override

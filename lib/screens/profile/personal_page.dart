@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import 'package:provider/provider.dart';
-import '../helpers/const_data.dart';
-import '../providers/news.dart';
-import '../widgets/title_name.dart';
+import '../../helpers/const_data.dart';
+import '../../providers/news.dart';
+import '../../widgets/title_name.dart';
 
 class PersonalPage extends StatefulWidget {
   @override

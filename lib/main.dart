@@ -3,7 +3,7 @@ import 'package:news_app_flutter_demo/providers/themeProvider.dart';
 import 'package:provider/provider.dart';
 import './providers/categories.dart';
 import './providers/news.dart';
-import './screens/homepage.dart';
+import 'screens/article/homepage.dart';
 
 void main() {
   runApp(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/news.dart';
-import '../widgets/article_item.dart';
+import '../../providers/news.dart';
+import '../../widgets/article_item.dart';
 
 class CategoryNewsScreen extends StatefulWidget {
   final String categoryName;

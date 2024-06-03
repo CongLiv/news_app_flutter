@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
-import '../helpers/share_article.dart';
-import '../helpers/urlLauncher.dart';
+import '../../helpers/share_article.dart';
+import '../../helpers/urlLauncher.dart';
 
 class ArticlePage extends StatelessWidget {
   final String headline;
