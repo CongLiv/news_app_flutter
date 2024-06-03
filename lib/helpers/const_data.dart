@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const redViettel = Color.fromARGB(255, 230, 25, 52);
-const appNameLogo = 'VDT News';
+const appNameLogo = 'VDT NEWS';
 
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,

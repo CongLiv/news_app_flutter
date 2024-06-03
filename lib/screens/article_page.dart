@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
+import '../helpers/share_article.dart';
 import '../helpers/urlLauncher.dart';
 
 class ArticlePage extends StatelessWidget {
@@ -26,24 +29,46 @@ class ArticlePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
         actions: [
           IconButton(
             icon: Icon(
-              Icons.open_in_browser,
+              Icons.share,
             ),
-            onPressed: () => UrlLauncher.launchUrlLink(webUrl),
+            onPressed: () => ShareArticle.shareArticle(webUrl),
           ),
         ],
       ),
       body: Stack(
         children: [
-          Image.asset(
-            'assets/images/searchScreen.jpg',
-            width: double.infinity,
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Theme
+                        .of(context)
+                        .colorScheme
+                        .secondary,
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
           ),
           SingleChildScrollView(
             child: Container(
@@ -53,7 +78,10 @@ class ArticlePage extends StatelessWidget {
                 vertical: 30,
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme
+                    .of(context)
+                    .colorScheme
+                    .primary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -68,7 +96,10 @@ class ArticlePage extends StatelessWidget {
                         fontFamily: 'FS Magistral',
                         fontSize: 16,
                         letterSpacing: 1,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onSurface,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
@@ -89,63 +120,72 @@ class ArticlePage extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'Published on : $date',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: 'FS PFBeauSansPro',
-                      color: Theme.of(context).colorScheme.onSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 1,
-                    )
+                      'Published on : $date',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'FS PFBeauSansPro',
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 1,
+                      )
                   ),
                   SizedBox(
                     height: 8,
                   ),
                   Text(
-                    description,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: 'FS PFBeauSansPro',
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1,
-                    )
+                      description,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'FS PFBeauSansPro',
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onSurface,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1,
+                      )
                   ),
                   SizedBox(
                     height: 8,
                   ),
                   Text(
-                    'Source :  $source',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: 'FS PFBeauSansPro',
-                      color: Theme.of(context).colorScheme.onSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1,
-                    )
+                      'Source :  $source',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'FS PFBeauSansPro',
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onSecondary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 1,
+                      )
                   ),
                   GestureDetector(
                     onTap: () => UrlLauncher.launchUrlLink(webUrl),
                     child: Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       margin: EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
                         color: redViettel,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
-                        'Read Article',
-                        style: TextStyle(
-                          fontFamily: 'FS Magistral',
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1,
-                        )
+                          'Read Article',
+                          style: TextStyle(
+                            fontFamily: 'FS Magistral',
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1,
+                          )
                       ),
                     ),
                   ),
