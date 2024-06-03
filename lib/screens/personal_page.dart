@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
+import 'package:provider/provider.dart';
 import '../helpers/const_data.dart';
+import '../providers/news.dart';
 import '../widgets/title_name.dart';
 
-class PersonalPage extends StatelessWidget {
+class PersonalPage extends StatefulWidget {
+  @override
+  _PersonalPageState createState() => _PersonalPageState();
+}
+
+class _PersonalPageState extends State<PersonalPage> {
+  bool _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<News>(context).getTopNews().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,19 +97,39 @@ class PersonalPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: .5, bottom: 10),
               ),
 
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return LikedNewsItem(
-                      headline: 'headline',
-                      source: 'source',
-                      webUrl: 'webUrl',
-                      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg',
-                    );
-                  },
-                ),
-              ),
+              _isLoading
+                  ? Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: redViettel,
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      // child: ListView.builder(
+                      //   itemCount: 10,
+                      //   itemBuilder: (context, index) {
+                      //     return LikedNewsItem(
+                      //       headline: 'headline',
+                      //       source: 'source',
+                      //       webUrl: 'webUrl',
+                      //       imageUrl:
+                      //           'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg',
+                      //     );
+                      //   },
+                      // ),
+                      child: Consumer<News>(
+                        builder: (ctx, news, child) => ListView.builder(
+                          itemCount: news.topNews.length,
+                          itemBuilder: (ctx, index) => LikedNewsItem(
+                            headline: news.topNews[index].headline,
+                            source: news.topNews[index].source,
+                            webUrl: news.topNews[index].webUrl,
+                            imageUrl: news.topNews[index].imageUrl,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),

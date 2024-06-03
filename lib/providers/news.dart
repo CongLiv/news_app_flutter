@@ -145,7 +145,6 @@ class News extends ChangeNotifier {
       }
     });
     _topNews = _loadedItems;
-    print(_topNews.length + 1);
   }
 
 
