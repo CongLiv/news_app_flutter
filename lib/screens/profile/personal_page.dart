@@ -122,17 +122,29 @@ class _PersonalPageState extends State<PersonalPage> {
                       ),
                     )
                   : Expanded(
-                      child: Consumer<News>(
-                        builder: (ctx, news, child) => ListView.builder(
-                          itemCount: news.likedNews.length,
-                          itemBuilder: (ctx, index) => LikedNewsItem(
-                            headline: news.likedNews[index].headline,
-                            source: news.likedNews[index].source,
-                            webUrl: news.likedNews[index].webUrl,
-                            imageUrl: news.likedNews[index].imageUrl,
-                          ),
-                        ),
-                      ),
+                      child: Provider.of<News>(context).likedNews.isEmpty
+                          ? Center(
+                              child: Text(
+                                'You have not liked any news yet.',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: 'FS PFBeauSansPro',
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            )
+                          : Consumer<News>(
+                              builder: (ctx, news, child) => ListView.builder(
+                                itemCount: news.likedNews.length,
+                                itemBuilder: (ctx, index) => LikedNewsItem(
+                                  headline: news.likedNews[index].headline,
+                                  source: news.likedNews[index].source,
+                                  webUrl: news.likedNews[index].webUrl,
+                                  imageUrl: news.likedNews[index].imageUrl,
+                                ),
+                              ),
+                            ),
                     ),
             ],
           ),
@@ -141,6 +153,3 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 }
-
-
-
