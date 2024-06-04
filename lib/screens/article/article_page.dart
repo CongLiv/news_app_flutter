@@ -207,7 +207,11 @@ class _ArticlePageState extends State<ArticlePage> {
                         margin: EdgeInsets.only(top: 20, right: 20),
                         child: GestureDetector(
                           onTap: () {
-                            isMarked ? removeArticle() : addArticle();
+                            _auth.currentUser == null
+                                ? notLoggedIn()
+                                : isMarked
+                                    ? removeArticle()
+                                    : addArticle();
                           },
                           child: Icon(
                             isMarked
@@ -295,6 +299,21 @@ class _ArticlePageState extends State<ArticlePage> {
     }
     Fluttertoast.showToast(
       msg: 'Article Unmarked',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = false;
+    });
+  }
+
+  void notLoggedIn() {
+    Fluttertoast.showToast(
+      msg: 'Please login to mark articles',
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
