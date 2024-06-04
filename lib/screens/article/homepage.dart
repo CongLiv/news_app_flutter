@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter_demo/screens/profile/login_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
+import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
+import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
-import '../../providers/news.dart';
 import '../../providers/themeProvider.dart';
 import '../../widgets/categories.dart';
 import '../../widgets/home.dart';
@@ -62,7 +62,7 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(),
+                    builder: (context) => SignUpPage()
                   ),
                 );
               },
