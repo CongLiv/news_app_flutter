@@ -1,5 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/news.dart';
 
 class LikedNewsItem extends StatelessWidget {
   final String headline;
@@ -17,7 +23,7 @@ class LikedNewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Provider.of<News>(context, listen: false).launchUrlLink(webUrl);
+        UrlLauncher.launchUrlLink(webUrl);
       },
       child: Card(
         child: ListTile(
@@ -52,7 +58,16 @@ class LikedNewsItem extends StatelessWidget {
               color: Colors.red,
             ),
             onPressed: () {
-              // Provider.of<News>(context, listen: false).removeLikedNews(webUrl);
+              Provider.of<News>(context, listen: false).removeLikedNews(webUrl);
+              Fluttertoast.showToast(
+                msg: 'Removed from liked news',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: redViettel,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
             },
           ),
         ),

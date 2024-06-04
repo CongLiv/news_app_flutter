@@ -24,7 +24,7 @@ class _PersonalPageState extends State<PersonalPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<News>(context).getTopNews().then((_) {
+      Provider.of<News>(context).getLikedNews().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -51,7 +51,6 @@ class _PersonalPageState extends State<PersonalPage> {
               Icons.logout_rounded,
             ),
             onPressed: () {
-              // TODO: implement logout
               _auth.signOut();
               Fluttertoast.showToast(
                 msg: 'Logged out',
@@ -123,26 +122,14 @@ class _PersonalPageState extends State<PersonalPage> {
                       ),
                     )
                   : Expanded(
-                      // child: ListView.builder(
-                      //   itemCount: 10,
-                      //   itemBuilder: (context, index) {
-                      //     return LikedNewsItem(
-                      //       headline: 'headline',
-                      //       source: 'source',
-                      //       webUrl: 'webUrl',
-                      //       imageUrl:
-                      //           'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg',
-                      //     );
-                      //   },
-                      // ),
                       child: Consumer<News>(
                         builder: (ctx, news, child) => ListView.builder(
-                          itemCount: news.topNews.length,
+                          itemCount: news.likedNews.length,
                           itemBuilder: (ctx, index) => LikedNewsItem(
-                            headline: news.topNews[index].headline,
-                            source: news.topNews[index].source,
-                            webUrl: news.topNews[index].webUrl,
-                            imageUrl: news.topNews[index].imageUrl,
+                            headline: news.likedNews[index].headline,
+                            source: news.likedNews[index].source,
+                            webUrl: news.likedNews[index].webUrl,
+                            imageUrl: news.likedNews[index].imageUrl,
                           ),
                         ),
                       ),
@@ -154,3 +141,6 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 }
+
+
+

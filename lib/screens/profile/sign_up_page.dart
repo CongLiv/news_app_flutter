@@ -219,8 +219,7 @@ class _SignUpPage extends State<SignUpPage> {
                                                     gravity:
                                                         ToastGravity.BOTTOM,
                                                     timeInSecForIosWeb: 1,
-                                                    backgroundColor:
-                                                        redViettel,
+                                                    backgroundColor: redViettel,
                                                     textColor: Colors.white,
                                                     fontSize: 16.0);
                                                 // pop to home page

@@ -288,7 +288,7 @@ class _ArticlePageState extends State<ArticlePage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: redViettel,
         textColor: Colors.white,
         fontSize: 16.0,
       );

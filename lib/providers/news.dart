@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
 
@@ -10,6 +13,8 @@ import '../models/searchedArticle.dart';
 class News extends ChangeNotifier {
   final String apiKey = "QdjEczdPCm0YwTGBlGEEy8uTBblGouk0";
   final baseUrl = "https://api.nytimes.com/svc";
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
   List<Article> _topNews = [];
   List<Article> _worldNews = [];
@@ -17,6 +22,7 @@ class News extends ChangeNotifier {
   List<SearchedArticle> _loadingItems = [];
   List<Article> _categoryNews = [];
   List<Article> _loadedItems = [];
+  List<LikedNewsItem> _likedNews = [];
 
   List<Article> get categoryNews {
     return [..._categoryNews];
@@ -33,6 +39,11 @@ class News extends ChangeNotifier {
   List<SearchedArticle> get searchedNews {
     return [..._searchedNews];
   }
+
+  List<LikedNewsItem> get likedNews {
+    return [..._likedNews];
+  }
+
   String formatter(String date) {
     DateTime parsedDate = DateTime.parse(date);
     var formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
@@ -147,5 +158,50 @@ class News extends ChangeNotifier {
     _topNews = _loadedItems;
   }
 
+  Future<void> getLikedNews() async {
+    // get liked news from firestore
+    try {
+      final value = await _firestore
+          .collection('news_mark')
+          .doc(_auth.currentUser!.email)
+          .collection('news')
+          .get();
+      List<LikedNewsItem> likedNews = [];
+      value.docs.forEach((element) {
+        likedNews.add(LikedNewsItem(
+          headline: element['headline'],
+          source: element['source'],
+          webUrl: element['webUrl'],
+          imageUrl: element['imageUrl'],
+        ));
+      });
+      _likedNews = likedNews;
+    }
+    catch (error) {
+      print(error);
+    }
+
+  }
+
+  Future<void> removeLikedNews(webUrl) async {
+    try {
+      await _firestore
+          .collection('news_mark')
+          .doc(_auth.currentUser!.email)
+          .collection('news')
+          .where('webUrl', isEqualTo: webUrl)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          element.reference.delete();
+        });
+      });
+      _likedNews.removeWhere((element) => element.webUrl == webUrl);
+      notifyListeners();
+    }
+    catch (error) {
+      print(error);
+    }
+  }
 
 }
