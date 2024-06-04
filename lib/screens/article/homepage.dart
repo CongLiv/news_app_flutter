@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
-import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
 import '../../providers/themeProvider.dart';
@@ -16,6 +17,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +65,9 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignInPage(),
+                    builder: (context) => _auth.currentUser == null
+                        ? SignInPage()
+                        : PersonalPage(),
                   ),
                 );
               },
@@ -88,7 +93,6 @@ class _HomepageState extends State<Homepage> {
                           Homepage(),
                     ),
                   );
-
                 },
               ),
             ),

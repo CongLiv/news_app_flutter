@@ -15,6 +15,11 @@ ThemeData lightTheme = ThemeData(
     onSurface: Colors.black,
     onError: Colors.white,
   ),
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: redViettel,
+    selectionColor: redViettel.withOpacity(0.5),
+    selectionHandleColor: redViettel,
+  ),
 );
 
 ThemeData darkTheme = ThemeData(
@@ -28,5 +33,11 @@ ThemeData darkTheme = ThemeData(
     onSecondary: Colors.white38,
     onSurface: Colors.white,
     onError: Colors.white,
+  ),
+
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: redViettel,
+    selectionColor: redViettel.withOpacity(0.5),
+    selectionHandleColor: redViettel,
   ),
 );

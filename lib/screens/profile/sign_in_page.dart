@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/const_data.dart';
@@ -13,6 +15,14 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPage extends State<SignInPage> {
+  final _auth = FirebaseAuth.instance;
+  String email = '';
+  String password = '';
+  bool isValid = true;
+
+  String _signInError = 'Email or password is incorrect';
+  String _noti = '';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,11 +69,16 @@ class _SignInPage extends State<SignInPage> {
                           child: Column(
                             children: [
                               TextField(
+                                onChanged: (value) {
+                                  email = value;
+                                },
+                                keyboardType: TextInputType.emailAddress,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
@@ -89,6 +104,9 @@ class _SignInPage extends State<SignInPage> {
                                 height: 30,
                               ),
                               TextField(
+                                onChanged: (value) {
+                                  password = value;
+                                },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
@@ -115,8 +133,15 @@ class _SignInPage extends State<SignInPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 25,
-                              ),
+                                  height: 30,
+                                  child: Text(
+                                    _noti,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      fontFamily: 'FS PFBeauSansPro',
+                                    ),
+                                  )),
                               Column(
                                 children: [
                                   CircleAvatar(
@@ -125,7 +150,25 @@ class _SignInPage extends State<SignInPage> {
                                     child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          // TODO: implement sign in
+                                          _auth
+                                              .signInWithEmailAndPassword(
+                                                  email: email,
+                                                  password: password)
+                                              .then((_) {
+                                            Fluttertoast.showToast(
+                                                msg: 'Sign in successfully',
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: redViettel,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                            Navigator.pop(context);
+                                          }).catchError((error) {
+                                            setState(() {
+                                              _noti = _signInError;
+                                            });
+                                          });
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward,
@@ -137,8 +180,7 @@ class _SignInPage extends State<SignInPage> {
                                 height: 25,
                               ),
                               TextButton(
-                                onPressed: () {
-                                },
+                                onPressed: () {},
                                 child: RichText(
                                   text: TextSpan(
                                     text: 'Don\'t have an account? ',
@@ -159,7 +201,7 @@ class _SignInPage extends State<SignInPage> {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
-                                             // transition to sign up page
+                                              // transition to sign up page
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(

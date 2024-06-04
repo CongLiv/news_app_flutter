@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/screens/article/homepage.dart';
 
 import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
@@ -12,6 +15,21 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPage extends State<SignUpPage> {
+  final _auth = FirebaseAuth.instance;
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  bool isValid = true;
+
+  String _emailError = 'Invalid email';
+  String _passwordLengthError = 'Password must be at least 6 characters';
+  String _passwordMatchError = 'Password does not match';
+  String _emailExistError = 'Email already exists';
+
+  String _noti0 = '';
+  String _noti1 = '';
+  String _noti2 = '';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,10 +76,16 @@ class _SignUpPage extends State<SignUpPage> {
                           child: Column(
                             children: [
                               TextField(
-                                cursorColor: Theme.of(context).colorScheme.onSurface,
+                                onChanged: (value) {
+                                  email = value;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                cursorColor:
+                                    Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
@@ -85,9 +109,20 @@ class _SignUpPage extends State<SignUpPage> {
                               ),
                               SizedBox(
                                 height: 20,
+                                child: Text(
+                                  _noti0,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                    fontFamily: 'FS PFBeauSansPro',
+                                  ),
+                                ),
                               ),
                               TextField(
-                                cursorColor: Theme.of(context).colorScheme.onSurface,
+                                onChanged: (value) {
+                                  password = value;
+                                },
+                                cursorColor:
+                                    Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -112,10 +147,21 @@ class _SignUpPage extends State<SignUpPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 20,
-                              ),
+                                  height: 20,
+                                  child: Text(
+                                    _noti1,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      fontFamily: 'FS PFBeauSansPro',
+                                    ),
+                                  )),
                               TextField(
-                                cursorColor: Theme.of(context).colorScheme.onSurface,
+                                onChanged: (value) {
+                                  confirmPassword = value;
+                                },
+                                cursorColor:
+                                    Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -140,8 +186,15 @@ class _SignUpPage extends State<SignUpPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 25,
-                              ),
+                                  height: 25,
+                                  child: Text(
+                                    _noti2,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      fontFamily: 'FS PFBeauSansPro',
+                                    ),
+                                  )),
                               Column(
                                 children: [
                                   CircleAvatar(
@@ -149,8 +202,48 @@ class _SignUpPage extends State<SignUpPage> {
                                     backgroundColor: redViettel,
                                     child: IconButton(
                                         color: Colors.white,
-                                        onPressed: () {
-                                          // TODO: implement sign in
+                                        onPressed: () async {
+                                          ValidateEmail();
+                                          ValidatePassword();
+                                          if (isValid) {
+                                            try {
+                                              final newUser = await _auth
+                                                  .createUserWithEmailAndPassword(
+                                                      email: email,
+                                                      password: password);
+                                              if (newUser != null) {
+                                                Fluttertoast.showToast(
+                                                    msg: 'Sign up successfully',
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        redViettel,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0);
+                                                // pop to home page
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  PageRouteBuilder(
+                                                    pageBuilder: (context,
+                                                            animation1,
+                                                            animation2) =>
+                                                        Homepage(),
+                                                  ),
+                                                );
+                                              }
+                                            } catch (e) {
+                                              if (e.toString().contains(
+                                                  'email-already-in-use')) {
+                                                setState(() {
+                                                  _noti0 = _emailExistError;
+                                                  isValid = false;
+                                                });
+                                              }
+                                            }
+                                          }
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward,
@@ -205,5 +298,47 @@ class _SignUpPage extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void ValidateEmail() {
+    String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    RegExp regExp = new RegExp(pattern);
+    if (!regExp.hasMatch(email)) {
+      setState(() {
+        _noti0 = _emailError;
+        isValid = false;
+      });
+    } else {
+      setState(() {
+        _noti0 = '';
+        isValid = true;
+      });
+    }
+  }
+
+  void ValidatePassword() {
+    if (password.length < 6) {
+      setState(() {
+        _noti1 = _passwordLengthError;
+        isValid = false;
+      });
+    } else {
+      setState(() {
+        _noti1 = '';
+        isValid = true;
+      });
+    }
+    // check password match
+    if (password != confirmPassword) {
+      setState(() {
+        _noti2 = _passwordMatchError;
+        isValid = false;
+      });
+    } else {
+      setState(() {
+        _noti2 = '';
+        isValid = true;
+      });
+    }
   }
 }

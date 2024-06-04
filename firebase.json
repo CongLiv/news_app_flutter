@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"vdt-news","appId":"1:742943725240:android:ecead36211060b8bcc464d","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"vdt-news","configurations":{"android":"1:742943725240:android:ecead36211060b8bcc464d","ios":"1:742943725240:ios:ec7b21fda543e072cc464d"}}}}}}

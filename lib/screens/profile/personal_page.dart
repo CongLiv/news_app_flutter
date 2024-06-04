@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import 'package:provider/provider.dart';
 import '../../helpers/const_data.dart';
@@ -11,6 +13,8 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
+  final _auth = FirebaseAuth.instance;
+  String email = '';
   bool _isInit = true;
   var _isLoading = false;
 
@@ -25,6 +29,8 @@ class _PersonalPageState extends State<PersonalPage> {
           _isLoading = false;
         });
       });
+
+      email = _auth.currentUser!.email!;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -46,6 +52,17 @@ class _PersonalPageState extends State<PersonalPage> {
             ),
             onPressed: () {
               // TODO: implement logout
+              _auth.signOut();
+              Fluttertoast.showToast(
+                msg: 'Logged out',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: redViettel,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+              Navigator.of(context).pop();
             },
           ),
         ],
@@ -71,7 +88,7 @@ class _PersonalPageState extends State<PersonalPage> {
               // personal news liked
               Container(
                 child: Text(
-                  'Person Name',
+                  email,
                   style: TextStyle(
                     fontSize: 15,
                     fontFamily: 'FS Magistral',
