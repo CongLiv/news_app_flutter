@@ -44,19 +44,27 @@ class _HomeState extends State<Home> {
             ),
             // list of test news
             child: Consumer<News>(
-              builder: (ctx, news, child) => ListView.builder(
-                itemCount: news.topNews.length,
-                itemBuilder: (ctx, index) => ArticleItem(
-                  headline: news.topNews[index].headline,
-                  description: news.topNews[index].description,
-                  source: news.topNews[index].source,
-                  webUrl: news.topNews[index].webUrl,
-                  imageUrl: news.topNews[index].imageUrl,
-                  date: news.topNews[index].date,
+              builder: (ctx, news, child) => RefreshIndicator(
+                color: Colors.red,
+                onRefresh: () => _refreshNews(context),
+                child: ListView.builder(
+                  itemCount: news.topNews.length,
+                  itemBuilder: (ctx, index) => ArticleItem(
+                    headline: news.topNews[index].headline,
+                    description: news.topNews[index].description,
+                    source: news.topNews[index].source,
+                    webUrl: news.topNews[index].webUrl,
+                    imageUrl: news.topNews[index].imageUrl,
+                    date: news.topNews[index].date,
+                  ),
                 ),
               ),
             ),
           );
+  }
+
+  Future<void> _refreshNews(BuildContext context) async {
+    await Provider.of<News>(context, listen: false).getTopNews();
   }
 }
 

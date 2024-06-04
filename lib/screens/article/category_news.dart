@@ -60,18 +60,27 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
               ),
             )
           : Consumer<News>(
-              builder: (ctx, news, child) => ListView.builder(
-                itemCount: news.categoryNews.length,
-                itemBuilder: (ctx, index) => ArticleItem(
-                  headline: news.categoryNews[index].headline,
-                  description: news.categoryNews[index].description,
-                  source: news.categoryNews[index].source,
-                  webUrl: news.categoryNews[index].webUrl,
-                  imageUrl: news.categoryNews[index].imageUrl,
-                  date: news.categoryNews[index].date,
+              builder: (ctx, news, child) => RefreshIndicator(
+                color: redViettel,
+                onRefresh: () => _refreshNews(context),
+                child: ListView.builder(
+                  itemCount: news.categoryNews.length,
+                  itemBuilder: (ctx, index) => ArticleItem(
+                    headline: news.categoryNews[index].headline,
+                    description: news.categoryNews[index].description,
+                    source: news.categoryNews[index].source,
+                    webUrl: news.categoryNews[index].webUrl,
+                    imageUrl: news.categoryNews[index].imageUrl,
+                    date: news.categoryNews[index].date,
+                  ),
                 ),
               ),
             ),
     );
+  }
+
+  Future<void> _refreshNews(BuildContext context) async {
+    await Provider.of<News>(context, listen: false)
+        .getCategoriesNews(widget.categoryName);
   }
 }

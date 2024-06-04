@@ -135,13 +135,17 @@ class _PersonalPageState extends State<PersonalPage> {
                               ),
                             )
                           : Consumer<News>(
-                              builder: (ctx, news, child) => ListView.builder(
-                                itemCount: news.likedNews.length,
-                                itemBuilder: (ctx, index) => LikedNewsItem(
-                                  headline: news.likedNews[index].headline,
-                                  source: news.likedNews[index].source,
-                                  webUrl: news.likedNews[index].webUrl,
-                                  imageUrl: news.likedNews[index].imageUrl,
+                              builder: (ctx, news, child) => RefreshIndicator(
+                                color: redViettel,
+                                onRefresh: () => _refreshLikedNews(context),
+                                child: ListView.builder(
+                                  itemCount: news.likedNews.length,
+                                  itemBuilder: (ctx, index) => LikedNewsItem(
+                                    headline: news.likedNews[index].headline,
+                                    source: news.likedNews[index].source,
+                                    webUrl: news.likedNews[index].webUrl,
+                                    imageUrl: news.likedNews[index].imageUrl,
+                                  ),
                                 ),
                               ),
                             ),
@@ -151,5 +155,9 @@ class _PersonalPageState extends State<PersonalPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _refreshLikedNews(BuildContext context) async {
+    await Provider.of<News>(context, listen: false).getLikedNews();
   }
 }
