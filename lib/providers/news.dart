@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
@@ -52,7 +56,10 @@ class News extends ChangeNotifier {
 
   Future<void> getSearchedNews(String category) async {
     final url = '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
-
+    if (!await CheckConnection.isInternet()) {
+      showToasts('No internet connection');
+      return;
+    }
     var response = await Dio().get(url);
     var jsonResponse;
 
@@ -95,6 +102,10 @@ class News extends ChangeNotifier {
 
   Future<void> getCategoriesNews(String category) async {
     final url = '$baseUrl/topstories/v2/$category.json?api-key=$apiKey';
+    if (!await CheckConnection.isInternet()) {
+      showToasts('No internet connection');
+      return;
+    }
     var response = await Dio().get(url);
     var jsonResponse;
     if(response.data is String) {
@@ -135,6 +146,10 @@ class News extends ChangeNotifier {
   Future<void> getTopNews() async {
     final url =
         'https://newsapi.org/v2/everything?q=keyword&apiKey=$newsApiKey';
+    if (!await CheckConnection.isInternet()) {
+      showToasts('No internet connection');
+      return;
+    }
     Response response = await Dio().get(url);
     var jsonResponse = response.data;
     List extractedData = jsonResponse['articles'];
@@ -159,6 +174,12 @@ class News extends ChangeNotifier {
   }
 
   Future<void> getLikedNews() async {
+
+    if (!await CheckConnection.isInternet()) {
+      showToasts('No internet connection');
+      return;
+    }
+
     // get liked news from firestore
     try {
       final value = await _firestore
@@ -202,6 +223,16 @@ class News extends ChangeNotifier {
     catch (error) {
       print(error);
     }
+  }
+
+  void showToasts(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+    );
   }
 
 }

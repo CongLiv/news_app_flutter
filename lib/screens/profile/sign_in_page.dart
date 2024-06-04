@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
+import '../../helpers/check_connection.dart';
 import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
 
@@ -164,10 +165,32 @@ class _SignInPage extends State<SignInPage> {
                                                 textColor: Colors.white,
                                                 fontSize: 16.0);
                                             Navigator.pop(context);
-                                          }).catchError((error) {
-                                            setState(() {
-                                              _noti = _signInError;
-                                            });
+                                          }).catchError((error) async {
+                                            if (error.code ==
+                                                    'user-not-found' ||
+                                                error.code ==
+                                                    'wrong-password') {
+                                              setState(() {
+                                                _noti = _signInError;
+                                              });
+                                            } else if (!await CheckConnection
+                                                .isInternet()) {
+                                              Fluttertoast.showToast(
+                                                msg: 'No internet connection',
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                              );
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                msg: 'Something went wrong',
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                              );
+                                            }
                                           });
                                         },
                                         icon: Icon(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/screens/article/homepage.dart';
 
+import '../../helpers/check_connection.dart';
 import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
 
@@ -240,6 +241,25 @@ class _SignUpPage extends State<SignUpPage> {
                                                   _noti0 = _emailExistError;
                                                   isValid = false;
                                                 });
+                                              } else if (!await CheckConnection
+                                                  .isInternet()) {
+                                                Fluttertoast.showToast(
+                                                  msg: 'No internet connection',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                );
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                  msg: 'Something went wrong',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                );
                                               }
                                             }
                                           }
