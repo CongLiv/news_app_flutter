@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-
 import '../screens/article/article_page.dart';
 
 class ArticleItem extends StatelessWidget {

@@ -1,13 +1,16 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../helpers/share_article.dart';
 import '../../helpers/urlLauncher.dart';
 
-class ArticlePage extends StatelessWidget {
+class ArticlePage extends StatefulWidget {
   final String headline;
   final String description;
   final String source;
@@ -25,6 +28,42 @@ class ArticlePage extends StatelessWidget {
   });
 
   @override
+  State<ArticlePage> createState() => _ArticlePageState();
+}
+
+class _ArticlePageState extends State<ArticlePage> {
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  bool isMarked = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // check if article is already marked
+    checkArticleMarked().then((value) {
+      setState(() {
+        isMarked = value;
+      });
+    });
+  }
+
+  Future<bool> checkArticleMarked() async {
+    final value = await _firestore
+        .collection('news_mark')
+        .doc(_auth.currentUser!.email)
+        .collection('news')
+        .where('webUrl', isEqualTo: widget.webUrl)
+        .get();
+
+    if (value.docs.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +77,7 @@ class ArticlePage extends StatelessWidget {
             icon: Icon(
               Icons.share,
             ),
-            onPressed: () => ShareArticle.shareArticle(webUrl),
+            onPressed: () => ShareArticle.shareArticle(widget.webUrl),
           ),
         ],
       ),
@@ -47,7 +86,7 @@ class ArticlePage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(imageUrl),
+                image: NetworkImage(widget.imageUrl),
                 fit: BoxFit.cover,
               ),
             ),
@@ -82,7 +121,7 @@ class ArticlePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    headline,
+                    widget.headline,
                     style: TextStyle(
                         fontFamily: 'FS Magistral',
                         fontSize: 16,
@@ -98,7 +137,7 @@ class ArticlePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
-                      image: imageUrl,
+                      image: widget.imageUrl,
                       fadeInDuration: const Duration(milliseconds: 100),
                       fadeInCurve: Curves.easeIn,
                       fit: BoxFit.cover,
@@ -107,7 +146,7 @@ class ArticlePage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Text('Published on : $date',
+                  Text('Published on : ${widget.date}',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
@@ -119,7 +158,7 @@ class ArticlePage extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  Text(description,
+                  Text(widget.description,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
@@ -131,7 +170,7 @@ class ArticlePage extends StatelessWidget {
                   SizedBox(
                     height: 8,
                   ),
-                  Text('Source :  $source',
+                  Text('Source :  ${widget.source}',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontFamily: 'FS PFBeauSansPro',
@@ -144,7 +183,7 @@ class ArticlePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () => UrlLauncher.launchUrlLink(webUrl),
+                        onTap: () => UrlLauncher.launchUrlLink(widget.webUrl),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
@@ -168,11 +207,13 @@ class ArticlePage extends StatelessWidget {
                         margin: EdgeInsets.only(top: 20, right: 20),
                         child: GestureDetector(
                           onTap: () {
-                            // TODO: implement bookmark
+                            isMarked ? removeArticle() : addArticle();
                           },
                           child: Icon(
-                            Icons.bookmark_add_outlined,
-                            color: redViettel,
+                            isMarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_add_outlined,
+                            color: isMarked ? redViettel : Colors.grey,
                             size: 35,
                           ),
                         ),
@@ -186,5 +227,83 @@ class ArticlePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // add article to firestore
+  void addArticle() {
+    try {
+      _firestore
+          .collection('news_mark')
+          .doc(_auth.currentUser!.email)
+          .collection('news')
+          .add({
+        'headline': widget.headline,
+        'description': widget.description,
+        'source': widget.source,
+        'webUrl': widget.webUrl,
+        'imageUrl': widget.imageUrl,
+      });
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    Fluttertoast.showToast(
+      msg: 'Article Marked',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = true;
+    });
+  }
+
+  // remove article from firestore
+  void removeArticle() {
+    try {
+      _firestore
+          .collection('news_mark')
+          .doc(_auth.currentUser!.email)
+          .collection('news')
+          .where('webUrl', isEqualTo: widget.webUrl)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          element.reference.delete();
+        });
+      });
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    Fluttertoast.showToast(
+      msg: 'Article Unmarked',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = false;
+    });
   }
 }
