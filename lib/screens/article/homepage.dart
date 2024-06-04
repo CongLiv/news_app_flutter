@@ -62,7 +62,7 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignUpPage()
+                    builder: (context) => SignInPage(),
                   ),
                 );
               },

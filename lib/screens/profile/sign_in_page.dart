@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
@@ -137,7 +138,6 @@ class _SignInPage extends State<SignInPage> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // TODO: implement sign up
                                 },
                                 child: RichText(
                                   text: TextSpan(
@@ -159,7 +159,13 @@ class _SignInPage extends State<SignInPage> {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
-                                              print('Sign Up');
+                                             // transition to sign up page
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (ctx) =>
+                                                        SignUpPage()),
+                                              );
                                             }),
                                     ],
                                   ),

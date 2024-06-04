@@ -185,7 +185,7 @@ class _SignUpPage extends State<SignUpPage> {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
-                                              print('Sign Up');
+                                              Navigator.pop(context);
                                             }),
                                     ],
                                   ),
