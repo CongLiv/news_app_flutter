@@ -16,8 +16,6 @@ flutter run
 
 
 ## Features
-
-- Login and Sign Up with Firebase 
 - Log in with email and password via Firebase
 - Save your favorite news
 - View top latest news or news by category
