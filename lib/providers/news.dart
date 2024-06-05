@@ -12,7 +12,6 @@ import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
 
-// by nytimes.com
 class News extends ChangeNotifier {
   final String apiKey = "QdjEczdPCm0YwTGBlGEEy8uTBblGouk0";
   final baseUrl = "https://api.nytimes.com/svc";
@@ -53,8 +52,10 @@ class News extends ChangeNotifier {
     return formattedDate;
   }
 
+// by nytimes.com
   Future<void> getSearchedNews(String category) async {
-    final url = '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
+    final url =
+        '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
@@ -68,7 +69,7 @@ class News extends ChangeNotifier {
       jsonResponse = response.data;
     }
 
-    _loadingItems = [];   // Clear the list before adding new items
+    _loadingItems = []; // Clear the list before adding new items
 
     List extractedData = jsonResponse['response']['docs'];
     extractedData.forEach((item) {
@@ -79,7 +80,8 @@ class News extends ChangeNotifier {
         imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
       } else {
         if (item['web_url'] != null) {
-          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+          imageUrl =
+              'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
         } else {
           return;
         }
@@ -96,9 +98,6 @@ class News extends ChangeNotifier {
     _searchedNews = _loadingItems;
   }
 
-
-
-
   Future<void> getCategoriesNews(String category) async {
     final url = '$baseUrl/topstories/v2/$category.json?api-key=$apiKey';
     if (!await CheckConnection.isInternet()) {
@@ -107,9 +106,9 @@ class News extends ChangeNotifier {
     }
     var response = await Dio().get(url);
     var jsonResponse;
-    if(response.data is String) {
+    if (response.data is String) {
       jsonResponse = json.decode(response.data);
-    } else if(response.data is Map<String, dynamic>) {
+    } else if (response.data is Map<String, dynamic>) {
       jsonResponse = response.data;
     }
     List extractedData = jsonResponse['results'];
@@ -120,11 +119,11 @@ class News extends ChangeNotifier {
         imageUrl = item['multimedia'][0]['url'];
       } else {
         if (item[url] != null) {
-          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+          imageUrl =
+              'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
         } else {
           return;
         }
-
       }
       _loadedItems.add(Article(
         headline: item['title'],
@@ -138,42 +137,70 @@ class News extends ChangeNotifier {
     _categoryNews = _loadedItems;
   }
 
-
+  List<String> sources = [
+    'bbc-news',
+    'cnn',
+    'fox-news',
+    'reuters',
+    'the-wall-street-journal',
+    'the-washington-post',
+    'axios',
+    'the-verge',
+    'espn',
+    'abc-news',
+    'nfl-news',
+    'usa-today',
+    'fox-news',
+  ];
 
   // by newsapi.org
-  final String newsApiKey = "3c6c2af37aa3470e88d0731029a15469";
+  // final String newsApiKey = "3c6c2af37aa3470e88d0731029a15469";
+  final String newsApiKey = "a1644628a7454cfa92cd537c92e37ee4";
+  final String newsBaseUrl = "https://newsapi.org/v2";
+
   Future<void> getTopNews() async {
-    final url =
-        'https://newsapi.org/v2/everything?q=keyword&apiKey=$newsApiKey';
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
     }
-    Response response = await Dio().get(url);
-    var jsonResponse = response.data;
-    List extractedData = jsonResponse['articles'];
     _loadedItems = [];
-    extractedData.forEach((item) {
-      if (item['title'] != null &&
-          item['author'] != null &&
-          item['description'] != null &&
-          item['urlToImage'] != null &&
-          item['urlToImage'] != null) {
-        _loadedItems.add(Article(
-          headline: item['title'],
-          source: item['author'],
-          description: item['description'],
-          date: formatter(item['publishedAt']),
-          imageUrl: item['urlToImage'],
-          webUrl: item['url'],
-        ));
-      }
-    });
+    // pick 2 sources randomly
+    List<String> tmpSource = [];
+    for (int i = 0; i < 2; i++) {
+      String randomSource;
+      do {
+        randomSource = sources[DateTime.now().microsecond % sources.length];
+      } while (tmpSource.contains(randomSource));
+      tmpSource.add(randomSource);
+      final url =
+          '$newsBaseUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
+      Response response = await Dio().get(url);
+      var jsonResponse = response.data;
+      List extractedData = jsonResponse['articles'];
+      extractedData.forEach((item) {
+        if (item['title'] != null &&
+            item['author'] != null &&
+            item['description'] != null &&
+            item['urlToImage'] != null &&
+            item['urlToImage'] != null) {
+          _loadedItems.add(Article(
+            headline: item['title'],
+            source: item['author'],
+            description: item['description'],
+            date: formatter(item['publishedAt']),
+            imageUrl: item['urlToImage'],
+            webUrl: item['url'],
+          ));
+        }
+      });
+    }
+
+    // mix _loadedItems
+    _loadedItems.shuffle();
     _topNews = _loadedItems;
   }
 
   Future<void> getLikedNews() async {
-
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
@@ -196,11 +223,9 @@ class News extends ChangeNotifier {
         ));
       });
       _likedNews = likedNews;
-    }
-    catch (error) {
+    } catch (error) {
       print(error);
     }
-
   }
 
   Future<void> removeLikedNews(webUrl) async {
@@ -218,8 +243,7 @@ class News extends ChangeNotifier {
       });
       _likedNews.removeWhere((element) => element.webUrl == webUrl);
       notifyListeners();
-    }
-    catch (error) {
+    } catch (error) {
       print(error);
     }
   }
@@ -233,5 +257,4 @@ class News extends ChangeNotifier {
       backgroundColor: Colors.red,
     );
   }
-
 }
