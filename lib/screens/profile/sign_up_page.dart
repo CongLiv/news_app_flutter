@@ -235,13 +235,7 @@ class _SignUpPage extends State<SignUpPage> {
                                                 );
                                               }
                                             } catch (e) {
-                                              if (e.toString().contains(
-                                                  'email-already-in-use')) {
-                                                setState(() {
-                                                  _noti0 = _emailExistError;
-                                                  isValid = false;
-                                                });
-                                              } else if (!await CheckConnection
+                                              if (!await CheckConnection
                                                   .isInternet()) {
                                                 Fluttertoast.showToast(
                                                   msg: 'No internet connection',
@@ -251,9 +245,15 @@ class _SignUpPage extends State<SignUpPage> {
                                                   timeInSecForIosWeb: 1,
                                                   backgroundColor: Colors.red,
                                                 );
+                                              } else if (e.toString().contains(
+                                                  'email-already-in-use')) {
+                                                setState(() {
+                                                  _noti0 = _emailExistError;
+                                                  isValid = false;
+                                                });
                                               } else {
                                                 Fluttertoast.showToast(
-                                                  msg: 'Something went wrong',
+                                                  msg: 'Sign up failed',
                                                   toastLength:
                                                       Toast.LENGTH_SHORT,
                                                   gravity: ToastGravity.BOTTOM,

@@ -166,14 +166,7 @@ class _SignInPage extends State<SignInPage> {
                                                 fontSize: 16.0);
                                             Navigator.pop(context);
                                           }).catchError((error) async {
-                                            if (error.code ==
-                                                    'user-not-found' ||
-                                                error.code ==
-                                                    'wrong-password') {
-                                              setState(() {
-                                                _noti = _signInError;
-                                              });
-                                            } else if (!await CheckConnection
+                                            if (!await CheckConnection
                                                 .isInternet()) {
                                               Fluttertoast.showToast(
                                                 msg: 'No internet connection',
@@ -184,7 +177,7 @@ class _SignInPage extends State<SignInPage> {
                                               );
                                             } else {
                                               Fluttertoast.showToast(
-                                                msg: 'Something went wrong',
+                                                msg: 'Email or password is incorrect',
                                                 toastLength: Toast.LENGTH_SHORT,
                                                 gravity: ToastGravity.BOTTOM,
                                                 timeInSecForIosWeb: 1,
