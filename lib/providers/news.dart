@@ -149,7 +149,6 @@ class News extends ChangeNotifier {
     'espn',
     'abc-news',
     'nfl-news',
-    'usa-today',
     'fox-news',
   ];
 
