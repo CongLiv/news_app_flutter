@@ -7,7 +7,9 @@ import '../../widgets/article_item.dart';
 
 class CategoryNewsScreen extends StatefulWidget {
   final String categoryName;
+
   CategoryNewsScreen({required this.categoryName});
+
   @override
   _CategoryNewsScreenState createState() => _CategoryNewsScreenState();
 }
@@ -42,16 +44,14 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
         iconTheme: IconThemeData(color: redViettel),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
-        title: Text(
-          widget.categoryName.toUpperCase(),
-          style: TextStyle(
-            fontFamily: 'FS PFBeauSansPro',
-            fontSize: 21,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-            color: redViettel,
-          )
-        ),
+        title: Text(widget.categoryName.toUpperCase(),
+            style: TextStyle(
+              fontFamily: 'FS PFBeauSansPro',
+              fontSize: 21,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 2,
+              color: redViettel,
+            )),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -85,5 +85,7 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
   Future<void> _refreshNews(BuildContext context) async {
     await Provider.of<News>(context, listen: false)
         .getCategoriesNews(widget.categoryName);
+    setState(() {});
+
   }
 }

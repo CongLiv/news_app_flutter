@@ -7,7 +7,6 @@ import './article_item.dart';
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
-
 }
 
 class _HomeState extends State<Home> {
@@ -15,12 +14,12 @@ class _HomeState extends State<Home> {
   var _isLoading = false;
 
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-     Provider.of<News>(context).getTopNews().then((_) {
+      Provider.of<News>(context).getTopNews().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -65,6 +64,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _refreshNews(BuildContext context) async {
     await Provider.of<News>(context, listen: false).getTopNews();
+    setState(() {});
   }
 }
 

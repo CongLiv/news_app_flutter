@@ -159,5 +159,6 @@ class _PersonalPageState extends State<PersonalPage> {
 
   Future<void> _refreshLikedNews(BuildContext context) async {
     await Provider.of<News>(context, listen: false).getLikedNews();
+    setState(() {});
   }
 }
