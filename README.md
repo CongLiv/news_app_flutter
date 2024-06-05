@@ -36,12 +36,18 @@ flutter run
 - [nytimes API](https://developer.nytimes.com/apis)
 
 ## Screenshots
-![Screenshot_20240605-221537](https://github.com/CongLiv/news_app_flutter/assets/116829489/1f9f67fc-d7b8-4ca4-b457-66d8fc33a664)
-![Screenshot_20240605-220942](https://github.com/CongLiv/news_app_flutter/assets/116829489/581073f7-8915-4499-af53-ed5273a3a4e8)
-![Screenshot_20240605-220917](https://github.com/CongLiv/news_app_flutter/assets/116829489/24a9905d-e92a-40a6-90ae-a455f9ca0847)
-![Screenshot_20240605-220816](https://github.com/CongLiv/news_app_flutter/assets/116829489/0cd376a3-393c-4d09-a56e-f1df18905f80)
-![Screenshot_20240605-220855](https://github.com/CongLiv/news_app_flutter/assets/116829489/2673e571-562a-429d-b94a-61304f820d90)
-
+  <tr>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/1f9f67fc-d7b8-4ca4-b457-66d8fc33a664" alt="Screenshot_1" width="200"/></td>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/581073f7-8915-4499-af53-ed5273a3a4e8" alt="Screenshot_2" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/24a9905d-e92a-40a6-90ae-a455f9ca0847" alt="Screenshot_3" width="200"/></td>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/0cd376a3-393c-4d09-a56e-f1df18905f80" alt="Screenshot_4" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/2673e571-562a-429d-b94a-61304f820d90" alt="Screenshot_5" width="200"/></td>
+  </tr>
+</table>
 
 
 
