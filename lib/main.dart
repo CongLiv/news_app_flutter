@@ -7,14 +7,24 @@ import './providers/news.dart';
 import 'firebase_options.dart';
 import 'screens/article/homepage.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(   // need add theme provider first
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+            value: ThemeProvider()
+        ),
+        ChangeNotifierProvider.value(
+          value: News(),
+        ),
+        ChangeNotifierProvider.value(
+          value: Categories(),
+        ),
+      ],
       child: MyApp(),
     ),
   );
@@ -23,21 +33,10 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-          value: News(),
-        ),
-        ChangeNotifierProvider.value(
-          value: Categories(),
-        ),
-
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Provider.of<ThemeProvider>(context).themData,
-        home: Homepage(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: Provider.of<ThemeProvider>(context).themData,
+      home: Homepage(),
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:provider/provider.dart';
+import '../../providers/news.dart';
 import '../../providers/themeProvider.dart';
 import '../../widgets/categories.dart';
 import '../../widgets/home.dart';
@@ -23,8 +23,6 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    isDarkMode =
-        Provider.of<ThemeProvider>(context, listen: false).isDarkMode();
   }
 
   int _selectedIndex = 0;
@@ -34,8 +32,6 @@ class _HomepageState extends State<Homepage> {
     Search(),
     PersonalPage(),
   ];
-
-  late bool isDarkMode;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -79,32 +75,25 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.only(right: 5.0),
               child: IconButton(
                 icon: Icon(
-                  isDarkMode ? Icons.nightlight_round_sharp : Icons.wb_sunny,
+                  Provider.of<ThemeProvider>(context, listen: false)
+                          .isDarkMode()
+                      ? Icons.nightlight_round_sharp
+                      : Icons.wb_sunny,
                   size: 30,
                 ),
                 onPressed: () {
                   Provider.of<ThemeProvider>(context, listen: false)
                       .toggleTheme();
-                  isDarkMode = !isDarkMode;
                   // toast message
                   Fluttertoast.showToast(
-                    msg: isDarkMode
-                        ? 'Dark mode'
-                        : 'Light mode',
+                    msg: Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? 'Dark mode' : 'Light mode',
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 1,
-                    backgroundColor: isDarkMode ? Colors.black : Color(0xFFE5E5E5),
-                    textColor: isDarkMode ? Colors.white70 : Colors.black,
+                    backgroundColor:
+                    Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? Colors.black : Color(0xFFE5E5E5),
+                    textColor: Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? Colors.white70 : Colors.black,
                     fontSize: 16.0,
-                  );
-                  // reload homepage
-                  Navigator.pushReplacement(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          Homepage(),
-                    ),
                   );
                 },
               ),
