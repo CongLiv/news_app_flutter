@@ -53,29 +53,32 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
           )
         ),
       ),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(redViettel),
-              ),
-            )
-          : Consumer<News>(
-              builder: (ctx, news, child) => RefreshIndicator(
-                color: redViettel,
-                onRefresh: () => _refreshNews(context),
-                child: ListView.builder(
-                  itemCount: news.categoryNews.length,
-                  itemBuilder: (ctx, index) => ArticleItem(
-                    headline: news.categoryNews[index].headline,
-                    description: news.categoryNews[index].description,
-                    source: news.categoryNews[index].source,
-                    webUrl: news.categoryNews[index].webUrl,
-                    imageUrl: news.categoryNews[index].imageUrl,
-                    date: news.categoryNews[index].date,
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+                ),
+              )
+            : Consumer<News>(
+                builder: (ctx, news, child) => RefreshIndicator(
+                  color: redViettel,
+                  onRefresh: () => _refreshNews(context),
+                  child: ListView.builder(
+                    itemCount: news.categoryNews.length,
+                    itemBuilder: (ctx, index) => ArticleItem(
+                      headline: news.categoryNews[index].headline,
+                      description: news.categoryNews[index].description,
+                      source: news.categoryNews[index].source,
+                      webUrl: news.categoryNews[index].webUrl,
+                      imageUrl: news.categoryNews[index].imageUrl,
+                      date: news.categoryNews[index].date,
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
