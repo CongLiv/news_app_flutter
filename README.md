@@ -1,16 +1,47 @@
-# news_app_flutter_demo
+## About project
 
-A new Flutter project.
+VDT News is a mobile application that updates the latest news, built with the [Flutter](https://flutter.dev/) SDK using the Dart language.
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application.
+Cloning this repository then run this line to install dependencies in yaml file:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+```
+Run the following command to start your application on VSC or Android Studio and pray that all the environment settings are correct:
+```bash
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
+
+- Login and Sign Up with Firebase 
+- Log in with email and password via Firebase
+- Save your favorite news
+- View top latest news or news by category
+- Search for news by keyword
+- Switch between light mode and dark mode 
+
+## Built with
+- [url_launcher](https://pub.dev/packages/url_launcher)
+- [dio](https://pub.dev/packages/dio)
+- [share_plus](https://pub.dev/packages/share_plus)
+- [firebase_core](https://pub.dev/packages/firebase_core)
+- [firebase_auth](https://pub.dev/packages/firebase_auth)
+- [cloud_firestore](https://pub.dev/packages/cloud_firestore)
+- [fluttertoast](https://pub.dev/packages/fluttertoast)
+- [newsapi.org](https://newsapi.org/docs)
+- [nytimes API](https://developer.nytimes.com/apis)
+
+## Screenshots
+![Screenshot_20240605-221537](https://github.com/CongLiv/news_app_flutter/assets/116829489/1f9f67fc-d7b8-4ca4-b457-66d8fc33a664)
+![Screenshot_20240605-220942](https://github.com/CongLiv/news_app_flutter/assets/116829489/581073f7-8915-4499-af53-ed5273a3a4e8)
+![Screenshot_20240605-220917](https://github.com/CongLiv/news_app_flutter/assets/116829489/24a9905d-e92a-40a6-90ae-a455f9ca0847)
+![Screenshot_20240605-220816](https://github.com/CongLiv/news_app_flutter/assets/116829489/0cd376a3-393c-4d09-a56e-f1df18905f80)
+![Screenshot_20240605-220855](https://github.com/CongLiv/news_app_flutter/assets/116829489/2673e571-562a-429d-b94a-61304f820d90)
+
+
+
+
