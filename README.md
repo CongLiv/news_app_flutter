@@ -36,6 +36,7 @@ flutter run
 - [nytimes API](https://developer.nytimes.com/apis)
 
 ## Screenshots
+<table>
   <tr>
     <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/1f9f67fc-d7b8-4ca4-b457-66d8fc33a664" alt="Screenshot_1" width="200"/></td>
     <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/581073f7-8915-4499-af53-ed5273a3a4e8" alt="Screenshot_2" width="200"/></td>
@@ -46,7 +47,8 @@ flutter run
   </tr>
   <tr>
     <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/2673e571-562a-429d-b94a-61304f820d90" alt="Screenshot_5" width="200"/></td>
-  </tr>
+    <td><img src="https://github.com/CongLiv/news_app_flutter/assets/116829489/4bb1bf14-5da7-4e3b-a9b3-62c2e3f94bde" alt="Screenshot_6" width="200"/></td>
+
 </table>
 
 
