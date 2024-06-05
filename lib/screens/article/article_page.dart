@@ -41,11 +41,13 @@ class _ArticlePageState extends State<ArticlePage> {
     super.initState();
 
     // check if article is already marked
-    checkArticleMarked().then((value) {
-      setState(() {
-        isMarked = value;
+    if (_auth.currentUser != null) {
+      checkArticleMarked().then((value) {
+        setState(() {
+          isMarked = value;
+        });
       });
-    });
+    }
   }
 
   Future<bool> checkArticleMarked() async {
