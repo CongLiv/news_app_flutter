@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/providers/themeProvider.dart';
-import 'package:provider/provider.dart';
-import './providers/categories.dart';
-import './providers/news.dart';
 import 'firebase_options.dart';
 import 'screens/article/homepage.dart';
 
@@ -12,30 +10,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-            value: ThemeProvider()
-        ),
-        ChangeNotifierProvider.value(
-          value: News(),
-        ),
-        ChangeNotifierProvider.value(
-          value: Categories(),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
+
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themePro = ref.watch(themeProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: Provider.of<ThemeProvider>(context).themData,
+      theme: themePro,
       home: Homepage(),
     );
   }

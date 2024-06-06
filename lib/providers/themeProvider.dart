@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/article/homepage.dart';
+final themeProvider = StateNotifierProvider<ThemeProvider, ThemeData>((ref) {
+  return ThemeProvider();
+});
 
-class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = lightTheme;
-
-  ThemeProvider() {
+class ThemeProvider extends StateNotifier<ThemeData> {
+  ThemeProvider() : super(lightTheme) {
     loadThemeMode();
-  }
-
-  ThemeData get themData {
-    return _themeData;
   }
 
   Future<void> loadThemeMode() async {
@@ -20,18 +17,18 @@ class ThemeProvider with ChangeNotifier {
     bool? isDarkMode = prefs.getBool('isDarkMode');
 
     if (isDarkMode != null) {
-      _themeData = isDarkMode ? darkTheme : lightTheme;
-      notifyListeners();
+      state = isDarkMode ? darkTheme : lightTheme;
+    } else {
+      state = lightTheme; // Default theme
     }
   }
 
   Future<void> toggleTheme() async {
-    if (_themeData == lightTheme) {
-      _themeData = darkTheme;
+    if (state == lightTheme) {
+      state = darkTheme;
     } else {
-      _themeData = lightTheme;
+      state = lightTheme;
     }
-    notifyListeners();
 
     // Save theme mode to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -39,6 +36,8 @@ class ThemeProvider with ChangeNotifier {
   }
 
   bool isDarkMode() {
-    return _themeData == darkTheme;
+    return state == darkTheme;
   }
 }
+
+

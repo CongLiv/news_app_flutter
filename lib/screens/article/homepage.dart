@@ -1,23 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
-import 'package:provider/provider.dart';
-import '../../providers/news.dart';
 import '../../providers/themeProvider.dart';
 import '../../widgets/categories.dart';
 import '../../widgets/home.dart';
 import '../../widgets/search.dart';
 import '../../helpers/const_data.dart';
 
-class Homepage extends StatefulWidget {
+class Homepage extends ConsumerStatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends ConsumerState<Homepage> {
   final _auth = FirebaseAuth.instance;
 
   @override
@@ -41,6 +40,7 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final themePro = ref.watch(themeProvider.notifier);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -75,24 +75,21 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.only(right: 5.0),
               child: IconButton(
                 icon: Icon(
-                  Provider.of<ThemeProvider>(context, listen: false)
-                          .isDarkMode()
+                  themePro.isDarkMode()
                       ? Icons.nightlight_round_sharp
                       : Icons.wb_sunny,
                   size: 30,
                 ),
                 onPressed: () {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleTheme();
+                  themePro.toggleTheme();
                   // toast message
                   Fluttertoast.showToast(
-                    msg: Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? 'Dark mode' : 'Light mode',
+                    msg: themePro.isDarkMode() ? 'Dark mode' : 'Light mode',
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 1,
-                    backgroundColor:
-                    Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? Colors.black : Color(0xFFE5E5E5),
-                    textColor: Provider.of<ThemeProvider>(context, listen: false).isDarkMode() ? Colors.white70 : Colors.black,
+                    backgroundColor: themePro.isDarkMode() ? Colors.black : Color(0xFFE5E5E5),
+                    textColor: themePro.isDarkMode() ? Colors.white70 : Colors.black,
                     fontSize: 16.0,
                   );
                 },

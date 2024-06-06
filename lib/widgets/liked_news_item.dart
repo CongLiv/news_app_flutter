@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
-import 'package:provider/provider.dart';
-
 import '../providers/news.dart';
 
-class LikedNewsItem extends StatelessWidget {
+class LikedNewsItem extends ConsumerWidget {
   final String headline;
   final String source;
   final String webUrl;
@@ -20,7 +19,8 @@ class LikedNewsItem extends StatelessWidget {
       required this.imageUrl});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final newsPro = ref.read(newsProvider);
     return GestureDetector(
       onTap: () {
         UrlLauncher.launchUrlLink(webUrl);
@@ -58,7 +58,8 @@ class LikedNewsItem extends StatelessWidget {
               color: Colors.red,
             ),
             onPressed: () {
-              Provider.of<News>(context, listen: false).removeLikedNews(webUrl);
+              // Provider.of<News>(context, listen: false).removeLikedNews(webUrl);
+              newsPro.removeLikedNews(webUrl);
               Fluttertoast.showToast(
                 msg: 'Removed from liked news',
                 toastLength: Toast.LENGTH_SHORT,

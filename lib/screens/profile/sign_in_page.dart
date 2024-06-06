@@ -21,7 +21,6 @@ class _SignInPage extends State<SignInPage> {
   String password = '';
   bool isValid = true;
 
-  String _signInError = 'Email or password is incorrect';
   String _noti = '';
 
   @override

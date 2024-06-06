@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
-import 'package:provider/provider.dart';
-
 import '../../providers/news.dart';
 import '../../widgets/article_item.dart';
 
-class CategoryNewsScreen extends StatefulWidget {
+class CategoryNewsScreen extends ConsumerStatefulWidget {
   final String categoryName;
 
   CategoryNewsScreen({required this.categoryName});
@@ -14,19 +13,25 @@ class CategoryNewsScreen extends StatefulWidget {
   _CategoryNewsScreenState createState() => _CategoryNewsScreenState();
 }
 
-class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
+class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen> {
   bool _isInit = true;
   var _isLoading = false;
 
+  final newsPro = ProviderContainer().read(newsProvider);
   @override
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<News>(context)
-          .getCategoriesNews(widget.categoryName)
-          .then((_) {
+      // Provider.of<News>(context)
+      //     .getCategoriesNews(widget.categoryName)
+      //     .then((_) {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      // });
+      newsPro.getCategoriesNews(widget.categoryName).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -61,30 +66,48 @@ class _CategoryNewsScreenState extends State<CategoryNewsScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(redViettel),
                 ),
               )
-            : Consumer<News>(
-                builder: (ctx, news, child) => RefreshIndicator(
-                  color: redViettel,
-                  onRefresh: () => _refreshNews(context),
-                  child: ListView.builder(
-                    itemCount: news.categoryNews.length,
-                    itemBuilder: (ctx, index) => ArticleItem(
-                      headline: news.categoryNews[index].headline,
-                      description: news.categoryNews[index].description,
-                      source: news.categoryNews[index].source,
-                      webUrl: news.categoryNews[index].webUrl,
-                      imageUrl: news.categoryNews[index].imageUrl,
-                      date: news.categoryNews[index].date,
-                    ),
+            // : Consumer<News>(
+            //     builder: (ctx, news, child) => RefreshIndicator(
+            //       color: redViettel,
+            //       onRefresh: () => _refreshNews(context),
+            //       child: ListView.builder(
+            //         itemCount: news.categoryNews.length,
+            //         itemBuilder: (ctx, index) => ArticleItem(
+            //           headline: news.categoryNews[index].headline,
+            //           description: news.categoryNews[index].description,
+            //           source: news.categoryNews[index].source,
+            //           webUrl: news.categoryNews[index].webUrl,
+            //           imageUrl: news.categoryNews[index].imageUrl,
+            //           date: news.categoryNews[index].date,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            : RefreshIndicator(
+                color: redViettel,
+                onRefresh: () => _refreshNews(context),
+                child: ListView.builder(
+                  itemCount: newsPro.categoryNews.length,
+                  itemBuilder: (ctx, index) => ArticleItem(
+                    headline: newsPro.categoryNews[index].headline,
+                    description: newsPro.categoryNews[index].description,
+                    source: newsPro.categoryNews[index].source,
+                    webUrl: newsPro.categoryNews[index].webUrl,
+                    imageUrl: newsPro.categoryNews[index].imageUrl,
+                    date: newsPro.categoryNews[index].date,
                   ),
                 ),
+
               ),
       ),
     );
   }
 
   Future<void> _refreshNews(BuildContext context) async {
-    await Provider.of<News>(context, listen: false)
-        .getCategoriesNews(widget.categoryName);
+    // await Provider.of<News>(context, listen: false)
+    //     .getCategoriesNews(widget.categoryName);
+
+    await newsPro.getCategoriesNews(widget.categoryName);
     setState(() {});
 
   }

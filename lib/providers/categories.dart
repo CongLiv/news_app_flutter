@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/category.dart';
+
+
+final categoriesProvider = StateProvider<Categories> ((ref) => Categories());
 
 class Categories extends ChangeNotifier {
   final List<Category> categoryList = [

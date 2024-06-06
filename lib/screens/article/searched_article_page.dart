@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
-import 'package:provider/provider.dart';
-
 import '../../widgets/searched_article.dart';
 import '../../providers/news.dart';
 
-class SearchedArticleScreen extends StatefulWidget {
+class SearchedArticleScreen extends ConsumerStatefulWidget {
   final String searchField;
   SearchedArticleScreen({required this.searchField});
   @override
   _SearchedArticleScreenState createState() => _SearchedArticleScreenState();
 }
 
-class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
+class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen> {
   bool _isInit = true;
   var _isLoading = false;
+
+  final newsPro = ProviderContainer().read(newsProvider);
 
   @override
   void didChangeDependencies() {
@@ -30,9 +31,8 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
     setState(() {
       _isLoading = true;
     });
-    Provider.of<News>(context, listen: false)
-        .getSearchedNews(widget.searchField)
-        .then((_) {
+
+    newsPro.getSearchedNews(widget.searchField).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -56,19 +56,17 @@ class _SearchedArticleScreenState extends State<SearchedArticleScreen> {
               ),
             )
           : Container(
-              child: Consumer<News>(
-                builder: (ctx, news, child) => ListView.builder(
-                  itemCount: news.searchedNews.length,
-                  itemBuilder: (ctx, index) {
-                    return SearchedArticle(
-                      headline: news.searchedNews[index].headline,
-                      source: news.searchedNews[index].source,
-                      webUrl: news.searchedNews[index].webUrl,
-                      date: news.searchedNews[index].date,
-                      imageUrl: news.searchedNews[index].imageUrl,
-                    );
-                  },
-                ),
+              child: ListView.builder(
+                itemCount: newsPro.searchedNews.length,
+                itemBuilder: (ctx, index) {
+                  return SearchedArticle(
+                    headline: newsPro.searchedNews[index].headline,
+                    source: newsPro.searchedNews[index].source,
+                    webUrl: newsPro.searchedNews[index].webUrl,
+                    date: newsPro.searchedNews[index].date,
+                    imageUrl: newsPro.searchedNews[index].imageUrl,
+                  );
+                },
               ),
             ),
     );

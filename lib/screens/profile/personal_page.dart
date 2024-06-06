@@ -1,22 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
-import 'package:provider/provider.dart';
 import '../../helpers/const_data.dart';
 import '../../providers/news.dart';
 import '../../widgets/title_name.dart';
 
-class PersonalPage extends StatefulWidget {
+class PersonalPage extends ConsumerStatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
 
-class _PersonalPageState extends State<PersonalPage> {
+class _PersonalPageState extends ConsumerState<PersonalPage> {
   final _auth = FirebaseAuth.instance;
   String email = '';
   bool _isInit = true;
   var _isLoading = false;
+
+  final newsPro = ProviderContainer().read(newsProvider);
 
   @override
   void didChangeDependencies() {
@@ -24,7 +26,12 @@ class _PersonalPageState extends State<PersonalPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<News>(context).getLikedNews().then((_) {
+      // Provider.of<News>(context).getLikedNews().then((_) {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      // });
+      newsPro.getLikedNews().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -122,7 +129,7 @@ class _PersonalPageState extends State<PersonalPage> {
                       ),
                     )
                   : Expanded(
-                      child: Provider.of<News>(context).likedNews.isEmpty
+                      child: newsPro.likedNews.isEmpty
                           ? Center(
                               child: Text(
                                 'You have not liked any news yet.',
@@ -134,18 +141,31 @@ class _PersonalPageState extends State<PersonalPage> {
                                 ),
                               ),
                             )
-                          : Consumer<News>(
-                              builder: (ctx, news, child) => RefreshIndicator(
-                                color: redViettel,
-                                onRefresh: () => _refreshLikedNews(context),
-                                child: ListView.builder(
-                                  itemCount: news.likedNews.length,
-                                  itemBuilder: (ctx, index) => LikedNewsItem(
-                                    headline: news.likedNews[index].headline,
-                                    source: news.likedNews[index].source,
-                                    webUrl: news.likedNews[index].webUrl,
-                                    imageUrl: news.likedNews[index].imageUrl,
-                                  ),
+                          // : Consumer<News>(
+                          //     builder: (ctx, news, child) => RefreshIndicator(
+                          //       color: redViettel,
+                          //       onRefresh: () => _refreshLikedNews(context),
+                          //       child: ListView.builder(
+                          //         itemCount: news.likedNews.length,
+                          //         itemBuilder: (ctx, index) => LikedNewsItem(
+                          //           headline: news.likedNews[index].headline,
+                          //           source: news.likedNews[index].source,
+                          //           webUrl: news.likedNews[index].webUrl,
+                          //           imageUrl: news.likedNews[index].imageUrl,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          : RefreshIndicator(
+                              color: redViettel,
+                              onRefresh: () => _refreshLikedNews(context),
+                              child: ListView.builder(
+                                itemCount: newsPro.likedNews.length,
+                                itemBuilder: (ctx, index) => LikedNewsItem(
+                                  headline: newsPro.likedNews[index].headline,
+                                  source: newsPro.likedNews[index].source,
+                                  webUrl: newsPro.likedNews[index].webUrl,
+                                  imageUrl: newsPro.likedNews[index].imageUrl,
                                 ),
                               ),
                             ),
@@ -158,7 +178,8 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   Future<void> _refreshLikedNews(BuildContext context) async {
-    await Provider.of<News>(context, listen: false).getLikedNews();
+    // await Provider.of<News>(context, listen: false).getLikedNews();
+    await newsPro.getLikedNews();
     setState(() {});
   }
 }
