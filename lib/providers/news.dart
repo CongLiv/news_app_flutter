@@ -98,6 +98,12 @@ class News extends StateNotifier<NewsState> {
     List<SearchedArticle> _loadedItems = [];
     List extractedData = jsonResponse['response']['docs'];
     extractedData.forEach((item) {
+      if (item['abstract'] == null ||
+          item['source'] == null ||
+          item['pub_date'] == null ||
+          item['web_url'] == null) {
+        return;
+      }
       String imageUrl;
 
       // Check if 'multimedia' list is not empty before accessing its elements
@@ -139,6 +145,14 @@ class News extends StateNotifier<NewsState> {
     List<Article> _loadedItems = [];
     List extractedData = jsonResponse['results'];
     extractedData.forEach((item) {
+      if (item['title'] == null ||
+          item['byline'] == null ||
+          item['abstract'] == null ||
+          item['published_date'] == null ||
+          item['url'] == null) {
+        return;
+      }
+
       String imageUrl;
       if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
         imageUrl = item['multimedia'][0]['url'];
