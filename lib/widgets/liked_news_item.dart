@@ -20,7 +20,7 @@ class LikedNewsItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final newsPro = ref.read(newsProvider);
+    final newsNoti = ref.watch(newsProvider.notifier);
     return GestureDetector(
       onTap: () {
         UrlLauncher.launchUrlLink(webUrl);
@@ -58,8 +58,7 @@ class LikedNewsItem extends ConsumerWidget {
               color: Colors.red,
             ),
             onPressed: () {
-              // Provider.of<News>(context, listen: false).removeLikedNews(webUrl);
-              newsPro.removeLikedNews(webUrl);
+              newsNoti.removeLikedNews(webUrl);
               Fluttertoast.showToast(
                 msg: 'Removed from liked news',
                 toastLength: Toast.LENGTH_SHORT,

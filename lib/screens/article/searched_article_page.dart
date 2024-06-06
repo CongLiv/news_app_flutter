@@ -7,7 +7,9 @@ import '../../providers/news.dart';
 
 class SearchedArticleScreen extends ConsumerStatefulWidget {
   final String searchField;
+
   SearchedArticleScreen({required this.searchField});
+
   @override
   _SearchedArticleScreenState createState() => _SearchedArticleScreenState();
 }
@@ -16,7 +18,13 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen> {
   bool _isInit = true;
   var _isLoading = false;
 
-  final newsPro = ProviderContainer().read(newsProvider);
+  late final newsNoti;
+
+  @override
+  void initState() {
+    super.initState();
+    newsNoti = ref.read(newsProvider.notifier);
+  }
 
   @override
   void didChangeDependencies() {
@@ -31,8 +39,7 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen> {
     setState(() {
       _isLoading = true;
     });
-
-    newsPro.getSearchedNews(widget.searchField).then((_) {
+    newsNoti.getSearchedNews(widget.searchField).then((_) {
       setState(() {
         _isLoading = false;
       });
@@ -41,14 +48,14 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final newsData = ref.watch(newsProvider);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: redViettel),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        elevation: 0,
-        centerTitle: true,
-        title: TitleName(text: appNameLogo)
-      ),
+          iconTheme: IconThemeData(color: redViettel),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          elevation: 0,
+          centerTitle: true,
+          title: TitleName(text: appNameLogo)),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -57,14 +64,14 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen> {
             )
           : Container(
               child: ListView.builder(
-                itemCount: newsPro.searchedNews.length,
+                itemCount: newsData.searchedNews.length,
                 itemBuilder: (ctx, index) {
                   return SearchedArticle(
-                    headline: newsPro.searchedNews[index].headline,
-                    source: newsPro.searchedNews[index].source,
-                    webUrl: newsPro.searchedNews[index].webUrl,
-                    date: newsPro.searchedNews[index].date,
-                    imageUrl: newsPro.searchedNews[index].imageUrl,
+                    headline: newsData.searchedNews[index].headline,
+                    source: newsData.searchedNews[index].source,
+                    webUrl: newsData.searchedNews[index].webUrl,
+                    date: newsData.searchedNews[index].date,
+                    imageUrl: newsData.searchedNews[index].imageUrl,
                   );
                 },
               ),

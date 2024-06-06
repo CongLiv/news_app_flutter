@@ -6,60 +6,82 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
 
+final newsProvider = StateNotifierProvider<News, NewsState>((ref) {
+  return News();
+});
 
-final newsProvider = StateProvider((ref) => News());
+class NewsState {
+  final List<Article> topNews;
+  final List<Article> worldNews;
+  final List<SearchedArticle> searchedNews;
+  final List<Article> categoryNews;
+  final List<LikedNewsItem> likedNews;
 
-class News extends ChangeNotifier {
-  final String apiKey = "QdjEczdPCm0YwTGBlGEEy8uTBblGouk0";
-  final baseUrl = "https://api.nytimes.com/svc";
-  final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
+  NewsState({
+    required this.topNews,
+    required this.worldNews,
+    required this.searchedNews,
+    required this.categoryNews,
+    required this.likedNews,
+  });
 
-  List<Article> _topNews = [];
-  List<Article> _worldNews = [];
-  List<SearchedArticle> _searchedNews = [];
-  List<SearchedArticle> _loadingItems = [];
-  List<Article> _categoryNews = [];
-  List<Article> _loadedItems = [];
-  List<LikedNewsItem> _likedNews = [];
-
-  List<Article> get categoryNews {
-    return [..._categoryNews];
+  NewsState copyWith({
+    List<Article>? topNews,
+    List<Article>? worldNews,
+    List<SearchedArticle>? searchedNews,
+    List<Article>? categoryNews,
+    List<LikedNewsItem>? likedNews,
+  }) {
+    return NewsState(
+      topNews: topNews ?? this.topNews,
+      worldNews: worldNews ?? this.worldNews,
+      searchedNews: searchedNews ?? this.searchedNews,
+      categoryNews: categoryNews ?? this.categoryNews,
+      likedNews: likedNews ?? this.likedNews,
+    );
   }
+}
 
-  List<Article> get worldNews {
-    return [..._worldNews];
-  }
+class News extends StateNotifier<NewsState> {
+  News()
+      : super(NewsState(
+          topNews: [],
+          worldNews: [],
+          searchedNews: [],
+          categoryNews: [],
+          likedNews: [],
+        ));
 
-  List<Article> get topNews {
-    return [..._topNews];
-  }
-
-  List<SearchedArticle> get searchedNews {
-    return [..._searchedNews];
-  }
-
-  List<LikedNewsItem> get likedNews {
-    return [..._likedNews];
-  }
-
+  // HELPER FUNCTIONS
   String formatter(String date) {
     DateTime parsedDate = DateTime.parse(date);
     var formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
     return formattedDate;
   }
 
-// by nytimes.com
+  void showToasts(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+    );
+  }
+
+  // FETCH DATA BY NYT API
+  final String nytApiKey = "QdjEczdPCm0YwTGBlGEEy8uTBblGouk0";
+  final nytUrl = "https://api.nytimes.com/svc";
+
   Future<void> getSearchedNews(String category) async {
     final url =
-        '$baseUrl/search/v2/articlesearch.json?q=$category&api-key=$apiKey';
+        '$nytUrl/search/v2/articlesearch.json?q=$category&api-key=$nytApiKey';
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
@@ -73,8 +95,7 @@ class News extends ChangeNotifier {
       jsonResponse = response.data;
     }
 
-    _loadingItems = []; // Clear the list before adding new items
-
+    List<SearchedArticle> _loadedItems = [];
     List extractedData = jsonResponse['response']['docs'];
     extractedData.forEach((item) {
       String imageUrl;
@@ -90,8 +111,7 @@ class News extends ChangeNotifier {
           return;
         }
       }
-
-      _loadingItems.add(SearchedArticle(
+      _loadedItems.add(SearchedArticle(
         headline: item['abstract'],
         source: item['source'],
         date: formatter(item['pub_date']),
@@ -99,11 +119,12 @@ class News extends ChangeNotifier {
         imageUrl: imageUrl,
       ));
     });
-    _searchedNews = _loadingItems;
+
+    state = state.copyWith(searchedNews: _loadedItems);
   }
 
   Future<void> getCategoriesNews(String category) async {
-    final url = '$baseUrl/topstories/v2/$category.json?api-key=$apiKey';
+    final url = '$nytUrl/topstories/v2/$category.json?api-key=$nytApiKey';
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
@@ -115,8 +136,8 @@ class News extends ChangeNotifier {
     } else if (response.data is Map<String, dynamic>) {
       jsonResponse = response.data;
     }
+    List<Article> _loadedItems = [];
     List extractedData = jsonResponse['results'];
-    _loadedItems = [];
     extractedData.forEach((item) {
       String imageUrl;
       if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
@@ -138,9 +159,10 @@ class News extends ChangeNotifier {
         webUrl: item['url'],
       ));
     });
-    _categoryNews = _loadedItems;
+    state = state.copyWith(categoryNews: _loadedItems);
   }
 
+  // FETCH DATA BY NEWSAPI
   List<String> sources = [
     'bbc-news',
     'cnn',
@@ -156,17 +178,17 @@ class News extends ChangeNotifier {
     'fox-news',
   ];
 
-  // by newsapi.org
-  // final String newsApiKey = "3c6c2af37aa3470e88d0731029a15469";
-  final String newsApiKey = "a1644628a7454cfa92cd537c92e37ee4";
-  final String newsBaseUrl = "https://newsapi.org/v2";
+  final String newsApiKey = "3c6c2af37aa3470e88d0731029a15469";
+
+  // final String newsApiKey = "a1644628a7454cfa92cd537c92e37ee4";  // second key
+  final newsApiUrl = "https://newsapi.org/v2";
 
   Future<void> getTopNews() async {
     if (!await CheckConnection.isInternet()) {
       showToasts('No internet connection');
       return;
     }
-    _loadedItems = [];
+    List<Article> _loadedItems = [];
     // pick 2 sources randomly
     List<String> tmpSource = [];
     for (int i = 0; i < 2; i++) {
@@ -176,7 +198,7 @@ class News extends ChangeNotifier {
       } while (tmpSource.contains(randomSource));
       tmpSource.add(randomSource);
       final url =
-          '$newsBaseUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
+          '$newsApiUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
       Response response = await Dio().get(url);
       var jsonResponse = response.data;
       List extractedData = jsonResponse['articles'];
@@ -184,7 +206,6 @@ class News extends ChangeNotifier {
         if (item['title'] != null &&
             item['author'] != null &&
             item['description'] != null &&
-            item['urlToImage'] != null &&
             item['urlToImage'] != null) {
           _loadedItems.add(Article(
             headline: item['title'],
@@ -200,8 +221,12 @@ class News extends ChangeNotifier {
 
     // mix _loadedItems
     _loadedItems.shuffle();
-    _topNews = _loadedItems;
+
+    state = state.copyWith(topNews: _loadedItems);
   }
+
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
   Future<void> getLikedNews() async {
     if (!await CheckConnection.isInternet()) {
@@ -225,7 +250,8 @@ class News extends ChangeNotifier {
           imageUrl: element['imageUrl'],
         ));
       });
-      _likedNews = likedNews;
+
+      state = state.copyWith(likedNews: likedNews);
     } catch (error) {
       print(error);
     }
@@ -244,20 +270,12 @@ class News extends ChangeNotifier {
           element.reference.delete();
         });
       });
-      _likedNews.removeWhere((element) => element.webUrl == webUrl);
-      notifyListeners();
+      List<LikedNewsItem> likedNews = state.likedNews;
+      likedNews.removeWhere((element) => element.webUrl == webUrl);
+
+      state = state.copyWith(likedNews: likedNews);
     } catch (error) {
       print(error);
     }
-  }
-
-  void showToasts(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-    );
   }
 }

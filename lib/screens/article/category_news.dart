@@ -17,25 +17,25 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen> {
   bool _isInit = true;
   var _isLoading = false;
 
-  final newsPro = ProviderContainer().read(newsProvider);
+  late final newsNoti;
+  @override
+  void initState() {
+    super.initState();
+    newsNoti = ref.read(newsProvider.notifier);
+  }
+
   @override
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      // Provider.of<News>(context)
-      //     .getCategoriesNews(widget.categoryName)
-      //     .then((_) {
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      // });
-      newsPro.getCategoriesNews(widget.categoryName).then((_) {
+      newsNoti.getCategoriesNews(widget.categoryName).then((_) {
         setState(() {
           _isLoading = false;
         });
       });
+
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -43,6 +43,7 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final newsData = ref.watch(newsProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -66,48 +67,27 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(redViettel),
                 ),
               )
-            // : Consumer<News>(
-            //     builder: (ctx, news, child) => RefreshIndicator(
-            //       color: redViettel,
-            //       onRefresh: () => _refreshNews(context),
-            //       child: ListView.builder(
-            //         itemCount: news.categoryNews.length,
-            //         itemBuilder: (ctx, index) => ArticleItem(
-            //           headline: news.categoryNews[index].headline,
-            //           description: news.categoryNews[index].description,
-            //           source: news.categoryNews[index].source,
-            //           webUrl: news.categoryNews[index].webUrl,
-            //           imageUrl: news.categoryNews[index].imageUrl,
-            //           date: news.categoryNews[index].date,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
             : RefreshIndicator(
                 color: redViettel,
                 onRefresh: () => _refreshNews(context),
                 child: ListView.builder(
-                  itemCount: newsPro.categoryNews.length,
+                  itemCount: newsData.categoryNews.length,
                   itemBuilder: (ctx, index) => ArticleItem(
-                    headline: newsPro.categoryNews[index].headline,
-                    description: newsPro.categoryNews[index].description,
-                    source: newsPro.categoryNews[index].source,
-                    webUrl: newsPro.categoryNews[index].webUrl,
-                    imageUrl: newsPro.categoryNews[index].imageUrl,
-                    date: newsPro.categoryNews[index].date,
+                    headline: newsData.categoryNews[index].headline,
+                    description: newsData.categoryNews[index].description,
+                    source: newsData.categoryNews[index].source,
+                    webUrl: newsData.categoryNews[index].webUrl,
+                    imageUrl: newsData.categoryNews[index].imageUrl,
+                    date: newsData.categoryNews[index].date,
                   ),
                 ),
-
               ),
       ),
     );
   }
 
   Future<void> _refreshNews(BuildContext context) async {
-    // await Provider.of<News>(context, listen: false)
-    //     .getCategoriesNews(widget.categoryName);
-
-    await newsPro.getCategoriesNews(widget.categoryName);
+    await newsNoti.getCategoriesNews(widget.categoryName);
     setState(() {});
 
   }

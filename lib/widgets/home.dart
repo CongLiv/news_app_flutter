@@ -12,8 +12,13 @@ class _HomeState extends ConsumerState<Home> {
   bool _isInit = true;
   var _isLoading = false;
 
-  final newsPro = ProviderContainer().read(newsProvider);
+  late final newsNoti;
 
+  @override
+  void initState() {
+    super.initState();
+    newsNoti = ref.read(newsProvider.notifier);
+  }
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -21,7 +26,7 @@ class _HomeState extends ConsumerState<Home> {
         _isLoading = true;
       });
 
-      newsPro.getTopNews().then((_) {
+      newsNoti.getTopNews().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -34,6 +39,7 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final newsData = ref.watch(newsProvider);
     return _isLoading
         ? Center(
             child: CircularProgressIndicator(
@@ -44,37 +50,18 @@ class _HomeState extends ConsumerState<Home> {
             padding: EdgeInsets.symmetric(
               horizontal: 10,
             ),
-            // list of test news
-            // child: Consumer<News>(
-            //   builder: (ctx, news, child) => RefreshIndicator(
-            //     color: Colors.red,
-            //     onRefresh: () => _refreshNews(context),
-            //     child: ListView.builder(
-            //       itemCount: news.topNews.length,
-            //       itemBuilder: (ctx, index) => ArticleItem(
-            //         headline: news.topNews[index].headline,
-            //         description: news.topNews[index].description,
-            //         source: news.topNews[index].source,
-            //         webUrl: news.topNews[index].webUrl,
-            //         imageUrl: news.topNews[index].imageUrl,
-            //         date: news.topNews[index].date,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
             child: RefreshIndicator(
               color: Colors.red,
               onRefresh: () => _refreshNews(context),
               child: ListView.builder(
-                itemCount: newsPro.topNews.length,
+                itemCount: newsData.topNews.length,
                 itemBuilder: (ctx, index) => ArticleItem(
-                  headline: newsPro.topNews[index].headline,
-                  description: newsPro.topNews[index].description,
-                  source: newsPro.topNews[index].source,
-                  webUrl: newsPro.topNews[index].webUrl,
-                  imageUrl: newsPro.topNews[index].imageUrl,
-                  date: newsPro.topNews[index].date,
+                  headline: newsData.topNews[index].headline,
+                  description: newsData.topNews[index].description,
+                  source: newsData.topNews[index].source,
+                  webUrl: newsData.topNews[index].webUrl,
+                  imageUrl: newsData.topNews[index].imageUrl,
+                  date: newsData.topNews[index].date,
                 ),
               ),
             )
@@ -82,7 +69,7 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Future<void> _refreshNews(BuildContext context) async {
-    await newsPro.getTopNews();
+    await newsNoti.getTopNews();
     setState(() {});
   }
 }

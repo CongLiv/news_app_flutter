@@ -18,7 +18,13 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
   bool _isInit = true;
   var _isLoading = false;
 
-  final newsPro = ProviderContainer().read(newsProvider);
+  late final newsNoti;
+
+  @override
+  void initState() {
+    super.initState();
+    newsNoti = ref.read(newsProvider.notifier);
+  }
 
   @override
   void didChangeDependencies() {
@@ -26,12 +32,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
       setState(() {
         _isLoading = true;
       });
-      // Provider.of<News>(context).getLikedNews().then((_) {
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      // });
-      newsPro.getLikedNews().then((_) {
+      newsNoti.getLikedNews().then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -45,6 +46,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
 
   @override
   Widget build(BuildContext context) {
+    final newsData = ref.watch(newsProvider);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: redViettel),
@@ -129,7 +131,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
                       ),
                     )
                   : Expanded(
-                      child: newsPro.likedNews.isEmpty
+                      child: newsData.likedNews.isEmpty
                           ? Center(
                               child: Text(
                                 'You have not liked any news yet.',
@@ -141,31 +143,16 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
                                 ),
                               ),
                             )
-                          // : Consumer<News>(
-                          //     builder: (ctx, news, child) => RefreshIndicator(
-                          //       color: redViettel,
-                          //       onRefresh: () => _refreshLikedNews(context),
-                          //       child: ListView.builder(
-                          //         itemCount: news.likedNews.length,
-                          //         itemBuilder: (ctx, index) => LikedNewsItem(
-                          //           headline: news.likedNews[index].headline,
-                          //           source: news.likedNews[index].source,
-                          //           webUrl: news.likedNews[index].webUrl,
-                          //           imageUrl: news.likedNews[index].imageUrl,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
                           : RefreshIndicator(
                               color: redViettel,
                               onRefresh: () => _refreshLikedNews(context),
                               child: ListView.builder(
-                                itemCount: newsPro.likedNews.length,
+                                itemCount: newsData.likedNews.length,
                                 itemBuilder: (ctx, index) => LikedNewsItem(
-                                  headline: newsPro.likedNews[index].headline,
-                                  source: newsPro.likedNews[index].source,
-                                  webUrl: newsPro.likedNews[index].webUrl,
-                                  imageUrl: newsPro.likedNews[index].imageUrl,
+                                  headline: newsData.likedNews[index].headline,
+                                  source: newsData.likedNews[index].source,
+                                  webUrl: newsData.likedNews[index].webUrl,
+                                  imageUrl: newsData.likedNews[index].imageUrl,
                                 ),
                               ),
                             ),
@@ -178,8 +165,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
   }
 
   Future<void> _refreshLikedNews(BuildContext context) async {
-    // await Provider.of<News>(context, listen: false).getLikedNews();
-    await newsPro.getLikedNews();
+    await newsNoti.getLikedNews();
     setState(() {});
   }
 }
