@@ -36,7 +36,7 @@ class LikedNewsItem extends ConsumerWidget {
                 description: headline
             ),
           ),
-        );
+        ).then((_) => newsNoti.getLikedNews());
       },
       child: Card(
         child: ListTile(

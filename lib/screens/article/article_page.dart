@@ -193,14 +193,22 @@ class _ArticlePageState extends State<ArticlePage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => WebviewContainer(
-                                webUrl: widget.webUrl,
-                                headline: widget.headline,
-                                source: widget.source,
-                                imageUrl: widget.imageUrl,
-                                description: widget.description
-                              ),
+                                  webUrl: widget.webUrl,
+                                  headline: widget.headline,
+                                  source: widget.source,
+                                  imageUrl: widget.imageUrl,
+                                  description: widget.description),
                             ),
-                          )
+                          ).then((_) => {
+                                if (FirebaseAccount.isSignedIn())
+                                  {
+                                    checkArticleMarked().then((value) {
+                                      setState(() {
+                                        isMarked = value;
+                                      });
+                                    })
+                                  }
+                              })
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
