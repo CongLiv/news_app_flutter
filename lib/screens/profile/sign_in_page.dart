@@ -31,6 +31,60 @@ class _SignInPage extends State<SignInPage> {
     });
   }
 
+  void _handleSignIn() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+          ),
+        );
+      },
+    );
+
+    await FirebaseAccount.signIn(
+      email: email,
+      password: password,
+      onSuccess: () {
+        Navigator.pop(context);
+
+        Fluttertoast.showToast(
+          msg: 'Sign in successfully',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: redViettel,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.pop(context);
+      },
+      onError: (error) async {
+        Navigator.pop(context);
+        if (!await CheckConnection.isInternet()) {
+          Fluttertoast.showToast(
+            msg: 'No internet connection',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: 'Email or password is incorrect',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+          );
+        }
+      },
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -164,41 +218,42 @@ class _SignInPage extends State<SignInPage> {
                                     child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          FirebaseAccount.signIn(
-                                            email: email,
-                                            password: password,
-                                            onSuccess: () {
-                                              Fluttertoast.showToast(
-                                                  msg: 'Sign in successfully',
-                                                  toastLength: Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: redViettel,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0);
-                                              Navigator.pop(context);
-                                            },
-                                            onError: (error) async {
-                                              if (!await CheckConnection
-                                                  .isInternet()) {
-                                                Fluttertoast.showToast(
-                                                  msg: 'No internet connection',
-                                                  toastLength: Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                );
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                  msg: 'Email or password is incorrect',
-                                                  toastLength: Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                );
-                                              }
-                                            },
-                                          );
+                                          _handleSignIn();
+                                          // FirebaseAccount.signIn(
+                                          //   email: email,
+                                          //   password: password,
+                                          //   onSuccess: () {
+                                          //     Fluttertoast.showToast(
+                                          //         msg: 'Sign in successfully',
+                                          //         toastLength: Toast.LENGTH_SHORT,
+                                          //         gravity: ToastGravity.BOTTOM,
+                                          //         timeInSecForIosWeb: 1,
+                                          //         backgroundColor: redViettel,
+                                          //         textColor: Colors.white,
+                                          //         fontSize: 16.0);
+                                          //     Navigator.pop(context);
+                                          //   },
+                                          //   onError: (error) async {
+                                          //     if (!await CheckConnection
+                                          //         .isInternet()) {
+                                          //       Fluttertoast.showToast(
+                                          //         msg: 'No internet connection',
+                                          //         toastLength: Toast.LENGTH_SHORT,
+                                          //         gravity: ToastGravity.BOTTOM,
+                                          //         timeInSecForIosWeb: 1,
+                                          //         backgroundColor: Colors.red,
+                                          //       );
+                                          //     } else {
+                                          //       Fluttertoast.showToast(
+                                          //         msg: 'Email or password is incorrect',
+                                          //         toastLength: Toast.LENGTH_SHORT,
+                                          //         gravity: ToastGravity.BOTTOM,
+                                          //         timeInSecForIosWeb: 1,
+                                          //         backgroundColor: Colors.red,
+                                          //       );
+                                          //     }
+                                          //   },
+                                          // );
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward,

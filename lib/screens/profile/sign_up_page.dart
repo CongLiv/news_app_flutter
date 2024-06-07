@@ -21,7 +21,7 @@ class _SignUpPage extends State<SignUpPage> {
   String password = '';
   String confirmPassword = '';
   bool isValid = true;
-  
+
   String _emailError = 'Email is invalid! e.x: abc@example.com';
   String _passwordLengthError = 'Password must be at least 6 characters';
   String _passwordMatchError = 'Password does not match';
@@ -46,6 +46,67 @@ class _SignUpPage extends State<SignUpPage> {
     });
   }
 
+  void _handleSignUp() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+          ),
+        );
+      },
+    );
+
+    await FirebaseAccount.signUp(
+      email: email,
+      password: password,
+      onSuccess: () {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+          msg: 'Sign up successfully',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: redViettel,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => Homepage(),
+          ),
+        );
+      },
+      onError: (e) async {
+        Navigator.pop(context);
+        if (!await CheckConnection.isInternet()) {
+          Fluttertoast.showToast(
+            msg: 'No internet connection',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+          );
+        } else if (e.toString().contains('email-already-in-use')) {
+          setState(() {
+            _noti0 = _emailExistError;
+            isValid = false;
+          });
+        } else {
+          Fluttertoast.showToast(
+            msg: 'Sign up failed',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+          );
+        }
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -238,62 +299,63 @@ class _SignUpPage extends State<SignUpPage> {
                                           ValidateEmail();
                                           ValidatePassword();
                                           if (isValid) {
-                                            FirebaseAccount.signUp(
-                                              email: email,
-                                              password: password,
-                                              onSuccess: () {
-                                                Fluttertoast.showToast(
-                                                  msg: 'Sign up successfully',
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: redViettel,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0,
-                                                );
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    pageBuilder: (context,
-                                                            animation1,
-                                                            animation2) =>
-                                                        Homepage(),
-                                                  ),
-                                                );
-                                              },
-                                              onError: (e) async {
-                                                if (!await CheckConnection
-                                                    .isInternet()) {
-                                                  Fluttertoast.showToast(
-                                                    msg:
-                                                        'No internet connection',
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor: Colors.red,
-                                                  );
-                                                } else if (e.toString().contains(
-                                                    'email-already-in-use')) {
-                                                  setState(() {
-                                                    _noti0 = _emailExistError;
-                                                    isValid = false;
-                                                  });
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                    msg: 'Sign up failed',
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor: Colors.red,
-                                                  );
-                                                }
-                                              },
-                                            );
+                                            _handleSignUp();
+                                            // FirebaseAccount.signUp(
+                                            //   email: email,
+                                            //   password: password,
+                                            //   onSuccess: () {
+                                            //     Fluttertoast.showToast(
+                                            //       msg: 'Sign up successfully',
+                                            //       toastLength:
+                                            //           Toast.LENGTH_SHORT,
+                                            //       gravity: ToastGravity.BOTTOM,
+                                            //       timeInSecForIosWeb: 1,
+                                            //       backgroundColor: redViettel,
+                                            //       textColor: Colors.white,
+                                            //       fontSize: 16.0,
+                                            //     );
+                                            //     Navigator.pushReplacement(
+                                            //       context,
+                                            //       PageRouteBuilder(
+                                            //         pageBuilder: (context,
+                                            //                 animation1,
+                                            //                 animation2) =>
+                                            //             Homepage(),
+                                            //       ),
+                                            //     );
+                                            //   },
+                                            //   onError: (e) async {
+                                            //     if (!await CheckConnection
+                                            //         .isInternet()) {
+                                            //       Fluttertoast.showToast(
+                                            //         msg:
+                                            //             'No internet connection',
+                                            //         toastLength:
+                                            //             Toast.LENGTH_SHORT,
+                                            //         gravity:
+                                            //             ToastGravity.BOTTOM,
+                                            //         timeInSecForIosWeb: 1,
+                                            //         backgroundColor: Colors.red,
+                                            //       );
+                                            //     } else if (e.toString().contains(
+                                            //         'email-already-in-use')) {
+                                            //       setState(() {
+                                            //         _noti0 = _emailExistError;
+                                            //         isValid = false;
+                                            //       });
+                                            //     } else {
+                                            //       Fluttertoast.showToast(
+                                            //         msg: 'Sign up failed',
+                                            //         toastLength:
+                                            //             Toast.LENGTH_SHORT,
+                                            //         gravity:
+                                            //             ToastGravity.BOTTOM,
+                                            //         timeInSecForIosWeb: 1,
+                                            //         backgroundColor: Colors.red,
+                                            //       );
+                                            //     }
+                                            //   },
+                                            // );
                                           }
                                         },
                                         icon: Icon(

@@ -44,6 +44,48 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
     super.didChangeDependencies();
   }
 
+  void _handleSignOut() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+          ),
+        );
+      },
+    );
+
+    await FirebaseAccount.signOut(
+      onSuccess: () {
+        Navigator.of(context).pop();
+        Fluttertoast.showToast(
+          msg: 'Logged out',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: redViettel,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.of(context).pop();
+      },
+      onError: (e) {
+        Navigator.of(context).pop();
+        Fluttertoast.showToast(
+          msg: 'Failed to log out',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final newsData = ref.watch(newsProvider);
@@ -60,31 +102,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
               Icons.logout_rounded,
             ),
             onPressed: () {
-              FirebaseAccount.signOut(
-                onSuccess: () {
-                  Fluttertoast.showToast(
-                    msg: 'Logged out',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: redViettel,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                  Navigator.of(context).pop();
-                },
-                onError: (e) {
-                  Fluttertoast.showToast(
-                    msg: 'Failed to log out',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                },
-              );
+              _handleSignOut();
             },
           ),
         ],
