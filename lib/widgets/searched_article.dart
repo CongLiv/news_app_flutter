@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -55,13 +56,15 @@ class SearchedArticle extends StatelessWidget {
                     width: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: imageUrl,
-                        fadeInDuration: const Duration(milliseconds: 100),
-                        fadeInCurve: Curves.easeIn,
+                      child: CachedNetworkImage(
+                        imageUrl: imageUrl,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
+
                     )),
                 Text(
                   headline,
