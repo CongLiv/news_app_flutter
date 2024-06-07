@@ -5,7 +5,7 @@ const appNameLogo = 'VDT NEWS';
 
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
-  colorScheme: ColorScheme.light(
+  colorScheme: const ColorScheme.light(
     primary: Colors.white,
     secondary: Colors.white,
     surface: Colors.white,
@@ -24,7 +24,7 @@ ThemeData lightTheme = ThemeData(
 
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  colorScheme: ColorScheme.dark(
+  colorScheme: const ColorScheme.dark(
     primary: Colors.black54,
     secondary: Colors.black45,
     surface: Colors.black,

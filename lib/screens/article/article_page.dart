@@ -2,15 +2,12 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
-import 'package:transparent_image/transparent_image.dart';
 import '../../helpers/share_article.dart';
-import '../../helpers/urlLauncher.dart';
 import 'webview_container.dart';
 
 class ArticlePage extends StatefulWidget {
