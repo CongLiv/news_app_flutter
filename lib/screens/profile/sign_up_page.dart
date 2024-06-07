@@ -31,6 +31,22 @@ class _SignUpPage extends State<SignUpPage> {
   String _noti1 = '';
   String _noti2 = '';
 
+  bool _hiddenPassword1 = true;
+  bool _hiddenPassword2 = true;
+
+  void _togglePasswordVisibility1() {
+    setState(() {
+      _hiddenPassword1 = !_hiddenPassword1;
+    });
+  }
+
+  void _togglePasswordVisibility2() {
+    setState(() {
+      _hiddenPassword2 = !_hiddenPassword2;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,7 +141,7 @@ class _SignUpPage extends State<SignUpPage> {
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
-                                obscureText: true,
+                                obscureText: _hiddenPassword1,
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
@@ -144,6 +160,14 @@ class _SignUpPage extends State<SignUpPage> {
                                           .colorScheme
                                           .onSurface,
                                     ),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _hiddenPassword1
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                                    onPressed: _togglePasswordVisibility1,
                                   ),
                                 ),
                               ),
@@ -164,7 +188,7 @@ class _SignUpPage extends State<SignUpPage> {
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
-                                obscureText: true,
+                                obscureText: _hiddenPassword2,
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
@@ -183,6 +207,14 @@ class _SignUpPage extends State<SignUpPage> {
                                           .colorScheme
                                           .onSurface,
                                     ),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _hiddenPassword2
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                    ),
+                                    onPressed: _togglePasswordVisibility2,
                                   ),
                                 ),
                               ),

@@ -23,6 +23,14 @@ class _SignInPage extends State<SignInPage> {
 
   String _noti = '';
 
+  bool _isHiddenPassword = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isHiddenPassword = !_isHiddenPassword;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,10 +115,10 @@ class _SignInPage extends State<SignInPage> {
                                 onChanged: (value) {
                                   password = value;
                                 },
+                                obscureText: _isHiddenPassword,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
                                 style: TextStyle(),
-                                obscureText: true,
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
@@ -129,6 +137,12 @@ class _SignInPage extends State<SignInPage> {
                                           .colorScheme
                                           .onSurface,
                                     ),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: _togglePasswordVisibility,
+                                    icon: _isHiddenPassword
+                                        ? Icon(Icons.visibility_off)
+                                        : Icon(Icons.visibility),
                                   ),
                                 ),
                               ),
