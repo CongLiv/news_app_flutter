@@ -1,15 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../helpers/const_data.dart';
+import '../../helpers/firebase_account.dart';
 import '../../helpers/share_article.dart';
 
 class WebviewContainer extends StatefulWidget {
-  final String url;
+  final String headline;
+  final String source;
+  final String webUrl;
+  final String imageUrl;
+  final String description;
 
-  WebviewContainer({super.key, required this.url});
+  WebviewContainer(
+      {super.key,
+      required this.webUrl,
+      required this.headline,
+      required this.source,
+      required this.imageUrl,
+      required this.description});
 
   @override
   _WebviewContainerState createState() => _WebviewContainerState();
@@ -17,6 +30,8 @@ class WebviewContainer extends StatefulWidget {
 
 class _WebviewContainerState extends State<WebviewContainer> {
   late final WebViewController _controller;
+  final _firestore = FirebaseFirestore.instance;
+  bool isMarked = false;
   bool isLoading = true;
   bool isSet = false;
 
@@ -39,7 +54,31 @@ class _WebviewContainerState extends State<WebviewContainer> {
           }
         },
       ))
-      ..loadRequest(Uri.parse(widget.url));
+      ..loadRequest(Uri.parse(widget.webUrl));
+
+    // check if article is already marked
+    if (FirebaseAccount.isSignedIn()) {
+      checkArticleMarked().then((value) {
+        setState(() {
+          isMarked = value;
+        });
+      });
+    }
+  }
+
+  Future<bool> checkArticleMarked() async {
+    final value = await _firestore
+        .collection('news_mark')
+        .doc(FirebaseAccount.getEmail())
+        .collection('news')
+        .where('webUrl', isEqualTo: widget.webUrl)
+        .get();
+
+    if (value.docs.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -61,7 +100,7 @@ class _WebviewContainerState extends State<WebviewContainer> {
             icon: Icon(
               Icons.share,
             ),
-            onPressed: () => ShareArticle.shareArticle(widget.url),
+            onPressed: () => ShareArticle.shareArticle(widget.webUrl),
           ),
           PopupMenuButton(
             onSelected: (value) {
@@ -71,10 +110,8 @@ class _WebviewContainerState extends State<WebviewContainer> {
                   isSet = false;
                 });
                 _controller.reload();
-              } else if (value == 'Mark') {
-                // Mark article
               } else if (value == 'Open') {
-                UrlLauncher.launchUrlLink(widget.url);
+                UrlLauncher.launchUrlLink(widget.webUrl);
               }
             },
             itemBuilder: (BuildContext context) {
@@ -83,13 +120,6 @@ class _WebviewContainerState extends State<WebviewContainer> {
                     child: Text('Reload',
                         style: TextStyle(fontFamily: 'FS PFBeauSansPro')),
                     value: 'Reload'),
-                PopupMenuItem(
-                  child: Text(
-                    'Mark Article',
-                    style: TextStyle(fontFamily: 'FS PFBeauSansPro'),
-                  ),
-                  value: 'Mark',
-                ),
                 PopupMenuItem(
                   child: Text(
                     'Open in Browser',
@@ -102,19 +132,152 @@ class _WebviewContainerState extends State<WebviewContainer> {
           )
         ],
       ),
-      body: Stack(
-        children: [
-          WebViewWidget(
-            controller: _controller,
-          ),
-          if (isLoading)
-            Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          _controller.reload();
+        },
+        child: Stack(
+          children: [
+            WebViewWidget(
+              controller: _controller,
+            ),
+            if (isLoading)
+              Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(redViettel),
+                ),
+              ),
+            Positioned(
+              right: 30,
+              bottom: 45,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 7,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  radius: 30,
+                  child: IconButton(
+                    icon: Icon(
+                      isMarked ? Icons.bookmark : Icons.bookmark_add_outlined,
+                      color: isMarked ? redViettel : Colors.grey,
+                      size: 29,
+                    ),
+                    onPressed: () {
+                      !FirebaseAccount.isSignedIn()
+                          ? notLoggedIn()
+                          : isMarked
+                              ? removeArticle()
+                              : addArticle();
+                    },
+                  ),
+                ),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  // add article to firestore
+  void addArticle() {
+    try {
+      _firestore
+          .collection('news_mark')
+          .doc(FirebaseAccount.getEmail())
+          .collection('news')
+          .add({
+        'headline': widget.headline,
+        'description': widget.description,
+        'source': widget.source,
+        'webUrl': widget.webUrl,
+        'imageUrl': widget.imageUrl,
+      });
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    Fluttertoast.showToast(
+      msg: 'Article Marked',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = true;
+    });
+  }
+
+  // remove article from firestore
+  void removeArticle() {
+    try {
+      _firestore
+          .collection('news_mark')
+          .doc(FirebaseAccount.getEmail())
+          .collection('news')
+          .where('webUrl', isEqualTo: widget.webUrl)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          element.reference.delete();
+        });
+      });
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Error: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: redViettel,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+    Fluttertoast.showToast(
+      msg: 'Article Unmarked',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = false;
+    });
+  }
+
+  void notLoggedIn() {
+    Fluttertoast.showToast(
+      msg: 'Please login to mark articles',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: redViettel,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    setState(() {
+      isMarked = false;
+    });
   }
 }

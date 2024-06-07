@@ -192,8 +192,13 @@ class _ArticlePageState extends State<ArticlePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  WebviewContainer(url: widget.webUrl),
+                              builder: (context) => WebviewContainer(
+                                webUrl: widget.webUrl,
+                                headline: widget.headline,
+                                source: widget.source,
+                                imageUrl: widget.imageUrl,
+                                description: widget.description
+                              ),
                             ),
                           )
                         },

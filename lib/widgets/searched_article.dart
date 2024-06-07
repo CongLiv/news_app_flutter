@@ -26,7 +26,13 @@ class SearchedArticle extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WebviewContainer(url: webUrl),
+            builder: (context) => WebviewContainer(
+                webUrl: webUrl,
+                headline: headline,
+                source: source,
+                imageUrl: imageUrl,
+                description: headline,
+            ),
           ),
         )
       },
@@ -58,7 +64,13 @@ class SearchedArticle extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebviewContainer(url: webUrl),
+                    builder: (context) => WebviewContainer(
+                        webUrl: webUrl,
+                        headline: headline,
+                        source: source,
+                        imageUrl: imageUrl,
+                        description: headline,
+                    ),
                   ),
                 )
               },
