@@ -21,8 +21,8 @@ class _SignUpPage extends State<SignUpPage> {
   String password = '';
   String confirmPassword = '';
   bool isValid = true;
-
-  String _emailError = 'Invalid email';
+  
+  String _emailError = 'Email is invalid! e.x: abc@example.com';
   String _passwordLengthError = 'Password must be at least 6 characters';
   String _passwordMatchError = 'Password does not match';
   String _emailExistError = 'Email already exists';
