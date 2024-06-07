@@ -18,24 +18,18 @@ class Homepage extends ConsumerStatefulWidget {
 
 class _HomepageState extends ConsumerState<Homepage> {
   final _auth = FirebaseAuth.instance;
+  int _selectedIndex = 0;
+  final FocusNode _searchFocusNode = FocusNode();
+
+  static List<Widget> _widgetOptions(FocusNode focusNode) => <Widget>[
+    Home(),
+    Categories(),
+    Search(focusNode: focusNode),
+  ];
 
   @override
   void initState() {
     super.initState();
-  }
-
-  int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    Categories(),
-    Search(),
-    PersonalPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
@@ -46,11 +40,9 @@ class _HomepageState extends ConsumerState<Homepage> {
         appBar: AppBar(
           centerTitle: true,
           title: TitleName(text: appNameLogo),
-          // This is a custom widget that displays the app name
           iconTheme: IconThemeData(
             color: redViettel,
           ),
-
           leading: Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: IconButton(
@@ -66,7 +58,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                         ? SignInPage()
                         : PersonalPage(),
                   ),
-                );
+                ).then((_) => {
+                  _searchFocusNode.unfocus(),
+                });
               },
             ),
           ),
@@ -82,7 +76,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                 ),
                 onPressed: () {
                   themePro.toggleTheme();
-                  // toast message
                   Fluttertoast.showToast(
                     msg: themePro.isDarkMode() ? 'Dark mode' : 'Light mode',
                     toastLength: Toast.LENGTH_SHORT,
@@ -99,7 +92,10 @@ class _HomepageState extends ConsumerState<Homepage> {
           elevation: 0,
           backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
-        body: _widgetOptions.elementAt(_selectedIndex),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions(_searchFocusNode),
+        ),
         bottomNavigationBar: BottomNavigationBar(
           elevation: .5,
           showSelectedLabels: false,
@@ -133,7 +129,12 @@ class _HomepageState extends ConsumerState<Homepage> {
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: redViettel,
-          onTap: _onItemTapped,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+              _searchFocusNode.unfocus();
+            });
+          },
         ),
       ),
     );
