@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/widgets/webview_container.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../helpers/urlLauncher.dart';
 
@@ -21,7 +22,14 @@ class SearchedArticle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => UrlLauncher.launchUrlLink(webUrl),
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebviewContainer(url: webUrl),
+          ),
+        )
+      },
       child: Container(
         margin: EdgeInsets.fromLTRB(10, 2, 10, 8),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
@@ -42,11 +50,19 @@ class SearchedArticle extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             IconButton(
-                icon: Icon(
-                  Icons.launch,
-                  color: redViettel,
-                ),
-                onPressed: () => UrlLauncher.launchUrlLink(webUrl)),
+              icon: Icon(
+                Icons.launch,
+                color: redViettel,
+              ),
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WebviewContainer(url: webUrl),
+                  ),
+                )
+              },
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -64,7 +80,6 @@ class SearchedArticle extends StatelessWidget {
                         ),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
-
                     )),
                 Text(
                   headline,

@@ -11,6 +11,7 @@ import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../helpers/share_article.dart';
 import '../../helpers/urlLauncher.dart';
+import '../../widgets/webview_container.dart';
 
 class ArticlePage extends StatefulWidget {
   final String headline;
@@ -187,7 +188,15 @@ class _ArticlePageState extends State<ArticlePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () => UrlLauncher.launchUrlLink(widget.webUrl),
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WebviewContainer(url: widget.webUrl),
+                            ),
+                          )
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
