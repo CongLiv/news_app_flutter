@@ -1,20 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAccount {
-
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
-
   static bool isSignedIn() {
-    return _auth.currentUser != null;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.currentUser != null;
   }
 
   static String getEmail() {
-    return _auth.currentUser!.email!;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.currentUser!.email!;
   }
 
   static Future<void> signOut({onSuccess, onError}) async {
     try {
-      await _auth.signOut();
+      final auth = FirebaseAuth.instance;
+      await auth.signOut();
       if (onSuccess != null) {
         onSuccess();
       }
@@ -25,9 +25,14 @@ class FirebaseAccount {
     }
   }
 
-  static Future<User?> signIn({required String email, required String password, onSuccess, onError}) async {
+  static Future<User?> signIn(
+      {required String email,
+      required String password,
+      onSuccess,
+      onError}) async {
     try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
+      final auth = FirebaseAuth.instance;
+      final userCredential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -43,9 +48,14 @@ class FirebaseAccount {
     }
   }
 
-  static Future<User?> signUp({required String email, required String password, onSuccess, onError}) async {
+  static Future<User?> signUp(
+      {required String email,
+      required String password,
+      onSuccess,
+      onError}) async {
     try {
-      final userCredential = await _auth.createUserWithEmailAndPassword(
+      final auth = FirebaseAuth.instance;
+      final userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
