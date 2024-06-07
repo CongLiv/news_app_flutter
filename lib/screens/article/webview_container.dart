@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../helpers/const_data.dart';
-import '../helpers/share_article.dart';
+import '../../helpers/const_data.dart';
+import '../../helpers/share_article.dart';
 
 class WebviewContainer extends StatefulWidget {
   final String url;

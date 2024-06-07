@@ -11,7 +11,7 @@ import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../helpers/share_article.dart';
 import '../../helpers/urlLauncher.dart';
-import '../../widgets/webview_container.dart';
+import 'webview_container.dart';
 
 class ArticlePage extends StatefulWidget {
   final String headline;

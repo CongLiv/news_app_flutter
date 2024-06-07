@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
-import 'package:news_app_flutter_demo/widgets/webview_container.dart';
+import 'package:news_app_flutter_demo/screens/article/webview_container.dart';
 import '../providers/news.dart';
 
 class LikedNewsItem extends ConsumerWidget {
