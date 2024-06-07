@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
@@ -240,7 +241,6 @@ class News extends StateNotifier<NewsState> {
   }
 
   final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
 
   Future<void> getLikedNews() async {
     if (!await CheckConnection.isInternet()) {
@@ -252,7 +252,7 @@ class News extends StateNotifier<NewsState> {
     try {
       final value = await _firestore
           .collection('news_mark')
-          .doc(_auth.currentUser!.email)
+          .doc(FirebaseAccount.getEmail())
           .collection('news')
           .get();
       List<LikedNewsItem> likedNews = [];
@@ -275,7 +275,7 @@ class News extends StateNotifier<NewsState> {
     try {
       await _firestore
           .collection('news_mark')
-          .doc(_auth.currentUser!.email)
+          .doc(FirebaseAccount.getEmail())
           .collection('news')
           .where('webUrl', isEqualTo: webUrl)
           .get()

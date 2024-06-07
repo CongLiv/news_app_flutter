@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:transparent_image/transparent_image.dart';
 import '../../helpers/share_article.dart';
@@ -34,7 +35,6 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends State<ArticlePage> {
   final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
   bool isMarked = false;
 
   @override
@@ -42,7 +42,7 @@ class _ArticlePageState extends State<ArticlePage> {
     super.initState();
 
     // check if article is already marked
-    if (_auth.currentUser != null) {
+    if (FirebaseAccount.isSignedIn()) {
       checkArticleMarked().then((value) {
         setState(() {
           isMarked = value;
@@ -54,7 +54,7 @@ class _ArticlePageState extends State<ArticlePage> {
   Future<bool> checkArticleMarked() async {
     final value = await _firestore
         .collection('news_mark')
-        .doc(_auth.currentUser!.email)
+        .doc(FirebaseAccount.getEmail())
         .collection('news')
         .where('webUrl', isEqualTo: widget.webUrl)
         .get();
@@ -211,7 +211,7 @@ class _ArticlePageState extends State<ArticlePage> {
                         margin: EdgeInsets.only(top: 20, right: 20),
                         child: GestureDetector(
                           onTap: () {
-                            _auth.currentUser == null
+                            !FirebaseAccount.isSignedIn()
                                 ? notLoggedIn()
                                 : isMarked
                                     ? removeArticle()
@@ -242,7 +242,7 @@ class _ArticlePageState extends State<ArticlePage> {
     try {
       _firestore
           .collection('news_mark')
-          .doc(_auth.currentUser!.email)
+          .doc(FirebaseAccount.getEmail())
           .collection('news')
           .add({
         'headline': widget.headline,
@@ -281,7 +281,7 @@ class _ArticlePageState extends State<ArticlePage> {
     try {
       _firestore
           .collection('news_mark')
-          .doc(_auth.currentUser!.email)
+          .doc(FirebaseAccount.getEmail())
           .collection('news')
           .where('webUrl', isEqualTo: widget.webUrl)
           .get()

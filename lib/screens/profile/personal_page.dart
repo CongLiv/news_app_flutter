@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../../helpers/const_data.dart';
 import '../../providers/news.dart';
@@ -13,7 +14,6 @@ class PersonalPage extends ConsumerStatefulWidget {
 }
 
 class _PersonalPageState extends ConsumerState<PersonalPage> {
-  final _auth = FirebaseAuth.instance;
   String email = '';
   bool _isInit = true;
   var _isLoading = false;
@@ -38,7 +38,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
         });
       });
 
-      email = _auth.currentUser!.email!;
+      email = FirebaseAccount.getEmail();
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -60,17 +60,31 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
               Icons.logout_rounded,
             ),
             onPressed: () {
-              _auth.signOut();
-              Fluttertoast.showToast(
-                msg: 'Logged out',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: redViettel,
-                textColor: Colors.white,
-                fontSize: 16.0,
+              FirebaseAccount.signOut(
+                onSuccess: () {
+                  Fluttertoast.showToast(
+                    msg: 'Logged out',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: redViettel,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                  Navigator.of(context).pop();
+                },
+                onError: (e) {
+                  Fluttertoast.showToast(
+                    msg: 'Failed to log out',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                },
               );
-              Navigator.of(context).pop();
             },
           ),
         ],

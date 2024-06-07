@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
@@ -17,7 +18,7 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-  final _auth = FirebaseAuth.instance;
+
   int _selectedIndex = 0;
   final FocusNode _searchFocusNode = FocusNode();
 
@@ -54,7 +55,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => _auth.currentUser == null
+                    builder: (context) => !FirebaseAccount.isSignedIn()
                         ? SignInPage()
                         : PersonalPage(),
                   ),

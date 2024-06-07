@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/screens/article/homepage.dart';
 
 import '../../helpers/check_connection.dart';
@@ -16,7 +17,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPage extends State<SignUpPage> {
-  final _auth = FirebaseAuth.instance;
   String email = '';
   String password = '';
   String confirmPassword = '';
@@ -45,7 +45,6 @@ class _SignUpPage extends State<SignUpPage> {
       _hiddenPassword2 = !_hiddenPassword2;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -239,23 +238,20 @@ class _SignUpPage extends State<SignUpPage> {
                                           ValidateEmail();
                                           ValidatePassword();
                                           if (isValid) {
-                                            try {
-                                              final newUser = await _auth
-                                                  .createUserWithEmailAndPassword(
-                                                      email: email,
-                                                      password: password);
-                                              if (newUser != null) {
+                                            FirebaseAccount.signUp(
+                                              email: email,
+                                              password: password,
+                                              onSuccess: () {
                                                 Fluttertoast.showToast(
-                                                    msg: 'Sign up successfully',
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor: redViettel,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0);
-                                                // pop to home page
+                                                  msg: 'Sign up successfully',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: redViettel,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
                                                 Navigator.pushReplacement(
                                                   context,
                                                   PageRouteBuilder(
@@ -265,35 +261,39 @@ class _SignUpPage extends State<SignUpPage> {
                                                         Homepage(),
                                                   ),
                                                 );
-                                              }
-                                            } catch (e) {
-                                              if (!await CheckConnection
-                                                  .isInternet()) {
-                                                Fluttertoast.showToast(
-                                                  msg: 'No internet connection',
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                );
-                                              } else if (e.toString().contains(
-                                                  'email-already-in-use')) {
-                                                setState(() {
-                                                  _noti0 = _emailExistError;
-                                                  isValid = false;
-                                                });
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                  msg: 'Sign up failed',
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                );
-                                              }
-                                            }
+                                              },
+                                              onError: (e) async {
+                                                if (!await CheckConnection
+                                                    .isInternet()) {
+                                                  Fluttertoast.showToast(
+                                                    msg:
+                                                        'No internet connection',
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                  );
+                                                } else if (e.toString().contains(
+                                                    'email-already-in-use')) {
+                                                  setState(() {
+                                                    _noti0 = _emailExistError;
+                                                    isValid = false;
+                                                  });
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                    msg: 'Sign up failed',
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                  );
+                                                }
+                                              },
+                                            );
                                           }
                                         },
                                         icon: Icon(

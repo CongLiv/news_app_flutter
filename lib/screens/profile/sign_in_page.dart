@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/check_connection.dart';
@@ -16,7 +17,6 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPage extends State<SignInPage> {
-  final _auth = FirebaseAuth.instance;
   String email = '';
   String password = '';
   bool isValid = true;
@@ -164,40 +164,41 @@ class _SignInPage extends State<SignInPage> {
                                     child: IconButton(
                                         color: Colors.white,
                                         onPressed: () {
-                                          _auth
-                                              .signInWithEmailAndPassword(
-                                                  email: email,
-                                                  password: password)
-                                              .then((_) {
-                                            Fluttertoast.showToast(
-                                                msg: 'Sign in successfully',
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: redViettel,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                            Navigator.pop(context);
-                                          }).catchError((error) async {
-                                            if (!await CheckConnection
-                                                .isInternet()) {
+                                          FirebaseAccount.signIn(
+                                            email: email,
+                                            password: password,
+                                            onSuccess: () {
                                               Fluttertoast.showToast(
-                                                msg: 'No internet connection',
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                              );
-                                            } else {
-                                              Fluttertoast.showToast(
-                                                msg: 'Email or password is incorrect',
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                              );
-                                            }
-                                          });
+                                                  msg: 'Sign in successfully',
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: redViettel,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0);
+                                              Navigator.pop(context);
+                                            },
+                                            onError: (error) async {
+                                              if (!await CheckConnection
+                                                  .isInternet()) {
+                                                Fluttertoast.showToast(
+                                                  msg: 'No internet connection',
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                );
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                  msg: 'Email or password is incorrect',
+                                                  toastLength: Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                );
+                                              }
+                                            },
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward,
