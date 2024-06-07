@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../helpers/const_data.dart';
@@ -62,6 +63,43 @@ class _WebviewContainerState extends State<WebviewContainer> {
             ),
             onPressed: () => ShareArticle.shareArticle(widget.url),
           ),
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == 'Reload') {
+                setState(() {
+                  isLoading = true;
+                  isSet = false;
+                });
+                _controller.reload();
+              } else if (value == 'Mark') {
+                // Mark article
+              } else if (value == 'Open') {
+                UrlLauncher.launchUrlLink(widget.url);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                    child: Text('Reload',
+                        style: TextStyle(fontFamily: 'FS PFBeauSansPro')),
+                    value: 'Reload'),
+                PopupMenuItem(
+                  child: Text(
+                    'Mark Article',
+                    style: TextStyle(fontFamily: 'FS PFBeauSansPro'),
+                  ),
+                  value: 'Mark',
+                ),
+                PopupMenuItem(
+                  child: Text(
+                    'Open in Browser',
+                    style: TextStyle(fontFamily: 'FS PFBeauSansPro'),
+                  ),
+                  value: 'Open',
+                ),
+              ];
+            },
+          )
         ],
       ),
       body: Stack(
