@@ -1,3 +1,4 @@
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,6 +31,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   void initState() {
     super.initState();
+    // FirebaseCrashlytics.instance.crash();   // For testing Crashlytics
   }
 
   @override
