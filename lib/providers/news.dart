@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
-import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';

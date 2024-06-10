@@ -6,7 +6,7 @@ import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../helpers/const_data.dart';
-import '../../helpers/firebase_account.dart';
+import '../../firebase_tools/firebase_account.dart';
 import '../../helpers/share_article.dart';
 
 class WebviewContainer extends StatefulWidget {

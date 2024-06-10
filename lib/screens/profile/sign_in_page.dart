@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/check_connection.dart';

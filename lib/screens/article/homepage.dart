@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:news_app_flutter_demo/helpers/firebase_account.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/screens/profile/personal_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_in_page.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';

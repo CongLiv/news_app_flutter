@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_app_flutter_demo/helpers/firebase_config.dart';
 import 'package:news_app_flutter_demo/providers/themeProvider.dart';
+import 'firebase_tools/firebase_config.dart';
 import 'screens/article/homepage.dart';
 
 void main() async {
