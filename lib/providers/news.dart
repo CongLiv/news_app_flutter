@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -75,8 +76,9 @@ class News extends StateNotifier<NewsState> {
     );
   }
 
+
   // FETCH DATA BY NYT API
-  final String nytApiKey = "QdjEczdPCm0YwTGBlGEEy8uTBblGouk0";
+  final String nytApiKey = FirebaseRemoteConfig.instance.getString('nytApiKey');
   final nytUrl = "https://api.nytimes.com/svc";
 
   Future<void> getSearchedNews(String category) async {
@@ -192,9 +194,9 @@ class News extends StateNotifier<NewsState> {
     'fox-news',
   ];
 
-  final String newsApiKey = "3c6c2af37aa3470e88d0731029a15469";
+  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey1');
+  // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey2'); // key 2
 
-  // final String newsApiKey = "a1644628a7454cfa92cd537c92e37ee4";  // second key
   final newsApiUrl = "https://newsapi.org/v2";
 
   Future<void> getTopNews() async {
