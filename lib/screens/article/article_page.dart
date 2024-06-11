@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
