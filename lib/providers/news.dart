@@ -183,10 +183,10 @@ class News extends StateNotifier<NewsState> {
     'fox-news',
   ];
 
-  final String newsApiKey =
-      FirebaseRemoteConfig.instance.getString('newsApiKey1');
+  // final String newsApiKey =
+  //     FirebaseRemoteConfig.instance.getString('newsApiKey1');
 
-  // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey2'); // key 2
+  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApikey2'); // key 2
 
   final newsApiUrl = "https://newsapi.org/v2";
 

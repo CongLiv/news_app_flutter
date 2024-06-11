@@ -8,17 +8,63 @@ class Home extends ConsumerStatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<Home> {
+class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   bool _isInit = true;
   var _isLoading = false;
+
+  bool _showBackToTop = false;
+  late final ScrollController _scrollController;
+
+  late AnimationController _animController;
+  late Animation<double> _animation;
 
   late final newsNoti;
 
   @override
   void initState() {
     super.initState();
+
     newsNoti = ref.read(newsProvider.notifier);
+
+    _animController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+
+    _animation = Tween<double>(begin: -60.0, end: 30.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
+    );
+
+    _animation.addListener(() {
+      setState(() {});
+    });
+
+    _scrollController = ScrollController()
+      ..addListener(() {
+        if (_scrollController.offset >= 400) {
+          if (!_showBackToTop) {
+            setState(() {
+              _showBackToTop = true;
+            });
+            _animController.forward();
+          }
+        } else {
+          if (_showBackToTop) {
+            setState(() {
+              _showBackToTop = false;
+            });
+          }
+          _animController.reverse();
+        }
+      });
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -31,7 +77,6 @@ class _HomeState extends ConsumerState<Home> {
           _isLoading = false;
         });
       });
-
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -46,25 +91,61 @@ class _HomeState extends ConsumerState<Home> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
             ),
           )
-        : Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: RefreshIndicator(
-              color: Colors.red,
-              onRefresh: () => _refreshNews(context),
-              child: ListView.builder(
-                itemCount: newsData.topNews.length,
-                itemBuilder: (ctx, index) => ArticleItem(
-                  headline: newsData.topNews[index].headline,
-                  description: newsData.topNews[index].description,
-                  source: newsData.topNews[index].source,
-                  webUrl: newsData.topNews[index].webUrl,
-                  imageUrl: newsData.topNews[index].imageUrl,
-                  date: newsData.topNews[index].date,
-                ),
+        : Stack(
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: RefreshIndicator(
+                    color: Colors.red,
+                    onRefresh: () => _refreshNews(context),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: newsData.topNews.length,
+                      itemBuilder: (ctx, index) => ArticleItem(
+                        headline: newsData.topNews[index].headline,
+                        description: newsData.topNews[index].description,
+                        source: newsData.topNews[index].source,
+                        webUrl: newsData.topNews[index].webUrl,
+                        imageUrl: newsData.topNews[index].imageUrl,
+                        date: newsData.topNews[index].date,
+                      ),
+                    ),
+                  )),
+              AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Positioned(
+                    right: _animation.value,
+                    bottom: 45,
+                    child: Opacity(
+                      opacity: _animation.value > 0 ? _animation.value / 30.0 : 0,
+                      child: SizedBox(
+                        height: 55,
+                        width: 55,
+                        child: FloatingActionButton(
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(90),
+                          ),
+                          onPressed: () {
+                            _scrollController.animateTo(
+                              0,
+                              duration: Duration(milliseconds: 800),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          child: Icon(
+                            Icons.arrow_upward,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            )
+            ],
           );
   }
 
@@ -75,3 +156,5 @@ class _HomeState extends ConsumerState<Home> {
 }
 
 typedef ReloadCallback = void Function(BuildContext context);
+
+
