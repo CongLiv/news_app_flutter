@@ -4,7 +4,7 @@ class FirebaseAnalyst {
   static const String readEvent = 'read_news';
   static const String searchEvent = 'search_news';
   static const String markFavoriteEvent = 'mark_favorite';
-  static const String catagoryClickEvent = 'catagory_click';
+  static const String categoryClickEvent = 'category_click';
   static late FirebaseAnalytics analytics;
 
   static Future<void> initialize() async {
@@ -51,6 +51,6 @@ class FirebaseAnalyst {
 
   static Future<void> logCategoryClickEvent(String category) async {
     await logEvent(
-        name: catagoryClickEvent, parameters: {'category': category});
+        name: categoryClickEvent, parameters: {'category': category});
   }
 }
