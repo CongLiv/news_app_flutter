@@ -15,7 +15,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await FirebaseAnalyst.logCatagoryClickEvent(name);
+        await FirebaseAnalyst.logCategoryClickEvent(name);
         Navigator.push(
           context,
           MaterialPageRoute(

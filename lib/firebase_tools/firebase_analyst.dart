@@ -49,8 +49,8 @@ class FirebaseAnalyst {
     await logEvent(name: markFavoriteEvent, parameters: {'domain': domain});
   }
 
-  static Future<void> logCatagoryClickEvent(String catagory) async {
+  static Future<void> logCategoryClickEvent(String category) async {
     await logEvent(
-        name: catagoryClickEvent, parameters: {'catagory': catagory});
+        name: catagoryClickEvent, parameters: {'category': category});
   }
 }
