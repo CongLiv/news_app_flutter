@@ -29,6 +29,7 @@ dependencies:
   firebase_remote_config: ^4.4.0
   firebase_crashlytics: ^3.5.5
   firebase_analytics: ^10.10.0
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:

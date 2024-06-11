@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
@@ -113,14 +114,20 @@ class _SignUpPage extends State<SignUpPage> {
                 children: [
                   Container(
                     padding: EdgeInsets.only(top: 70),
-                    child: Text(
-                      'Sign Up Account',
-                      style: TextStyle(
-                          color: redViettel,
-                          fontSize: 33,
-                          fontFamily: 'FS PFBeauSansPro',
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 2),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText(
+                          ' Sign Up Account',
+                          textStyle: TextStyle(
+                              color: redViettel,
+                              fontSize: 33,
+                              fontFamily: 'FS PFBeauSansPro',
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 2),
+                          speed: Duration(milliseconds: 150),
+                        ),
+                      ],
+                      totalRepeatCount: 1,
                     ),
                   ),
                   Container(
