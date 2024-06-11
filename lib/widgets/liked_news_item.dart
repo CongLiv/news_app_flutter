@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/screens/article/webview_container.dart';
 import '../providers/news.dart';
 
@@ -77,15 +78,7 @@ class LikedNewsItem extends ConsumerWidget {
             ),
             onPressed: () {
               newsNoti.removeLikedNews(webUrl);
-              Fluttertoast.showToast(
-                msg: 'Removed from liked news',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: redViettel,
-                textColor: Colors.white,
-                fontSize: 16.0,
-              );
+              ToastLog.show('Article Removed');
             },
           ),
         ),

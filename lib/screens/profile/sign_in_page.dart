@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/check_connection.dart';
@@ -48,40 +49,18 @@ class _SignInPage extends State<SignInPage> {
       password: password,
       onSuccess: () {
         Navigator.pop(context);
-
-        Fluttertoast.showToast(
-          msg: 'Sign in successfully',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: redViettel,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastLog.show('Sign in successfully');
         Navigator.pop(context);
       },
       onError: (error) async {
         Navigator.pop(context);
         if (!await CheckConnection.isInternet()) {
-          Fluttertoast.showToast(
-            msg: 'No internet connection',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-          );
+          ToastLog.show('No internet connection');
         } else {
-          Fluttertoast.showToast(
-            msg: 'Email or password is incorrect',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-          );
+          ToastLog.show('Email or password is incorrect');
         }
       },
     );
-
   }
 
   @override
@@ -218,41 +197,6 @@ class _SignInPage extends State<SignInPage> {
                                         color: Colors.white,
                                         onPressed: () {
                                           _handleSignIn();
-                                          // FirebaseAccount.signIn(
-                                          //   email: email,
-                                          //   password: password,
-                                          //   onSuccess: () {
-                                          //     Fluttertoast.showToast(
-                                          //         msg: 'Sign in successfully',
-                                          //         toastLength: Toast.LENGTH_SHORT,
-                                          //         gravity: ToastGravity.BOTTOM,
-                                          //         timeInSecForIosWeb: 1,
-                                          //         backgroundColor: redViettel,
-                                          //         textColor: Colors.white,
-                                          //         fontSize: 16.0);
-                                          //     Navigator.pop(context);
-                                          //   },
-                                          //   onError: (error) async {
-                                          //     if (!await CheckConnection
-                                          //         .isInternet()) {
-                                          //       Fluttertoast.showToast(
-                                          //         msg: 'No internet connection',
-                                          //         toastLength: Toast.LENGTH_SHORT,
-                                          //         gravity: ToastGravity.BOTTOM,
-                                          //         timeInSecForIosWeb: 1,
-                                          //         backgroundColor: Colors.red,
-                                          //       );
-                                          //     } else {
-                                          //       Fluttertoast.showToast(
-                                          //         msg: 'Email or password is incorrect',
-                                          //         toastLength: Toast.LENGTH_SHORT,
-                                          //         gravity: ToastGravity.BOTTOM,
-                                          //         timeInSecForIosWeb: 1,
-                                          //         backgroundColor: Colors.red,
-                                          //       );
-                                          //     }
-                                          //   },
-                                          // );
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward,

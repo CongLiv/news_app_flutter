@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../../helpers/const_data.dart';
 import '../../providers/news.dart';
@@ -59,28 +60,12 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
     await FirebaseAccount.signOut(
       onSuccess: () {
         Navigator.of(context).pop();
-        Fluttertoast.showToast(
-          msg: 'Logged out',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: redViettel,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastLog.show('Logged out');
         Navigator.of(context).pop();
       },
       onError: (e) {
         Navigator.of(context).pop();
-        Fluttertoast.showToast(
-          msg: 'Failed to log out',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastLog.show('Failed to log out');
       },
     );
   }

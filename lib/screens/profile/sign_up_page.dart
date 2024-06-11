@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/screens/article/homepage.dart';
 
 import '../../helpers/check_connection.dart';
@@ -63,15 +64,7 @@ class _SignUpPage extends State<SignUpPage> {
       password: password,
       onSuccess: () {
         Navigator.pop(context);
-        Fluttertoast.showToast(
-          msg: 'Sign up successfully',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: redViettel,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastLog.show('Sign up successfully');
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
@@ -82,30 +75,19 @@ class _SignUpPage extends State<SignUpPage> {
       onError: (e) async {
         Navigator.pop(context);
         if (!await CheckConnection.isInternet()) {
-          Fluttertoast.showToast(
-            msg: 'No internet connection',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-          );
+          ToastLog.show('No internet connection');
         } else if (e.toString().contains('email-already-in-use')) {
           setState(() {
             _noti0 = _emailExistError;
             isValid = false;
           });
         } else {
-          Fluttertoast.showToast(
-            msg: 'Sign up failed',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-          );
+          ToastLog.show('Sign up failed');
         }
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -299,62 +281,6 @@ class _SignUpPage extends State<SignUpPage> {
                                           ValidatePassword();
                                           if (isValid) {
                                             _handleSignUp();
-                                            // FirebaseAccount.signUp(
-                                            //   email: email,
-                                            //   password: password,
-                                            //   onSuccess: () {
-                                            //     Fluttertoast.showToast(
-                                            //       msg: 'Sign up successfully',
-                                            //       toastLength:
-                                            //           Toast.LENGTH_SHORT,
-                                            //       gravity: ToastGravity.BOTTOM,
-                                            //       timeInSecForIosWeb: 1,
-                                            //       backgroundColor: redViettel,
-                                            //       textColor: Colors.white,
-                                            //       fontSize: 16.0,
-                                            //     );
-                                            //     Navigator.pushReplacement(
-                                            //       context,
-                                            //       PageRouteBuilder(
-                                            //         pageBuilder: (context,
-                                            //                 animation1,
-                                            //                 animation2) =>
-                                            //             Homepage(),
-                                            //       ),
-                                            //     );
-                                            //   },
-                                            //   onError: (e) async {
-                                            //     if (!await CheckConnection
-                                            //         .isInternet()) {
-                                            //       Fluttertoast.showToast(
-                                            //         msg:
-                                            //             'No internet connection',
-                                            //         toastLength:
-                                            //             Toast.LENGTH_SHORT,
-                                            //         gravity:
-                                            //             ToastGravity.BOTTOM,
-                                            //         timeInSecForIosWeb: 1,
-                                            //         backgroundColor: Colors.red,
-                                            //       );
-                                            //     } else if (e.toString().contains(
-                                            //         'email-already-in-use')) {
-                                            //       setState(() {
-                                            //         _noti0 = _emailExistError;
-                                            //         isValid = false;
-                                            //       });
-                                            //     } else {
-                                            //       Fluttertoast.showToast(
-                                            //         msg: 'Sign up failed',
-                                            //         toastLength:
-                                            //             Toast.LENGTH_SHORT,
-                                            //         gravity:
-                                            //             ToastGravity.BOTTOM,
-                                            //         timeInSecForIosWeb: 1,
-                                            //         backgroundColor: Colors.red,
-                                            //       );
-                                            //     }
-                                            //   },
-                                            // );
                                           }
                                         },
                                         icon: Icon(

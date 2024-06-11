@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
@@ -66,17 +67,6 @@ class News extends StateNotifier<NewsState> {
     return formattedDate;
   }
 
-  void showToasts(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-    );
-  }
-
-
   // FETCH DATA BY NYT API
   final String nytApiKey = FirebaseRemoteConfig.instance.getString('nytApiKey');
   final nytUrl = "https://api.nytimes.com/svc";
@@ -85,7 +75,7 @@ class News extends StateNotifier<NewsState> {
     final url =
         '$nytUrl/search/v2/articlesearch.json?q=$category&api-key=$nytApiKey';
     if (!await CheckConnection.isInternet()) {
-      showToasts('No internet connection');
+      ToastLog.show('No internet connection');
       return;
     }
     var response = await Dio().get(url);
@@ -134,7 +124,7 @@ class News extends StateNotifier<NewsState> {
   Future<void> getCategoriesNews(String category) async {
     final url = '$nytUrl/topstories/v2/$category.json?api-key=$nytApiKey';
     if (!await CheckConnection.isInternet()) {
-      showToasts('No internet connection');
+      ToastLog.show('No internet connection');
       return;
     }
     var response = await Dio().get(url);
@@ -201,7 +191,7 @@ class News extends StateNotifier<NewsState> {
 
   Future<void> getTopNews() async {
     if (!await CheckConnection.isInternet()) {
-      showToasts('No internet connection');
+      ToastLog.show('No internet connection');
       return;
     }
     List<Article> _loadedItems = [];
@@ -245,7 +235,7 @@ class News extends StateNotifier<NewsState> {
 
   Future<void> getLikedNews() async {
     if (!await CheckConnection.isInternet()) {
-      showToasts('No internet connection');
+      ToastLog.show('No internet connection');
       return;
     }
 

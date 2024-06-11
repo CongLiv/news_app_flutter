@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
+import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import '../../helpers/share_article.dart';
 import 'webview_container.dart';
@@ -274,25 +275,9 @@ class _ArticlePageState extends State<ArticlePage> {
       });
       await FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: 'Error: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      ToastLog.show('Error: $e');
     }
-    Fluttertoast.showToast(
-      msg: 'Article Marked',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: redViettel,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+    ToastLog.show('Article Marked');
     setState(() {
       isMarked = true;
     });
@@ -313,40 +298,17 @@ class _ArticlePageState extends State<ArticlePage> {
         });
       });
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: 'Error: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: redViettel,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      ToastLog.show('Error: $e');
     }
-    Fluttertoast.showToast(
-      msg: 'Article Unmarked',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: redViettel,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+    ToastLog.show('Article Unmarked');
+
     setState(() {
       isMarked = false;
     });
   }
 
   void notLoggedIn() {
-    Fluttertoast.showToast(
-      msg: 'Please login to mark articles',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: redViettel,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
+    ToastLog.show('Please login to mark articles');
     setState(() {
       isMarked = false;
     });
