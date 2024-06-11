@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/screens/article/webview_container.dart';
 
+import '../firebase_tools/firebase_analyst.dart';
+
 class SearchedArticle extends StatelessWidget {
   final String headline;
   final String source;
@@ -20,7 +22,8 @@ class SearchedArticle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
+      onTap: () async => {
+        await FirebaseAnalyst.logReadNewsEvent(webUrl),
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -58,7 +61,8 @@ class SearchedArticle extends StatelessWidget {
                 Icons.launch,
                 color: redViettel,
               ),
-              onPressed: () => {
+              onPressed: () async => {
+                await FirebaseAnalyst.logReadNewsEvent(webUrl),
                 Navigator.push(
                   context,
                   MaterialPageRoute(

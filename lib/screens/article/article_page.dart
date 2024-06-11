@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
@@ -185,7 +186,8 @@ class _ArticlePageState extends State<ArticlePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () => {
+                        onTap: () async => {
+                          await FirebaseAnalyst.logReadNewsEvent(widget.webUrl),
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -205,7 +207,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                       });
                                     })
                                   }
-                              })
+                              }),
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
@@ -257,7 +259,7 @@ class _ArticlePageState extends State<ArticlePage> {
   }
 
   // add article to firestore
-  void addArticle() {
+  Future<void> addArticle() async {
     try {
       _firestore
           .collection('news_mark')
@@ -270,6 +272,7 @@ class _ArticlePageState extends State<ArticlePage> {
         'webUrl': widget.webUrl,
         'imageUrl': widget.imageUrl,
       });
+      await FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
     } catch (e) {
       Fluttertoast.showToast(
         msg: 'Error: $e',

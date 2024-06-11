@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/screens/article/webview_container.dart';
 import '../providers/news.dart';
@@ -23,7 +24,8 @@ class LikedNewsItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final newsNoti = ref.watch(newsProvider.notifier);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await FirebaseAnalyst.logReadNewsEvent(webUrl);
         Navigator.push(
           context,
           MaterialPageRoute(

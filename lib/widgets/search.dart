@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 
+import '../firebase_tools/firebase_analyst.dart';
 import '../screens/article/searched_article_page.dart';
 
 class Search extends StatefulWidget {
@@ -95,10 +96,11 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   controller: myController,
-                  onSubmitted: (value) {
+                  onSubmitted: (value) async {
                     setState(() {
                       _searchWord = myController.text;
                     });
+                    await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -111,10 +113,11 @@ class _SearchState extends State<Search> {
                   }),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   _searchWord = myController.text;
                 });
+                await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

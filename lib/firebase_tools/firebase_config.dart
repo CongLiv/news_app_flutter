@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 
 import '../firebase_options.dart';
@@ -32,8 +33,15 @@ class FirebaseConfig {
   }
 
   static Future<void> initializeApp() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    try{
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ).then((_) => FirebaseAnalyst.initialize());
+
+    }
+    catch (e) {
+      print('Failed to initialize Firebase: $e');
+    }
+
   }
 }

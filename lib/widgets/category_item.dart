@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 
 import '../screens/article/category_news.dart';
 
@@ -13,7 +14,8 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await FirebaseAnalyst.logCatagoryClickEvent(name);
         Navigator.push(
           context,
           MaterialPageRoute(
