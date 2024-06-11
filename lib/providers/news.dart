@@ -5,6 +5,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firestore_articles.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
@@ -182,7 +183,9 @@ class News extends StateNotifier<NewsState> {
     'fox-news',
   ];
 
-  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey1');
+  final String newsApiKey =
+      FirebaseRemoteConfig.instance.getString('newsApiKey1');
+
   // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey2'); // key 2
 
   final newsApiUrl = "https://newsapi.org/v2";
@@ -236,8 +239,6 @@ class News extends StateNotifier<NewsState> {
       ToastLog.show('No internet connection');
       return;
     }
-
-    // get liked news from firestore
     try {
       final value = await _firestore
           .collection('news_mark')
@@ -260,25 +261,15 @@ class News extends StateNotifier<NewsState> {
     }
   }
 
-  Future<void> removeLikedNews(webUrl) async {
-    try {
-      await _firestore
-          .collection('news_mark')
-          .doc(FirebaseAccount.getEmail())
-          .collection('news')
-          .where('webUrl', isEqualTo: webUrl)
-          .get()
-          .then((value) {
-        value.docs.forEach((element) {
-          element.reference.delete();
-        });
-      });
-      List<LikedNewsItem> likedNews = state.likedNews;
-      likedNews.removeWhere((element) => element.webUrl == webUrl);
-
-      state = state.copyWith(likedNews: likedNews);
-    } catch (error) {
-      print(error);
-    }
+  void removeLikedNews(webUrl) {
+    FireStoreArticles.removeArticle(
+      webUrl: webUrl,
+      onSuccess: () {
+        getLikedNews();
+      },
+      onError: (error) {
+        ToastLog.show('Error: $error');
+      },
+    );
   }
 }

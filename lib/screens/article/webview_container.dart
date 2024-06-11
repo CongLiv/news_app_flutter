@@ -6,6 +6,7 @@ import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/helpers/urlLauncher.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../firebase_tools/firestore_articles.dart';
 import '../../helpers/const_data.dart';
 import '../../firebase_tools/firebase_account.dart';
 import '../../helpers/share_article.dart';
@@ -31,7 +32,6 @@ class WebviewContainer extends StatefulWidget {
 
 class _WebviewContainerState extends State<WebviewContainer> {
   late final WebViewController _controller;
-  final _firestore = FirebaseFirestore.instance;
   bool isMarked = false;
   bool isLoading = true;
   bool isSet = false;
@@ -59,26 +59,11 @@ class _WebviewContainerState extends State<WebviewContainer> {
 
     // check if article is already marked
     if (FirebaseAccount.isSignedIn()) {
-      checkArticleMarked().then((value) {
+      FireStoreArticles.checkArticleMarked(widget.webUrl).then((value) {
         setState(() {
           isMarked = value;
         });
       });
-    }
-  }
-
-  Future<bool> checkArticleMarked() async {
-    final value = await _firestore
-        .collection('news_mark')
-        .doc(FirebaseAccount.getEmail())
-        .collection('news')
-        .where('webUrl', isEqualTo: widget.webUrl)
-        .get();
-
-    if (value.docs.isNotEmpty) {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -163,22 +148,25 @@ class _WebviewContainerState extends State<WebviewContainer> {
                     ),
                   ],
                 ),
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  radius: 30,
-                  child: IconButton(
-                    icon: Icon(
-                      isMarked ? Icons.bookmark : Icons.bookmark_add_outlined,
-                      color: isMarked ? redViettel : Colors.grey,
-                      size: 29,
+                child: GestureDetector(
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    radius: 30,
+                    child: IconButton(
+                      icon: Icon(
+                        isMarked ? Icons.bookmark : Icons.bookmark_add_outlined,
+                        color: isMarked ? redViettel : Colors.grey,
+                        size: 29,
+                      ),
+                      onPressed: () {
+                        !FirebaseAccount.isSignedIn()
+                            ? notLoggedIn()
+                            : isMarked
+                                ? removeArticle()
+                                : addArticle();
+                      },
+
                     ),
-                    onPressed: () {
-                      !FirebaseAccount.isSignedIn()
-                          ? notLoggedIn()
-                          : isMarked
-                              ? removeArticle()
-                              : addArticle();
-                    },
                   ),
                 ),
               ),
@@ -189,51 +177,39 @@ class _WebviewContainerState extends State<WebviewContainer> {
     );
   }
 
-  // add article to firestore
-  Future<void> addArticle() async {
-    try {
-      _firestore
-          .collection('news_mark')
-          .doc(FirebaseAccount.getEmail())
-          .collection('news')
-          .add({
-        'headline': widget.headline,
-        'description': widget.description,
-        'source': widget.source,
-        'webUrl': widget.webUrl,
-        'imageUrl': widget.imageUrl,
-      });
-      await FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
-    } catch (e) {
-      ToastLog.show('Error: $e');
-    }
-    ToastLog.show('Article Marked');
-    setState(() {
-      isMarked = true;
-    });
+  void addArticle() {
+    FireStoreArticles.addArticle(
+      headline: widget.headline,
+      description: widget.description,
+      source: widget.source,
+      webUrl: widget.webUrl,
+      imageUrl: widget.imageUrl,
+      onSuccess: () {
+        FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
+        ToastLog.show('Article Marked');
+        setState(() {
+          isMarked = true;
+        });
+      },
+      onError: (error) {
+        ToastLog.show('Error: $error');
+      },
+    );
   }
 
-  // remove article from firestore
   void removeArticle() {
-    try {
-      _firestore
-          .collection('news_mark')
-          .doc(FirebaseAccount.getEmail())
-          .collection('news')
-          .where('webUrl', isEqualTo: widget.webUrl)
-          .get()
-          .then((value) {
-        value.docs.forEach((element) {
-          element.reference.delete();
+    FireStoreArticles.removeArticle(
+      webUrl: widget.webUrl,
+      onSuccess: () {
+        ToastLog.show('Article Unmarked');
+        setState(() {
+          isMarked = false;
         });
-      });
-    } catch (e) {
-      ToastLog.show('Error: $e');
-    }
-    ToastLog.show('Article Unmarked');
-    setState(() {
-      isMarked = false;
-    });
+      },
+      onError: (error) {
+        ToastLog.show('Error: $error');
+      },
+    );
   }
 
   void notLoggedIn() {

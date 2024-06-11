@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
+import 'package:news_app_flutter_demo/firebase_tools/firestore_articles.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
@@ -31,7 +31,6 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-  final _firestore = FirebaseFirestore.instance;
   bool isMarked = false;
 
   @override
@@ -40,26 +39,11 @@ class _ArticlePageState extends State<ArticlePage> {
 
     // check if article is already marked
     if (FirebaseAccount.isSignedIn()) {
-      checkArticleMarked().then((value) {
+      FireStoreArticles.checkArticleMarked(widget.webUrl).then((value) {
         setState(() {
           isMarked = value;
         });
       });
-    }
-  }
-
-  Future<bool> checkArticleMarked() async {
-    final value = await _firestore
-        .collection('news_mark')
-        .doc(FirebaseAccount.getEmail())
-        .collection('news')
-        .where('webUrl', isEqualTo: widget.webUrl)
-        .get();
-
-    if (value.docs.isNotEmpty) {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -199,7 +183,9 @@ class _ArticlePageState extends State<ArticlePage> {
                           ).then((_) => {
                                 if (FirebaseAccount.isSignedIn())
                                   {
-                                    checkArticleMarked().then((value) {
+                                    FireStoreArticles.checkArticleMarked(
+                                            widget.webUrl)
+                                        .then((value) {
                                       setState(() {
                                         isMarked = value;
                                       });
@@ -236,6 +222,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     ? removeArticle()
                                     : addArticle();
                           },
+                          onDoubleTap: null,
                           child: Icon(
                             isMarked
                                 ? Icons.bookmark
@@ -256,52 +243,39 @@ class _ArticlePageState extends State<ArticlePage> {
     );
   }
 
-  // add article to firestore
-  Future<void> addArticle() async {
-    try {
-      _firestore
-          .collection('news_mark')
-          .doc(FirebaseAccount.getEmail())
-          .collection('news')
-          .add({
-        'headline': widget.headline,
-        'description': widget.description,
-        'source': widget.source,
-        'webUrl': widget.webUrl,
-        'imageUrl': widget.imageUrl,
-      });
-      await FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
-    } catch (e) {
-      ToastLog.show('Error: $e');
-    }
-    ToastLog.show('Article Marked');
-    setState(() {
-      isMarked = true;
-    });
+  void addArticle() {
+    FireStoreArticles.addArticle(
+      headline: widget.headline,
+      description: widget.description,
+      source: widget.source,
+      webUrl: widget.webUrl,
+      imageUrl: widget.imageUrl,
+      onSuccess: () {
+        FirebaseAnalyst.logMarkFavoriteEvent(widget.webUrl);
+        setState(() {
+          isMarked = true;
+        });
+        ToastLog.show('Article Marked');
+      },
+      onError: (error) {
+        ToastLog.show('Error: $error');
+      },
+    );
   }
 
-  // remove article from firestore
   void removeArticle() {
-    try {
-      _firestore
-          .collection('news_mark')
-          .doc(FirebaseAccount.getEmail())
-          .collection('news')
-          .where('webUrl', isEqualTo: widget.webUrl)
-          .get()
-          .then((value) {
-        value.docs.forEach((element) {
-          element.reference.delete();
+    FireStoreArticles.removeArticle(
+      webUrl: widget.webUrl,
+      onSuccess: () {
+        setState(() {
+          isMarked = false;
         });
-      });
-    } catch (e) {
-      ToastLog.show('Error: $e');
-    }
-    ToastLog.show('Article Unmarked');
-
-    setState(() {
-      isMarked = false;
-    });
+        ToastLog.show('Article Unmarked');
+      },
+      onError: (error) {
+        ToastLog.show('Error: $error');
+      },
+    );
   }
 
   void notLoggedIn() {
