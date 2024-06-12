@@ -61,9 +61,10 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.dispose();
     _animController.dispose();
+    _animation.removeListener(() {});
+    super.dispose();
   }
 
   @override
@@ -121,12 +122,14 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     right: _animation.value,
                     bottom: 45,
                     child: Opacity(
-                      opacity: _animation.value > 0 ? _animation.value / 30.0 : 0,
+                      opacity:
+                          _animation.value > 0 ? _animation.value / 30.0 : 0,
                       child: SizedBox(
                         height: 55,
                         width: 55,
                         child: FloatingActionButton(
-                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(90),
                           ),
@@ -157,5 +160,3 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 }
 
 typedef ReloadCallback = void Function(BuildContext context);
-
-

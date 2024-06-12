@@ -82,9 +82,10 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.dispose();
     _animController.dispose();
+    _animation.removeListener(() {});
+    super.dispose();
 
   }
 
