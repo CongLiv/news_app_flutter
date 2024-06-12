@@ -86,6 +86,13 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    _animController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final newsData = ref.watch(newsProvider);
     return Scaffold(

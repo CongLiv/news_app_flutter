@@ -81,6 +81,14 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+    _animController.dispose();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     final newsData = ref.watch(newsProvider);
     return Scaffold(

@@ -63,6 +63,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    _animController.dispose();
   }
 
   @override
