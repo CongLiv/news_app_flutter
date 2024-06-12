@@ -135,6 +135,11 @@ class _HomepageState extends ConsumerState<Homepage> {
             setState(() {
               _selectedIndex = index;
               _searchFocusNode.unfocus();
+              if (_selectedIndex != 0) {
+                Home.resetScroll();
+              } else {
+                Home.reloadScroll();
+              }
             });
           },
         ),

@@ -4,6 +4,14 @@ import '../providers/news.dart';
 import './article_item.dart';
 
 class Home extends ConsumerStatefulWidget {
+  static Future<void> resetScroll() async {
+    _HomeState.resetScroll();
+  }
+
+  static void reloadScroll() {
+    _HomeState.reloadScroll();
+  }
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -13,10 +21,10 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   var _isLoading = false;
 
   bool _showBackToTop = false;
-  late final ScrollController _scrollController;
-
-  late AnimationController _animController;
-  late Animation<double> _animation;
+  static late final ScrollController homeScrollController;
+  static late final AnimationController homeAnimController;
+  static late final Animation<double> homeAnimation;
+  static double lastScrollOffset = 0;
 
   late final newsNoti;
 
@@ -26,27 +34,27 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
     newsNoti = ref.read(newsProvider.notifier);
 
-    _animController = AnimationController(
+    homeAnimController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
 
-    _animation = Tween<double>(begin: -60.0, end: 30.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
+    homeAnimation = Tween<double>(begin: -60.0, end: 30.0).animate(
+      CurvedAnimation(parent: homeAnimController, curve: Curves.easeInOut),
     );
 
-    _animation.addListener(() {
+    homeAnimation.addListener(() {
       setState(() {});
     });
 
-    _scrollController = ScrollController()
+    homeScrollController = ScrollController()
       ..addListener(() {
-        if (_scrollController.offset >= 400) {
+        if (homeScrollController.offset >= 400) {
           if (!_showBackToTop) {
             setState(() {
               _showBackToTop = true;
             });
-            _animController.forward();
+            homeAnimController.forward();
           }
         } else {
           if (_showBackToTop) {
@@ -54,16 +62,16 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
               _showBackToTop = false;
             });
           }
-          _animController.reverse();
+          homeAnimController.reverse();
         }
       });
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
-    _animController.dispose();
-    _animation.removeListener(() {});
+    homeScrollController.dispose();
+    homeAnimController.dispose();
+    homeAnimation.removeListener(() {});
     super.dispose();
   }
 
@@ -82,6 +90,26 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     }
     _isInit = false;
     super.didChangeDependencies();
+  }
+
+  static void resetScroll() {
+    lastScrollOffset = homeScrollController.offset;
+    homeAnimController.reset();
+    homeScrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  static void reloadScroll() {
+    // jump to last scroll offset
+    homeScrollController.jumpTo(lastScrollOffset);
+    if (homeScrollController.offset >= 400) {
+      homeAnimController.forward();
+    } else {
+      homeAnimController.reverse();
+    }
   }
 
   @override
@@ -103,7 +131,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     color: Colors.red,
                     onRefresh: () => _refreshNews(context),
                     child: ListView.builder(
-                      controller: _scrollController,
+                      controller: homeScrollController,
                       itemCount: newsData.topNews.length,
                       itemBuilder: (ctx, index) => ArticleItem(
                         headline: newsData.topNews[index].headline,
@@ -116,14 +144,15 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     ),
                   )),
               AnimatedBuilder(
-                animation: _animation,
+                animation: homeAnimation,
                 builder: (context, child) {
                   return Positioned(
-                    right: _animation.value,
+                    right: homeAnimation.value,
                     bottom: 45,
                     child: Opacity(
-                      opacity:
-                          _animation.value > 0 ? _animation.value / 30.0 : 0,
+                      opacity: homeAnimation.value > 0
+                          ? homeAnimation.value / 30.0
+                          : 0,
                       child: SizedBox(
                         height: 55,
                         width: 55,
@@ -134,7 +163,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(90),
                           ),
                           onPressed: () {
-                            _scrollController.animateTo(
+                            homeScrollController.animateTo(
                               0,
                               duration: Duration(milliseconds: 800),
                               curve: Curves.easeInOut,

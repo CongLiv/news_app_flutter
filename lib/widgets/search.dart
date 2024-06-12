@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
-
 import '../firebase_tools/firebase_analyst.dart';
 import '../screens/article/searched_article_page.dart';
 
 class Search extends StatefulWidget {
-
   final FocusNode focusNode;
 
   Search({required this.focusNode});
@@ -23,7 +21,6 @@ class _SearchState extends State<Search> {
     myController.dispose();
     widget.focusNode.dispose();
     super.dispose();
-
   }
 
   @override
@@ -44,7 +41,8 @@ class _SearchState extends State<Search> {
                     'assets/images/searchScreen.jpg',
                   ),
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+                  colorFilter:
+                      ColorFilter.mode(Colors.black54, BlendMode.darken),
                 ),
               ),
               child: Center(
@@ -97,36 +95,12 @@ class _SearchState extends State<Search> {
                   ),
                   controller: myController,
                   onSubmitted: (value) async {
-                    setState(() {
-                      _searchWord = myController.text;
-                    });
-                    await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) => SearchedArticleScreen(
-                              searchField:
-                                  _searchWord.isEmpty ? 'world' : _searchWord)),
-                    ).then((_) {
-                      widget.focusNode.unfocus();
-                    });
+                    await _searchNews(context);
                   }),
             ),
             GestureDetector(
               onTap: () async {
-                setState(() {
-                  _searchWord = myController.text;
-                });
-                await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => SearchedArticleScreen(
-                          searchField:
-                              _searchWord.isEmpty ? 'world' : _searchWord)),
-                ).then((_) {
-                  widget.focusNode.unfocus();
-                });
+                await _searchNews(context);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
@@ -148,5 +122,20 @@ class _SearchState extends State<Search> {
         ),
       ),
     );
+  }
+
+  Future<void> _searchNews(BuildContext ctx) async {
+    setState(() {
+      _searchWord = myController.text;
+    });
+    await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (ctx) => SearchedArticleScreen(
+              searchField: _searchWord.isEmpty ? 'world' : _searchWord)),
+    ).then((_) {
+      widget.focusNode.unfocus();
+    });
   }
 }
