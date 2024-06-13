@@ -111,6 +111,7 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
             )
           : Stack(
               children: [
+                if (newsData.searchedNews.isNotEmpty)
                 Container(
                   child: ListView.builder(
                     controller: _scrollController,
@@ -125,7 +126,41 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
                       );
                     },
                   ),
-                ),
+                )
+                else
+                  Center(
+                    // text and button refresh
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No news available',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'FS PFBeauSansPro',
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => {
+                            _refreshNews(context),
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                            WidgetStateProperty.all(redViettel),
+                          ),
+                          child: Text('Refresh',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'FS PFBeauSansPro',
+                                color: Colors.white,
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
                 AnimatedBuilder(
                   animation: _animation,
                   builder: (context, child) {
@@ -163,5 +198,16 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
               ],
             ),
     );
+  }
+
+  Future<void> _refreshNews(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await newsNoti.getSearchedNews(widget.searchField).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 }

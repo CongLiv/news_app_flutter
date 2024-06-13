@@ -86,7 +86,6 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
     _animController.dispose();
     _animation.removeListener(() {});
     super.dispose();
-
   }
 
   @override
@@ -117,22 +116,57 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
               )
             : Stack(
                 children: [
-                  RefreshIndicator(
-                    color: redViettel,
-                    onRefresh: () => _refreshNews(context),
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: newsData.categoryNews.length,
-                      itemBuilder: (ctx, index) => ArticleItem(
-                        headline: newsData.categoryNews[index].headline,
-                        description: newsData.categoryNews[index].description,
-                        source: newsData.categoryNews[index].source,
-                        webUrl: newsData.categoryNews[index].webUrl,
-                        imageUrl: newsData.categoryNews[index].imageUrl,
-                        date: newsData.categoryNews[index].date,
+                  if (newsData.categoryNews.isNotEmpty)
+                    RefreshIndicator(
+                      color: redViettel,
+                      onRefresh: () => _refreshNews(context),
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: newsData.categoryNews.length,
+                        itemBuilder: (ctx, index) => ArticleItem(
+                          headline: newsData.categoryNews[index].headline,
+                          description: newsData.categoryNews[index].description,
+                          source: newsData.categoryNews[index].source,
+                          webUrl: newsData.categoryNews[index].webUrl,
+                          imageUrl: newsData.categoryNews[index].imageUrl,
+                          date: newsData.categoryNews[index].date,
+                        ),
+                      ),
+                    )
+                  else
+                    Center(
+                      // text and button refresh
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No news available',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'FS PFBeauSansPro',
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => {
+                              _refreshNews(context),
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStateProperty.all(redViettel),
+                            ),
+                            child: Text('Refresh',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'FS PFBeauSansPro',
+                                  color: Colors.white,
+                                )),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
                   AnimatedBuilder(
                     animation: _animation,
                     builder: (context, child) {
@@ -175,7 +209,13 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
   }
 
   Future<void> _refreshNews(BuildContext context) async {
-    await newsNoti.getCategoriesNews(widget.categoryName);
-    setState(() {});
+    setState(() {
+      _isLoading = true;
+    });
+    newsNoti.getCategoriesNews(widget.categoryName).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import '../providers/news.dart';
 import './article_item.dart';
 
@@ -93,6 +94,9 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   }
 
   static void resetScroll() {
+    if (homeScrollController.hasClients == false) {
+      return;
+    }
     lastScrollOffset = homeScrollController.offset;
     homeAnimController.reset();
     homeScrollController.animateTo(
@@ -103,6 +107,10 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   }
 
   static void reloadScroll() {
+    // if scroll not attached to any widget
+    if (homeScrollController.hasClients == false) {
+      return;
+    }
     // jump to last scroll offset
     homeScrollController.jumpTo(lastScrollOffset);
     if (homeScrollController.offset >= 400) {
@@ -123,26 +131,60 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
           )
         : Stack(
             children: [
-              Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: RefreshIndicator(
-                    color: Colors.red,
-                    onRefresh: () => _refreshNews(context),
-                    child: ListView.builder(
-                      controller: homeScrollController,
-                      itemCount: newsData.topNews.length,
-                      itemBuilder: (ctx, index) => ArticleItem(
-                        headline: newsData.topNews[index].headline,
-                        description: newsData.topNews[index].description,
-                        source: newsData.topNews[index].source,
-                        webUrl: newsData.topNews[index].webUrl,
-                        imageUrl: newsData.topNews[index].imageUrl,
-                        date: newsData.topNews[index].date,
-                      ),
+              if (newsData.topNews.isNotEmpty)
+                Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
                     ),
-                  )),
+                    child: RefreshIndicator(
+                      color: Colors.red,
+                      onRefresh: () => _refreshNews(context),
+                      child: ListView.builder(
+                        controller: homeScrollController,
+                        itemCount: newsData.topNews.length,
+                        itemBuilder: (ctx, index) => ArticleItem(
+                          headline: newsData.topNews[index].headline,
+                          description: newsData.topNews[index].description,
+                          source: newsData.topNews[index].source,
+                          webUrl: newsData.topNews[index].webUrl,
+                          imageUrl: newsData.topNews[index].imageUrl,
+                          date: newsData.topNews[index].date,
+                        ),
+                      ),
+                    ))
+              else
+                Center(
+                  // text and button refresh
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No news available',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'FS PFBeauSansPro',
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => {
+                          _refreshNews(context),
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(redViettel),
+                        ),
+                        child: Text('Refresh',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'FS PFBeauSansPro',
+                              color: Colors.white,
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
               AnimatedBuilder(
                 animation: homeAnimation,
                 builder: (context, child) {
@@ -183,8 +225,14 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   }
 
   Future<void> _refreshNews(BuildContext context) async {
-    await newsNoti.getTopNews();
-    setState(() {});
+    setState(() {
+      _isLoading = true;
+    });
+    newsNoti.getTopNews().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 }
 
