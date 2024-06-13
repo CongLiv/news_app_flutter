@@ -77,94 +77,105 @@ class News extends StateNotifier<NewsState> {
       ToastLog.show('No internet connection');
       return;
     }
-    var response = await Dio().get(url);
-    var jsonResponse;
+    try {
+      var response = await Dio().get(url);
+      var jsonResponse;
 
-    if (response.data is String) {
-      jsonResponse = json.decode(response.data);
-    } else if (response.data is Map<String, dynamic>) {
-      jsonResponse = response.data;
-    }
-
-    List<SearchedArticle> _loadedItems = [];
-    List extractedData = jsonResponse['response']['docs'];
-    extractedData.forEach((item) {
-      if (item['abstract'] == null ||
-          item['source'] == null ||
-          item['pub_date'] == null ||
-          item['web_url'] == null) {
-        return;
+      if (response.data is String) {
+        jsonResponse = json.decode(response.data);
+      } else if (response.data is Map<String, dynamic>) {
+        jsonResponse = response.data;
       }
-      String imageUrl;
 
-      // Check if 'multimedia' list is not empty before accessing its elements
-      if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
-        imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
-      } else {
-        if (item['web_url'] != null) {
-          imageUrl =
-              'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
-        } else {
+      List<SearchedArticle> _loadedItems = [];
+      List extractedData = jsonResponse['response']['docs'];
+      extractedData.forEach((item) {
+        if (item['abstract'] == null ||
+            item['source'] == null ||
+            item['pub_date'] == null ||
+            item['web_url'] == null) {
           return;
         }
-      }
-      _loadedItems.add(SearchedArticle(
-        headline: item['abstract'],
-        source: item['source'],
-        date: formatter(item['pub_date']),
-        webUrl: item['web_url'],
-        imageUrl: imageUrl,
-      ));
-    });
+        String imageUrl;
 
-    state = state.copyWith(searchedNews: _loadedItems);
+        // Check if 'multimedia' list is not empty before accessing its elements
+        if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
+          imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
+        } else {
+          if (item['web_url'] != null) {
+            imageUrl =
+                'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+          } else {
+            return;
+          }
+        }
+        _loadedItems.add(SearchedArticle(
+          headline: item['abstract'],
+          source: item['source'],
+          date: formatter(item['pub_date']),
+          webUrl: item['web_url'],
+          imageUrl: imageUrl,
+        ));
+      });
+
+      state = state.copyWith(searchedNews: _loadedItems);
+    } catch (error) {
+      ToastLog.show('Error: Bad request');
+    }
   }
 
   Future<void> getCategoriesNews(String category) async {
     final url = '$nytUrl/topstories/v2/$category.json?api-key=$nytApiKey';
+
     if (!await CheckConnection.isInternet()) {
+      state = state.copyWith(categoryNews: []);
       ToastLog.show('No internet connection');
       return;
     }
-    var response = await Dio().get(url);
-    var jsonResponse;
-    if (response.data is String) {
-      jsonResponse = json.decode(response.data);
-    } else if (response.data is Map<String, dynamic>) {
-      jsonResponse = response.data;
-    }
-    List<Article> _loadedItems = [];
-    List extractedData = jsonResponse['results'];
-    extractedData.forEach((item) {
-      if (item['title'] == null ||
-          item['byline'] == null ||
-          item['abstract'] == null ||
-          item['published_date'] == null ||
-          item['url'] == null) {
-        return;
+    try {
+      state = state.copyWith(categoryNews: []);
+      var response = await Dio().get(url);
+      var jsonResponse;
+      if (response.data is String) {
+        jsonResponse = json.decode(response.data);
+      } else if (response.data is Map<String, dynamic>) {
+        jsonResponse = response.data;
       }
-
-      String imageUrl;
-      if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
-        imageUrl = item['multimedia'][0]['url'];
-      } else {
-        if (item[url] != null) {
-          imageUrl =
-              'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
-        } else {
+      List<Article> _loadedItems = [];
+      List extractedData = jsonResponse['results'];
+      extractedData.forEach((item) {
+        if (item['title'] == null ||
+            item['byline'] == null ||
+            item['abstract'] == null ||
+            item['published_date'] == null ||
+            item['url'] == null) {
           return;
         }
-      }
-      _loadedItems.add(Article(
-        headline: item['title'],
-        source: item['byline'],
-        description: item['abstract'],
-        date: formatter(item['published_date']),
-        imageUrl: imageUrl,
-        webUrl: item['url'],
-      ));
-    });
-    state = state.copyWith(categoryNews: _loadedItems);
+
+        String imageUrl;
+        if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
+          imageUrl = item['multimedia'][0]['url'];
+        } else {
+          if (item[url] != null) {
+            imageUrl =
+                'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+          } else {
+            return;
+          }
+        }
+        _loadedItems.add(Article(
+          headline: item['title'],
+          source: item['byline'],
+          description: item['abstract'],
+          date: formatter(item['published_date']),
+          imageUrl: imageUrl,
+          webUrl: item['url'],
+        ));
+      });
+      state = state.copyWith(categoryNews: _loadedItems);
+    } catch (error) {
+      ToastLog.show('Error: Bad request');
+    }
   }
 
   // FETCH DATA BY NEWSAPI
@@ -195,41 +206,45 @@ class News extends StateNotifier<NewsState> {
       ToastLog.show('No internet connection');
       return;
     }
-    List<Article> _loadedItems = [];
-    // pick 2 sources randomly
-    List<String> tmpSource = [];
-    for (int i = 0; i < 2; i++) {
-      String randomSource;
-      do {
-        randomSource = sources[DateTime.now().microsecond % sources.length];
-      } while (tmpSource.contains(randomSource));
-      tmpSource.add(randomSource);
-      final url =
-          '$newsApiUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
-      Response response = await Dio().get(url);
-      var jsonResponse = response.data;
-      List extractedData = jsonResponse['articles'];
-      extractedData.forEach((item) {
-        if (item['title'] != null &&
-            item['author'] != null &&
-            item['description'] != null &&
-            item['urlToImage'] != null) {
-          _loadedItems.add(Article(
-            headline: item['title'],
-            source: item['author'],
-            description: item['description'],
-            date: formatter(item['publishedAt']),
-            imageUrl: item['urlToImage'],
-            webUrl: item['url'],
-          ));
-        }
-      });
+    try {
+      List<Article> _loadedItems = [];
+      // pick 2 sources randomly
+      List<String> tmpSource = [];
+      for (int i = 0; i < 2; i++) {
+        String randomSource;
+        do {
+          randomSource = sources[DateTime.now().microsecond % sources.length];
+        } while (tmpSource.contains(randomSource));
+        tmpSource.add(randomSource);
+        final url =
+            '$newsApiUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
+        Response response = await Dio().get(url);
+        var jsonResponse = response.data;
+        List extractedData = jsonResponse['articles'];
+        extractedData.forEach((item) {
+          if (item['title'] != null &&
+              item['author'] != null &&
+              item['description'] != null &&
+              item['urlToImage'] != null) {
+            _loadedItems.add(Article(
+              headline: item['title'],
+              source: item['author'],
+              description: item['description'],
+              date: formatter(item['publishedAt']),
+              imageUrl: item['urlToImage'],
+              webUrl: item['url'],
+            ));
+          }
+        });
+      }
+
+      // mix _loadedItems
+      _loadedItems.shuffle();
+
+      state = state.copyWith(topNews: _loadedItems);
+    } catch (error) {
+      ToastLog.show('Error: Bad request');
     }
-
-    // mix _loadedItems
-    _loadedItems.shuffle();
-
-    state = state.copyWith(topNews: _loadedItems);
   }
 
   final _firestore = FirebaseFirestore.instance;
@@ -257,7 +272,7 @@ class News extends StateNotifier<NewsState> {
 
       state = state.copyWith(likedNews: likedNews);
     } catch (error) {
-      print(error);
+      ToastLog.show('Error: Bad request');
     }
   }
 

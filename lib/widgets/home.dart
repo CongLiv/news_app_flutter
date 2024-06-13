@@ -159,7 +159,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No news available',
+                        'No news available!',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
