@@ -18,15 +18,14 @@ class Homepage extends ConsumerStatefulWidget {
 }
 
 class _HomepageState extends ConsumerState<Homepage> {
-
   int _selectedIndex = 0;
   final FocusNode _searchFocusNode = FocusNode();
 
   static List<Widget> _widgetOptions(FocusNode focusNode) => <Widget>[
-    Home(),
-    Categories(),
-    Search(focusNode: focusNode),
-  ];
+        Home(),
+        Categories(),
+        Search(focusNode: focusNode),
+      ];
 
   @override
   void initState() {
@@ -61,8 +60,8 @@ class _HomepageState extends ConsumerState<Homepage> {
                         : PersonalPage(),
                   ),
                 ).then((_) => {
-                  _searchFocusNode.unfocus(),
-                });
+                      _searchFocusNode.unfocus(),
+                    });
               },
             ),
           ),
@@ -83,8 +82,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 1,
-                    backgroundColor: themePro.isDarkMode() ? Colors.black : Color(0xFFE5E5E5),
-                    textColor: themePro.isDarkMode() ? Colors.white70 : Colors.black,
+                    backgroundColor: themePro.isDarkMode()
+                        ? Colors.black
+                        : Color(0xFFE5E5E5),
+                    textColor:
+                        themePro.isDarkMode() ? Colors.white70 : Colors.black,
                     fontSize: 16.0,
                   );
                 },
@@ -132,11 +134,17 @@ class _HomepageState extends ConsumerState<Homepage> {
           currentIndex: _selectedIndex,
           selectedItemColor: redViettel,
           onTap: (index) {
+            if (_selectedIndex == index) {
+              return;
+            }
+            int tmpIndex = _selectedIndex;
             setState(() {
               _selectedIndex = index;
               _searchFocusNode.unfocus();
               if (_selectedIndex != 0) {
-                Home.resetScroll();
+                if (tmpIndex == 0) {
+                  Home.resetScroll();
+                }
               } else {
                 Home.reloadScroll();
               }
