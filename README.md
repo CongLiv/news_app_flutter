@@ -14,13 +14,20 @@ Run the following command to start your application on VSC or Android Studio and
 flutter run
 ```
 
+**Update features** in my new branch:
+```bash
+git checkout test-riverpod
+```
+
 
 ## Features
-- Log in with email and password via Firebase
-- Save your favorite news
-- View top latest news or news by category
-- Search for news by keyword
-- Switch between light mode and dark mode 
+- Log in with email and password via Firebase Authentication.
+- Save your favorite news.
+- View top latest news or news by category.
+- Search for news by keyword.
+- Switch between light mode and dark mode .
+- Read news through the application's Webview, allowing sharing of news, ... (update)
+- Analyze and monitor the application through Firebase Crashlytics and Firebase Analytics. (update)
 
 ## Built with
 - [url_launcher](https://pub.dev/packages/url_launcher)
@@ -29,9 +36,13 @@ flutter run
 - [firebase_core](https://pub.dev/packages/firebase_core)
 - [firebase_auth](https://pub.dev/packages/firebase_auth)
 - [cloud_firestore](https://pub.dev/packages/cloud_firestore)
+- [firebase_remote_config](https://pub.dev/packages/firebase_remote_config)
+- [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics)
+- [firebase_analytics](https://pub.dev/packages/firebase_analytics)
 - [fluttertoast](https://pub.dev/packages/fluttertoast)
 - [newsapi.org](https://newsapi.org/docs)
 - [nytimes API](https://developer.nytimes.com/apis)
+- [animated_text_kit](https://pub.dev/documentation/animated_text_kit/latest/)
 
 ## Screenshots
 <table>
