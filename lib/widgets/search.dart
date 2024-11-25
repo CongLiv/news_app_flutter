@@ -6,13 +6,13 @@ import '../screens/article/searched_article_page.dart';
 class Search extends StatefulWidget {
   final FocusNode focusNode;
 
-  Search({required this.focusNode});
+  const Search({super.key, required this.focusNode});
 
   @override
-  _SearchState createState() => _SearchState();
+  SearchState createState() => SearchState();
 }
 
-class _SearchState extends State<Search> {
+class SearchState extends State<Search> {
   final myController = TextEditingController();
   String _searchWord = "";
 
@@ -29,97 +29,95 @@ class _SearchState extends State<Search> {
       onTap: () {
         widget.focusNode.unfocus();
       },
-      child: Container(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/searchScreen.jpg',
-                  ),
-                  fit: BoxFit.cover,
-                  colorFilter:
-                      ColorFilter.mode(Colors.black54, BlendMode.darken),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            height: 200,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/searchScreen.jpg',
                 ),
-              ),
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text('SEARCH YOUR NEWS',
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'FS Magistral',
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 3,
-                      )),
-                ),
+                fit: BoxFit.cover,
+                colorFilter:
+                    ColorFilter.mode(Colors.black54, BlendMode.darken),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              margin: EdgeInsets.only(top: 20, bottom: 10),
-              child: TextField(
-                  focusNode: widget.focusNode,
-                  autocorrect: true,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.search),
-                    suffixIconConstraints: BoxConstraints(
-                      minHeight: 32,
-                      minWidth: 60,
-                    ),
-                    hintText: 'e.g: vietnam, gpt,...',
-                    hintStyle:
-                        TextStyle(fontFamily: 'FS PFBeauSansPro', fontSize: 18),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 7, horizontal: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50),
-                      ),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                  controller: myController,
-                  onSubmitted: (value) async {
-                    await _searchNews(context);
-                  }),
-            ),
-            GestureDetector(
-              onTap: () async {
-                await _searchNews(context);
-              },
+            child: Center(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-                decoration: BoxDecoration(
-                  color: redViettel,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text('SEARCH',
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const Text('SEARCH YOUR NEWS',
+                    softWrap: true,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'FS PFBeauSansPro',
+                      fontFamily: 'FS Magistral',
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: 0.75,
+                      letterSpacing: 3,
                     )),
               ),
             ),
-          ],
-        ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.only(top: 20, bottom: 10),
+            child: TextField(
+                focusNode: widget.focusNode,
+                autocorrect: true,
+                style: const TextStyle(fontSize: 18),
+                decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.search),
+                  suffixIconConstraints: const BoxConstraints(
+                    minHeight: 32,
+                    minWidth: 60,
+                  ),
+                  hintText: 'e.g: vietnam, gpt,...',
+                  hintStyle:
+                      const TextStyle(fontFamily: 'FS PFBeauSansPro', fontSize: 18),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 7, horizontal: 18),
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                controller: myController,
+                onSubmitted: (value) async {
+                  await _searchNews(context);
+                }),
+          ),
+          GestureDetector(
+            onTap: () async {
+              await _searchNews(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+              decoration: BoxDecoration(
+                color: redViettel,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text('SEARCH',
+                  style: TextStyle(
+                    fontFamily: 'FS PFBeauSansPro',
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.75,
+                  )),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -128,7 +126,7 @@ class _SearchState extends State<Search> {
     setState(() {
       _searchWord = myController.text;
     });
-    await FirebaseAnalyst.logSearchNewsEvent(_searchWord);
+    FirebaseAnalyst.logSearchNewsEvent(_searchWord);
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -10,22 +10,22 @@ import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
-  _SignUpPage createState() => _SignUpPage();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _SignUpPage extends State<SignUpPage> {
+class SignUpPageState extends State<SignUpPage> {
   String email = '';
   String password = '';
   String confirmPassword = '';
   bool isValid = true;
 
-  String _emailError = 'Email is invalid! e.x: abc@example.com';
-  String _passwordLengthError = 'Password must be at least 6 characters';
-  String _passwordMatchError = 'Password does not match';
-  String _emailExistError = 'Email already exists';
+  final String _emailError = 'Email is invalid! e.x: abc@example.com';
+  final String _passwordLengthError = 'Password must be at least 6 characters';
+  final String _passwordMatchError = 'Password does not match';
+  final String _emailExistError = 'Email already exists';
 
   String _noti0 = '';
   String _noti1 = '';
@@ -51,7 +51,7 @@ class _SignUpPage extends State<SignUpPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(redViettel),
           ),
@@ -68,7 +68,7 @@ class _SignUpPage extends State<SignUpPage> {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => Homepage(),
+            pageBuilder: (context, animation1, animation2) => const Homepage(),
           ),
         );
       },
@@ -94,13 +94,13 @@ class _SignUpPage extends State<SignUpPage> {
       decoration: BoxDecoration(
         image: DecorationImage(
             image: Theme.of(context).brightness == Brightness.dark
-                ? AssetImage('assets/images/background_dark.png')
-                : AssetImage('assets/images/background.jpg'),
+                ? const AssetImage('assets/images/background_dark.png')
+                : const AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover),
       ),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: redViettel),
+          iconTheme: const IconThemeData(color: redViettel),
           backgroundColor: Theme.of(context).colorScheme.secondary,
           elevation: 0,
           centerTitle: true,
@@ -113,30 +113,30 @@ class _SignUpPage extends State<SignUpPage> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 70),
+                    padding: const EdgeInsets.only(top: 70),
                     child: AnimatedTextKit(
                       animatedTexts: [
                         TypewriterAnimatedText(
                           ' Sign Up Account',
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               color: redViettel,
                               fontSize: 33,
                               fontFamily: 'FS PFBeauSansPro',
                               fontWeight: FontWeight.w500,
                               letterSpacing: 2),
-                          speed: Duration(milliseconds: 150),
+                          speed: const Duration(milliseconds: 150),
                         ),
                       ],
                       totalRepeatCount: 1,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.only(top: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 35, right: 35),
+                          margin: const EdgeInsets.only(left: 35, right: 35),
                           child: Column(
                             children: [
                               TextField(
@@ -155,7 +155,7 @@ class _SignUpPage extends State<SignUpPage> {
                                       Theme.of(context).colorScheme.primary,
                                   filled: true,
                                   hintText: "Email",
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontFamily: 'FS PFBeauSansPro',
                                   ),
                                   border: OutlineInputBorder(
@@ -187,14 +187,14 @@ class _SignUpPage extends State<SignUpPage> {
                                 },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
-                                style: TextStyle(),
+                                style: const TextStyle(),
                                 obscureText: _hiddenPassword1,
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
                                   filled: true,
                                   hintText: "Password",
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontFamily: 'FS PFBeauSansPro',
                                   ),
                                   border: OutlineInputBorder(
@@ -234,14 +234,14 @@ class _SignUpPage extends State<SignUpPage> {
                                 },
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
-                                style: TextStyle(),
+                                style: const TextStyle(),
                                 obscureText: _hiddenPassword2,
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
                                   filled: true,
                                   hintText: "Confirm Password",
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontFamily: 'FS PFBeauSansPro',
                                   ),
                                   border: OutlineInputBorder(
@@ -283,25 +283,26 @@ class _SignUpPage extends State<SignUpPage> {
                                     child: IconButton(
                                         color: Colors.white,
                                         onPressed: () async {
-                                          ValidateEmail();
-                                          ValidatePassword();
+                                          validateEmail();
+                                          validatePassword();
                                           if (isValid) {
                                             _handleSignUp();
                                           }
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.arrow_forward,
                                         )),
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 25,
                               ),
                               TextButton(
                                 onPressed: () {
                                   // TODO: implement sign up
                                 },
+                                style: const ButtonStyle(),
                                 child: RichText(
                                   text: TextSpan(
                                     text: 'Already have an account? ',
@@ -314,7 +315,7 @@ class _SignUpPage extends State<SignUpPage> {
                                     children: <TextSpan>[
                                       TextSpan(
                                           text: 'Sign In',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: redViettel,
                                             fontFamily: 'FS PFBeauSansPro',
                                             decoration:
@@ -327,7 +328,6 @@ class _SignUpPage extends State<SignUpPage> {
                                     ],
                                   ),
                                 ),
-                                style: ButtonStyle(),
                               ),
                             ],
                           ),
@@ -344,9 +344,9 @@ class _SignUpPage extends State<SignUpPage> {
     );
   }
 
-  void ValidateEmail() {
+  void validateEmail() {
     String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(email)) {
       setState(() {
         _noti0 = _emailError;
@@ -360,7 +360,7 @@ class _SignUpPage extends State<SignUpPage> {
     }
   }
 
-  void ValidatePassword() {
+  void validatePassword() {
     if (password.length < 6) {
       setState(() {
         _noti1 = _passwordLengthError;

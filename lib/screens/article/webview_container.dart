@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
@@ -10,14 +9,14 @@ import '../../helpers/const_data.dart';
 import '../../firebase_tools/firebase_account.dart';
 import '../../helpers/share_article.dart';
 
-class WebviewContainer extends StatefulWidget {
+class WebViewContainer extends StatefulWidget {
   final String headline;
   final String source;
   final String webUrl;
   final String imageUrl;
   final String description;
 
-  WebviewContainer(
+  const WebViewContainer(
       {super.key,
       required this.webUrl,
       required this.headline,
@@ -26,10 +25,10 @@ class WebviewContainer extends StatefulWidget {
       required this.description});
 
   @override
-  _WebviewContainerState createState() => _WebviewContainerState();
+  WebViewContainerState createState() => WebViewContainerState();
 }
 
-class _WebviewContainerState extends State<WebviewContainer> {
+class WebViewContainerState extends State<WebViewContainer> {
   late final WebViewController _controller;
   bool isMarked = false;
   bool isLoading = true;
@@ -75,14 +74,14 @@ class _WebviewContainerState extends State<WebviewContainer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: redViettel),
+        iconTheme: const IconThemeData(color: redViettel),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.share,
             ),
             onPressed: () => ShareArticle.shareArticle(widget.webUrl),
@@ -101,16 +100,16 @@ class _WebviewContainerState extends State<WebviewContainer> {
             },
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
+                const PopupMenuItem(
+                    value: 'Reload',
                     child: Text('Reload',
-                        style: TextStyle(fontFamily: 'FS PFBeauSansPro')),
-                    value: 'Reload'),
-                PopupMenuItem(
+                        style: TextStyle(fontFamily: 'FS PFBeauSansPro'))),
+                const PopupMenuItem(
+                  value: 'Open',
                   child: Text(
                     'Open in Browser',
                     style: TextStyle(fontFamily: 'FS PFBeauSansPro'),
                   ),
-                  value: 'Open',
                 ),
               ];
             },
@@ -127,7 +126,7 @@ class _WebviewContainerState extends State<WebviewContainer> {
               controller: _controller,
             ),
             if (isLoading)
-              Center(
+              const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(redViettel),
                 ),
@@ -143,7 +142,7 @@ class _WebviewContainerState extends State<WebviewContainer> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),

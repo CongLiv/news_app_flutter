@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
@@ -13,8 +12,8 @@ class LikedNewsItem extends ConsumerWidget {
   final String webUrl;
   final String imageUrl;
 
-  LikedNewsItem(
-      {required this.headline,
+  const LikedNewsItem(
+      {super.key, required this.headline,
       required this.source,
       required this.webUrl,
       required this.imageUrl});
@@ -24,11 +23,11 @@ class LikedNewsItem extends ConsumerWidget {
     final newsNoti = ref.watch(newsProvider.notifier);
     return GestureDetector(
       onTap: () async {
-        await FirebaseAnalyst.logReadNewsEvent(webUrl);
+        FirebaseAnalyst.logReadNewsEvent(webUrl);
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WebviewContainer(
+            builder: (context) => WebViewContainer(
                 webUrl: webUrl,
                 headline: headline,
                 source: source,
@@ -40,7 +39,7 @@ class LikedNewsItem extends ConsumerWidget {
       },
       child: Card(
         child: ListTile(
-          leading: Container(
+          leading: SizedBox(
             width: 100,
             height: 100,
             child: ClipRRect(
@@ -48,29 +47,29 @@ class LikedNewsItem extends ConsumerWidget {
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
+                placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ),
           title: Text(
             headline,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
           subtitle: Text(
             source,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
             ),
           ),
           trailing: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.bookmark_remove_rounded,
               color: Colors.red,
             ),

@@ -8,11 +8,13 @@ import '../../providers/news.dart';
 import '../../widgets/title_name.dart';
 
 class PersonalPage extends ConsumerStatefulWidget {
+  const PersonalPage({super.key});
+
   @override
-  _PersonalPageState createState() => _PersonalPageState();
+  PersonalPageState createState() => PersonalPageState();
 }
 
-class _PersonalPageState extends ConsumerState<PersonalPage> {
+class PersonalPageState extends ConsumerState<PersonalPage> {
   String email = '';
   bool _isInit = true;
   var _isLoading = false;
@@ -48,7 +50,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(redViettel),
           ),
@@ -74,14 +76,14 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
     final newsData = ref.watch(newsProvider);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: redViettel),
+        iconTheme: const IconThemeData(color: redViettel),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.logout_rounded,
             ),
             onPressed: () {
@@ -97,7 +99,7 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: 20, bottom: 20),
+                margin: const EdgeInsets.only(top: 20, bottom: 20),
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
@@ -110,23 +112,24 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
               ),
               // personal news liked
               Container(
+                margin: const EdgeInsets.only(bottom: 20),
                 child: Text(
                   email,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     fontFamily: 'FS Magistral',
                   ),
                 ),
-                margin: EdgeInsets.only(bottom: 20),
               ),
-              Divider(
+              const Divider(
                 color: redViettel,
                 thickness: .5,
                 indent: 8,
                 endIndent: 8,
               ),
               Container(
-                child: Text(
+                margin: const EdgeInsets.only(top: .5, bottom: 10),
+                child: const Text(
                   'Liked News',
                   style: TextStyle(
                     fontSize: 20,
@@ -134,11 +137,10 @@ class _PersonalPageState extends ConsumerState<PersonalPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                margin: EdgeInsets.only(top: .5, bottom: 10),
               ),
 
               _isLoading
-                  ? Expanded(
+                  ? const Expanded(
                       child: Center(
                         child: CircularProgressIndicator(
                           color: redViettel,

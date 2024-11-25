@@ -5,19 +5,21 @@ import '../providers/news.dart';
 import './article_item.dart';
 
 class Home extends ConsumerStatefulWidget {
+  const Home({super.key});
+
   static Future<void> resetScroll() async {
-    _HomeState.resetScroll();
+    HomeState.resetScroll();
   }
 
   static void reloadScroll() {
-    _HomeState.reloadScroll();
+    HomeState.reloadScroll();
   }
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
+class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   bool _isInit = true;
   var _isLoading = false;
 
@@ -37,7 +39,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
     homeAnimController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     homeAnimation = Tween<double>(begin: -60.0, end: 30.0).animate(
@@ -101,7 +103,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     homeAnimController.reset();
     homeScrollController.animateTo(
       0,
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 800),
       curve: Curves.easeInOut,
     );
   }
@@ -124,7 +126,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final newsData = ref.watch(newsProvider);
     return _isLoading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
             ),
@@ -133,7 +135,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             children: [
               if (newsData.topNews.isNotEmpty)
                 Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                     ),
                     child: RefreshIndicator(
@@ -174,7 +176,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all(redViettel),
                         ),
-                        child: Text('Refresh',
+                        child: const Text('Refresh',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -207,11 +209,11 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                           onPressed: () {
                             homeScrollController.animateTo(
                               0,
-                              duration: Duration(milliseconds: 800),
+                              duration: const Duration(milliseconds: 800),
                               curve: Curves.easeInOut,
                             );
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.arrow_upward,
                           ),
                         ),

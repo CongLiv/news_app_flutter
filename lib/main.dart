@@ -13,13 +13,15 @@ void main() async {
     await FirebaseConfig.initializeApp();
     await FirebaseConfig.initRemoteConfig();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-    runApp(ProviderScope(child: MyApp()));
+    runApp(const ProviderScope(child: MyApp()));
   }, (error, stackTrace) {
     FirebaseCrashlytics.instance.recordError(error, stackTrace);
   });
 }
 
 class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themePro = ref.watch(themeProvider);

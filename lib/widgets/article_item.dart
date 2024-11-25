@@ -10,7 +10,7 @@ class ArticleItem extends StatelessWidget {
   final String imageUrl;
   final String date;
 
-  ArticleItem({
+  const ArticleItem({super.key,
     required this.headline,
     required this.description,
     required this.source,
@@ -47,19 +47,19 @@ class ArticleItem extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 2,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: const Offset(0, 1), // changes position of shadow
             ),
           ],
         ),
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           bottom: 8,
         ),
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         width: double.infinity,
         child: Column(
           children: [
             Container(
-                margin: EdgeInsets.only(bottom: 4),
+                margin: const EdgeInsets.only(bottom: 4),
                 height: 180,
                 width: double.infinity,
                 child: ClipRRect(
@@ -67,14 +67,14 @@ class ArticleItem extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Center(
+                    placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
                     ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
                 )),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,8 +89,8 @@ class ArticleItem extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

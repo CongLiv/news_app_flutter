@@ -17,7 +17,7 @@ class ArticlePage extends StatefulWidget {
   final String imageUrl;
   final String date;
 
-  ArticlePage({
+  const ArticlePage({super.key,
     required this.headline,
     required this.description,
     required this.source,
@@ -52,14 +52,14 @@ class _ArticlePageState extends State<ArticlePage> {
     double topMargin = MediaQuery.of(context).size.height * 0.25;
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: redViettel),
+        iconTheme: const IconThemeData(color: redViettel),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
         title: TitleName(text: appNameLogo),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.share,
             ),
             onPressed: () => ShareArticle.shareArticle(widget.webUrl),
@@ -97,13 +97,13 @@ class _ArticlePageState extends State<ArticlePage> {
                   ),
                   child: Container(
                     margin: EdgeInsets.only(top: topMargin),
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 30,
                     ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
                       ),
@@ -121,7 +121,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               fontWeight: FontWeight.w600),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         ClipRRect(
@@ -129,13 +129,13 @@ class _ArticlePageState extends State<ArticlePage> {
                           child: CachedNetworkImage(
                             imageUrl: widget.imageUrl,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
+                            placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator(),
                             ),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text('Published on : ${widget.date}',
@@ -147,7 +147,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               fontWeight: FontWeight.w400,
                               letterSpacing: 1,
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Text(widget.description,
@@ -159,7 +159,7 @@ class _ArticlePageState extends State<ArticlePage> {
                               fontWeight: FontWeight.w500,
                               letterSpacing: 1,
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Text('Source :  ${widget.source}',
@@ -176,11 +176,11 @@ class _ArticlePageState extends State<ArticlePage> {
                           children: [
                             GestureDetector(
                               onTap: () async => {
-                                await FirebaseAnalyst.logReadNewsEvent(widget.webUrl),
+                                FirebaseAnalyst.logReadNewsEvent(widget.webUrl),
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => WebviewContainer(
+                                    builder: (context) => WebViewContainer(
                                         webUrl: widget.webUrl,
                                         headline: widget.headline,
                                         source: widget.source,
@@ -201,14 +201,14 @@ class _ArticlePageState extends State<ArticlePage> {
                                     }),
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 12),
-                                margin: EdgeInsets.only(top: 20),
+                                margin: const EdgeInsets.only(top: 20),
                                 decoration: BoxDecoration(
                                   color: redViettel,
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                child: Text('Read Article',
+                                child: const Text('Read Article',
                                     style: TextStyle(
                                       fontFamily: 'FS Magistral',
                                       color: Colors.white,
@@ -220,7 +220,7 @@ class _ArticlePageState extends State<ArticlePage> {
                             ),
                             // bookmark button
                             Container(
-                              margin: EdgeInsets.only(top: 20, right: 20),
+                              margin: const EdgeInsets.only(top: 20, right: 20),
                               child: GestureDetector(
                                 onTap: () {
                                   !FirebaseAccount.isSignedIn()

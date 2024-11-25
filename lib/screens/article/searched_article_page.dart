@@ -8,13 +8,13 @@ import '../../providers/news.dart';
 class SearchedArticleScreen extends ConsumerStatefulWidget {
   final String searchField;
 
-  SearchedArticleScreen({required this.searchField});
+  const SearchedArticleScreen({super.key, required this.searchField});
 
   @override
-  _SearchedArticleScreenState createState() => _SearchedArticleScreenState();
+  SearchedArticleScreenState createState() => SearchedArticleScreenState();
 }
 
-class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
+class SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
     with TickerProviderStateMixin {
   bool _isInit = true;
   var _isLoading = false;
@@ -34,7 +34,7 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
 
     _animController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     _animation = Tween<double>(begin: -60.0, end: 30.0).animate(
@@ -98,13 +98,13 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
     final newsData = ref.watch(newsProvider);
     return Scaffold(
       appBar: AppBar(
-          iconTheme: IconThemeData(color: redViettel),
+          iconTheme: const IconThemeData(color: redViettel),
           backgroundColor: Theme.of(context).colorScheme.secondary,
           elevation: 0,
           centerTitle: true,
           title: TitleName(text: appNameLogo)),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(redViettel),
               ),
@@ -112,20 +112,18 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
           : Stack(
               children: [
                 if (newsData.searchedNews.isNotEmpty)
-                Container(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: newsData.searchedNews.length,
-                    itemBuilder: (ctx, index) {
-                      return SearchedArticle(
-                        headline: newsData.searchedNews[index].headline,
-                        source: newsData.searchedNews[index].source,
-                        webUrl: newsData.searchedNews[index].webUrl,
-                        date: newsData.searchedNews[index].date,
-                        imageUrl: newsData.searchedNews[index].imageUrl,
-                      );
-                    },
-                  ),
+                ListView.builder(
+                  controller: _scrollController,
+                  itemCount: newsData.searchedNews.length,
+                  itemBuilder: (ctx, index) {
+                    return SearchedArticle(
+                      headline: newsData.searchedNews[index].headline,
+                      source: newsData.searchedNews[index].source,
+                      webUrl: newsData.searchedNews[index].webUrl,
+                      date: newsData.searchedNews[index].date,
+                      imageUrl: newsData.searchedNews[index].imageUrl,
+                    );
+                  },
                 )
                 else
                   Center(
@@ -150,7 +148,7 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
                             backgroundColor:
                             WidgetStateProperty.all(redViettel),
                           ),
-                          child: Text('Refresh',
+                          child: const Text('Refresh',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -182,11 +180,11 @@ class _SearchedArticleScreenState extends ConsumerState<SearchedArticleScreen>
                             onPressed: () {
                               _scrollController.animateTo(
                                 0,
-                                duration: Duration(milliseconds: 800),
+                                duration: const Duration(milliseconds: 800),
                                 curve: Curves.easeInOut,
                               );
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.arrow_upward,
                             ),
                           ),

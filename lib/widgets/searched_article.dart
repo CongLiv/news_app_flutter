@@ -12,8 +12,9 @@ class SearchedArticle extends StatelessWidget {
   final String date;
   final String imageUrl;
 
-  SearchedArticle(
-      {required this.headline,
+  const SearchedArticle(
+      {super.key,
+      required this.headline,
       required this.source,
       required this.webUrl,
       required this.date,
@@ -23,23 +24,23 @@ class SearchedArticle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async => {
-        await FirebaseAnalyst.logReadNewsEvent(webUrl),
+        FirebaseAnalyst.logReadNewsEvent(webUrl),
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WebviewContainer(
-                webUrl: webUrl,
-                headline: headline,
-                source: source,
-                imageUrl: imageUrl,
-                description: headline,
+            builder: (context) => WebViewContainer(
+              webUrl: webUrl,
+              headline: headline,
+              source: source,
+              imageUrl: imageUrl,
+              description: headline,
             ),
           ),
         )
       },
       child: Container(
-        margin: EdgeInsets.fromLTRB(10, 2, 10, 8),
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+        margin: const EdgeInsets.fromLTRB(10, 2, 10, 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           border: Border.all(color: Theme.of(context).colorScheme.secondary),
@@ -49,7 +50,7 @@ class SearchedArticle extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 2,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: const Offset(0, 1), // changes position of shadow
             ),
           ],
         ),
@@ -57,21 +58,21 @@ class SearchedArticle extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.launch,
                 color: redViettel,
               ),
               onPressed: () async => {
-                await FirebaseAnalyst.logReadNewsEvent(webUrl),
+                FirebaseAnalyst.logReadNewsEvent(webUrl),
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebviewContainer(
-                        webUrl: webUrl,
-                        headline: headline,
-                        source: source,
-                        imageUrl: imageUrl,
-                        description: headline,
+                    builder: (context) => WebViewContainer(
+                      webUrl: webUrl,
+                      headline: headline,
+                      source: source,
+                      imageUrl: imageUrl,
+                      description: headline,
                     ),
                   ),
                 )
@@ -81,7 +82,7 @@ class SearchedArticle extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    margin: EdgeInsets.only(bottom: 4),
+                    margin: const EdgeInsets.only(bottom: 4),
                     height: 180,
                     width: double.infinity,
                     child: ClipRRect(
@@ -89,10 +90,10 @@ class SearchedArticle extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Center(
+                        placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator(),
                         ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     )),
                 Text(
@@ -105,7 +106,7 @@ class SearchedArticle extends StatelessWidget {
                     fontWeight: FontWeight.w300,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Row(

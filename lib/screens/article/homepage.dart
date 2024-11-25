@@ -13,17 +13,19 @@ import '../../widgets/search.dart';
 import '../../helpers/const_data.dart';
 
 class Homepage extends ConsumerStatefulWidget {
+  const Homepage({super.key});
+
   @override
-  _HomepageState createState() => _HomepageState();
+  HomepageState createState() => HomepageState();
 }
 
-class _HomepageState extends ConsumerState<Homepage> {
+class HomepageState extends ConsumerState<Homepage> {
   int _selectedIndex = 0;
   final FocusNode _searchFocusNode = FocusNode();
 
   static List<Widget> _widgetOptions(FocusNode focusNode) => <Widget>[
-        Home(),
-        Categories(),
+        const Home(),
+        const Categories(),
         Search(focusNode: focusNode),
       ];
 
@@ -41,13 +43,13 @@ class _HomepageState extends ConsumerState<Homepage> {
         appBar: AppBar(
           centerTitle: true,
           title: TitleName(text: appNameLogo),
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
             color: redViettel,
           ),
           leading: Padding(
             padding: const EdgeInsets.only(left: 5.0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.person,
                 size: 30,
               ),
@@ -56,8 +58,8 @@ class _HomepageState extends ConsumerState<Homepage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => !FirebaseAccount.isSignedIn()
-                        ? SignInPage()
-                        : PersonalPage(),
+                        ? const SignInPage()
+                        : const PersonalPage(),
                   ),
                 ).then((_) => {
                       _searchFocusNode.unfocus(),
@@ -84,7 +86,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                     timeInSecForIosWeb: 1,
                     backgroundColor: themePro.isDarkMode()
                         ? Colors.black
-                        : Color(0xFFE5E5E5),
+                        : const Color(0xFFE5E5E5),
                     textColor:
                         themePro.isDarkMode() ? Colors.white70 : Colors.black,
                     fontSize: 16.0,

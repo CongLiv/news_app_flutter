@@ -10,18 +10,18 @@ import '../../helpers/const_data.dart';
 import '../../widgets/title_name.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
-  _SignInPage createState() => _SignInPage();
+  SignInPageState createState() => SignInPageState();
 }
 
-class _SignInPage extends State<SignInPage> {
+class SignInPageState extends State<SignInPage> {
   String email = '';
   String password = '';
   bool isValid = true;
 
-  String _noti = '';
+  final String _noti = '';
 
   bool _isHiddenPassword = true;
 
@@ -36,7 +36,7 @@ class _SignInPage extends State<SignInPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(redViettel),
           ),
@@ -69,13 +69,13 @@ class _SignInPage extends State<SignInPage> {
       decoration: BoxDecoration(
         image: DecorationImage(
             image: Theme.of(context).brightness == Brightness.dark
-                ? AssetImage('assets/images/background_dark.png')
-                : AssetImage('assets/images/background.jpg'),
+                ? const AssetImage('assets/images/background_dark.png')
+                : const AssetImage('assets/images/background.jpg'),
             fit: BoxFit.cover),
       ),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: redViettel),
+          iconTheme: const IconThemeData(color: redViettel),
           backgroundColor: Theme.of(context).colorScheme.secondary,
           elevation: 0,
           centerTitle: true,
@@ -88,7 +88,7 @@ class _SignInPage extends State<SignInPage> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 70),
+                    padding: const EdgeInsets.only(top: 70),
                     // child: Text(
                     //   'Let Sign In!',
                     //   style: TextStyle(
@@ -101,26 +101,26 @@ class _SignInPage extends State<SignInPage> {
                         animatedTexts: [
                           TypewriterAnimatedText(
                             '  Let Sign In!',
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               color: redViettel,
                               fontSize: 33,
                               fontFamily: 'FS PFBeauSansPro',
                               fontWeight: FontWeight.w500,
                               letterSpacing: 2,
                             ),
-                            speed: Duration(milliseconds: 150),
+                            speed: const Duration(milliseconds: 150),
                           ),
                         ],
                         totalRepeatCount: 3,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.only(top: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(left: 35, right: 35),
+                          margin: const EdgeInsets.only(left: 35, right: 35),
                           child: Column(
                             children: [
                               TextField(
@@ -139,7 +139,7 @@ class _SignInPage extends State<SignInPage> {
                                       Theme.of(context).colorScheme.primary,
                                   filled: true,
                                   hintText: "Email",
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontFamily: 'FS PFBeauSansPro',
                                   ),
                                   border: OutlineInputBorder(
@@ -155,7 +155,7 @@ class _SignInPage extends State<SignInPage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               TextField(
@@ -165,13 +165,13 @@ class _SignInPage extends State<SignInPage> {
                                 obscureText: _isHiddenPassword,
                                 cursorColor:
                                     Theme.of(context).colorScheme.onSurface,
-                                style: TextStyle(),
+                                style: const TextStyle(),
                                 decoration: InputDecoration(
                                   fillColor:
                                       Theme.of(context).colorScheme.primary,
                                   filled: true,
                                   hintText: "Password",
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     fontFamily: 'FS PFBeauSansPro',
                                   ),
                                   border: OutlineInputBorder(
@@ -188,8 +188,8 @@ class _SignInPage extends State<SignInPage> {
                                   suffixIcon: IconButton(
                                     onPressed: _togglePasswordVisibility,
                                     icon: _isHiddenPassword
-                                        ? Icon(Icons.visibility_off)
-                                        : Icon(Icons.visibility),
+                                        ? const Icon(Icons.visibility_off)
+                                        : const Icon(Icons.visibility),
                                   ),
                                 ),
                               ),
@@ -213,17 +213,18 @@ class _SignInPage extends State<SignInPage> {
                                         onPressed: () {
                                           _handleSignIn();
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.arrow_forward,
                                         )),
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 25,
                               ),
                               TextButton(
                                 onPressed: () {},
+                                style: const ButtonStyle(),
                                 child: RichText(
                                   text: TextSpan(
                                     text: 'Don\'t have an account? ',
@@ -236,7 +237,7 @@ class _SignInPage extends State<SignInPage> {
                                     children: <TextSpan>[
                                       TextSpan(
                                           text: 'Sign Up',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: redViettel,
                                             fontFamily: 'FS PFBeauSansPro',
                                             decoration:
@@ -249,13 +250,12 @@ class _SignInPage extends State<SignInPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (ctx) =>
-                                                        SignUpPage()),
+                                                        const SignUpPage()),
                                               );
                                             }),
                                     ],
                                   ),
                                 ),
-                                style: ButtonStyle(),
                               ),
                             ],
                           ),

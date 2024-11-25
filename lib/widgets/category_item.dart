@@ -7,7 +7,7 @@ class CategoryItem extends StatelessWidget {
   final String imageUrl;
   final String name;
 
-  CategoryItem({
+  const CategoryItem({super.key,
     required this.name,
     required this.imageUrl,
   });
@@ -15,7 +15,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await FirebaseAnalyst.logCategoryClickEvent(name);
+        FirebaseAnalyst.logCategoryClickEvent(name);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -26,7 +26,7 @@ class CategoryItem extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           top: 10,
           bottom: 5,
         ),
@@ -35,7 +35,7 @@ class CategoryItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
-            colorFilter: ColorFilter.mode(
+            colorFilter: const ColorFilter.mode(
               Colors.black54,
               BlendMode.darken,
             ),
@@ -46,7 +46,7 @@ class CategoryItem extends StatelessWidget {
         child: Center(
           child: Text(
             name.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'FS PFBeauSansPro',
               color: Colors.white,
               fontSize: 25,

@@ -7,13 +7,13 @@ import '../../widgets/article_item.dart';
 class CategoryNewsScreen extends ConsumerStatefulWidget {
   final String categoryName;
 
-  CategoryNewsScreen({required this.categoryName});
+  const CategoryNewsScreen({super.key, required this.categoryName});
 
   @override
-  _CategoryNewsScreenState createState() => _CategoryNewsScreenState();
+  CategoryNewsScreenState createState() => CategoryNewsScreenState();
 }
 
-class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
+class CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
     with TickerProviderStateMixin {
   bool _isInit = true;
   var _isLoading = false;
@@ -33,7 +33,7 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
 
     _animController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     _animation = Tween<double>(begin: -60.0, end: 25.0).animate(
@@ -94,11 +94,11 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: IconThemeData(color: redViettel),
+        iconTheme: const IconThemeData(color: redViettel),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         title: Text(widget.categoryName.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'FS PFBeauSansPro',
               fontSize: 21,
               fontWeight: FontWeight.w900,
@@ -107,9 +107,9 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
             )),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: _isLoading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(redViettel),
                 ),
@@ -156,7 +156,7 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
                               backgroundColor:
                                   WidgetStateProperty.all(redViettel),
                             ),
-                            child: Text('Refresh',
+                            child: const Text('Refresh',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -189,11 +189,11 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
                               onPressed: () {
                                 _scrollController.animateTo(
                                   0,
-                                  duration: Duration(milliseconds: 800),
+                                  duration: const Duration(milliseconds: 800),
                                   curve: Curves.easeInOut,
                                 );
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.arrow_upward,
                               ),
                             ),
