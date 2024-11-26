@@ -11,6 +11,54 @@ import '../../helpers/share_article.dart';
 import '../../providers/news.dart';
 import 'webview_container.dart';
 
+
+class ArticlesPageView extends StatelessWidget {
+  final List<dynamic> articles;
+  final int initialIndex;
+
+  const ArticlesPageView({
+    super.key,
+    required this.articles,
+    required this.initialIndex,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: redViettel),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        elevation: 0,
+        centerTitle: true,
+        title: const TitleName(text: appNameLogo),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.share,
+            ),
+            onPressed: () => ShareArticle.shareArticle(articles[initialIndex].webUrl),
+          ),
+        ],
+      ),
+      body: PageView.builder(
+        controller: PageController(initialPage: initialIndex),
+        itemCount: articles.length,
+        itemBuilder: (ctx, index) {
+          final article = articles[index];
+          return ArticlePage(
+            headline: article.headline,
+            description: article.description,
+            source: article.source,
+            webUrl: article.webUrl,
+            imageUrl: article.imageUrl,
+            date: article.date,
+          );
+        },
+      ),
+    );
+  }
+}
+
 class ArticlePage extends ConsumerStatefulWidget {
   final String headline;
   final String description;
@@ -53,25 +101,8 @@ class _ArticlePageState extends ConsumerState<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    final newsData = ref.watch(newsProvider);
-
     double topMargin = MediaQuery.of(context).size.height * 0.25;
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: redViettel),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        elevation: 0,
-        centerTitle: true,
-        title: const TitleName(text: appNameLogo),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.share,
-            ),
-            onPressed: () => ShareArticle.shareArticle(widget.webUrl),
-          ),
-        ],
-      ),
       body: Stack(
         children: [
           Container(

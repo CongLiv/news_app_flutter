@@ -151,6 +151,8 @@ class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                           webUrl: newsData.topNews[index].webUrl,
                           imageUrl: newsData.topNews[index].imageUrl,
                           date: newsData.topNews[index].date,
+                          articles: newsData.topNews,
+                          currentIndex: index,
                         ),
                       ),
                     ))
