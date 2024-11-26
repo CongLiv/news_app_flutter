@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_analyst.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firestore_articles.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
@@ -7,9 +8,10 @@ import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import '../../helpers/share_article.dart';
+import '../../providers/news.dart';
 import 'webview_container.dart';
 
-class ArticlePage extends StatefulWidget {
+class ArticlePage extends ConsumerStatefulWidget {
   final String headline;
   final String description;
   final String source;
@@ -17,7 +19,8 @@ class ArticlePage extends StatefulWidget {
   final String imageUrl;
   final String date;
 
-  const ArticlePage({super.key,
+  const ArticlePage({
+    super.key,
     required this.headline,
     required this.description,
     required this.source,
@@ -27,11 +30,12 @@ class ArticlePage extends StatefulWidget {
   });
 
   @override
-  State<ArticlePage> createState() => _ArticlePageState();
+  ConsumerState<ArticlePage> createState() => _ArticlePageState();
 }
 
-class _ArticlePageState extends State<ArticlePage> {
+class _ArticlePageState extends ConsumerState<ArticlePage> {
   bool isMarked = false;
+
 
   @override
   void initState() {
@@ -49,6 +53,8 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
+    final newsData = ref.watch(newsProvider);
+
     double topMargin = MediaQuery.of(context).size.height * 0.25;
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +62,7 @@ class _ArticlePageState extends State<ArticlePage> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         centerTitle: true,
-        title: TitleName(text: appNameLogo),
+        title: const TitleName(text: appNameLogo),
         actions: [
           IconButton(
             icon: const Icon(

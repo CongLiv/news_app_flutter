@@ -42,7 +42,7 @@ class HomepageState extends ConsumerState<Homepage> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: TitleName(text: appNameLogo),
+          title: const TitleName(text: appNameLogo),
           iconTheme: const IconThemeData(
             color: redViettel,
           ),
