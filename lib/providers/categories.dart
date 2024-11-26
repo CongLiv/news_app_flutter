@@ -34,3 +34,6 @@ class Categories extends ChangeNotifier {
     ),
   ];
 }
+
+// show hint provider
+final showHintProvider = StateProvider<bool>((ref) => true);
