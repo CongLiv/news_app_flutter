@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app_flutter_demo/helpers/const_data.dart';
+import 'package:news_app_flutter_demo/providers/recommender.dart';
 import '../providers/news.dart';
 import './article_item.dart';
 
@@ -34,7 +35,9 @@ class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(recommenderProvider.notifier).getUserRecommendations('U424171');
+    });
     newsNoti = ref.read(newsProvider.notifier);
 
     homeAnimController = AnimationController(

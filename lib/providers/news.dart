@@ -19,14 +19,12 @@ final newsProvider = StateNotifierProvider<News, NewsState>((ref) {
 
 class NewsState {
   final List<Article> topNews;
-  final List<Article> worldNews;
   final List<SearchedArticle> searchedNews;
   final List<Article> categoryNews;
   final List<LikedNewsItem> likedNews;
 
   NewsState({
     required this.topNews,
-    required this.worldNews,
     required this.searchedNews,
     required this.categoryNews,
     required this.likedNews,
@@ -41,7 +39,6 @@ class NewsState {
   }) {
     return NewsState(
       topNews: topNews ?? this.topNews,
-      worldNews: worldNews ?? this.worldNews,
       searchedNews: searchedNews ?? this.searchedNews,
       categoryNews: categoryNews ?? this.categoryNews,
       likedNews: likedNews ?? this.likedNews,
@@ -53,7 +50,6 @@ class News extends StateNotifier<NewsState> {
   News()
       : super(NewsState(
           topNews: [],
-          worldNews: [],
           searchedNews: [],
           categoryNews: [],
           likedNews: [],
@@ -87,38 +83,38 @@ class News extends StateNotifier<NewsState> {
         jsonResponse = response.data;
       }
 
-      List<SearchedArticle> _loadedItems = [];
+      List<SearchedArticle> loadedItems = [];
       List extractedData = jsonResponse['response']['docs'];
-      extractedData.forEach((item) {
+      for (var item in extractedData) {
         if (item['abstract'] == null ||
             item['source'] == null ||
             item['pub_date'] == null ||
             item['web_url'] == null) {
-          return;
+          continue;
         }
         String imageUrl;
 
         // Check if 'multimedia' list is not empty before accessing its elements
         if (item['multimedia'] != null && item['multimedia'].isNotEmpty) {
-          imageUrl = 'https://static01.nyt.com/' + item['multimedia'][0]['url'];
+          imageUrl = 'https://static01.nyt.com/${item['multimedia'][0]['url']}';
         } else {
           if (item['web_url'] != null) {
             imageUrl =
                 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
           } else {
-            return;
+            continue;
           }
         }
-        _loadedItems.add(SearchedArticle(
+        loadedItems.add(SearchedArticle(
           headline: item['abstract'],
           source: item['source'],
           date: formatter(item['pub_date']),
           webUrl: item['web_url'],
           imageUrl: imageUrl,
         ));
-      });
+      }
 
-      state = state.copyWith(searchedNews: _loadedItems);
+      state = state.copyWith(searchedNews: loadedItems);
     } catch (error) {
       ToastLog.show('Error: Bad request');
     }
@@ -141,15 +137,15 @@ class News extends StateNotifier<NewsState> {
       } else if (response.data is Map<String, dynamic>) {
         jsonResponse = response.data;
       }
-      List<Article> _loadedItems = [];
+      List<Article> loadedItems = [];
       List extractedData = jsonResponse['results'];
-      extractedData.forEach((item) {
+      for (var item in extractedData) {
         if (item['title'] == null ||
             item['byline'] == null ||
             item['abstract'] == null ||
             item['published_date'] == null ||
             item['url'] == null) {
-          return;
+          continue;
         }
 
         String imageUrl;
@@ -160,10 +156,10 @@ class News extends StateNotifier<NewsState> {
             imageUrl =
                 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
           } else {
-            return;
+            continue;
           }
         }
-        _loadedItems.add(Article(
+        loadedItems.add(Article(
           headline: item['title'],
           source: item['byline'],
           description: item['abstract'],
@@ -171,8 +167,8 @@ class News extends StateNotifier<NewsState> {
           imageUrl: imageUrl,
           webUrl: item['url'],
         ));
-      });
-      state = state.copyWith(categoryNews: _loadedItems);
+      }
+      state = state.copyWith(categoryNews: loadedItems);
     } catch (error) {
       ToastLog.show('Error: Bad request');
     }
@@ -207,7 +203,7 @@ class News extends StateNotifier<NewsState> {
       return;
     }
     try {
-      List<Article> _loadedItems = [];
+      List<Article> loadedItems = [];
       // pick 2 sources randomly
       List<String> tmpSource = [];
       for (int i = 0; i < 2; i++) {
@@ -221,12 +217,12 @@ class News extends StateNotifier<NewsState> {
         Response response = await Dio().get(url);
         var jsonResponse = response.data;
         List extractedData = jsonResponse['articles'];
-        extractedData.forEach((item) {
+        for (var item in extractedData) {
           if (item['title'] != null &&
               item['author'] != null &&
               item['description'] != null &&
               item['urlToImage'] != null) {
-            _loadedItems.add(Article(
+            loadedItems.add(Article(
               headline: item['title'],
               source: item['author'],
               description: item['description'],
@@ -235,13 +231,13 @@ class News extends StateNotifier<NewsState> {
               webUrl: item['url'],
             ));
           }
-        });
+        }
       }
 
       // mix _loadedItems
-      _loadedItems.shuffle();
+      loadedItems.shuffle();
 
-      state = state.copyWith(topNews: _loadedItems);
+      state = state.copyWith(topNews: loadedItems);
     } catch (error) {
       ToastLog.show('Error: Bad request');
     }
@@ -261,14 +257,14 @@ class News extends StateNotifier<NewsState> {
           .collection('news')
           .get();
       List<LikedNewsItem> likedNews = [];
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         likedNews.add(LikedNewsItem(
           headline: element['headline'],
           source: element['source'],
           webUrl: element['webUrl'],
           imageUrl: element['imageUrl'],
         ));
-      });
+      }
 
       state = state.copyWith(likedNews: likedNews);
     } catch (error) {
