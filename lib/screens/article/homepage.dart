@@ -107,12 +107,12 @@ class HomepageState extends ConsumerState<Homepage> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           backgroundColor: Theme.of(context).colorScheme.secondary,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
                 size: 30,
-                color: redViettel,
+                color: _selectedIndex == 0 ? redViettel : Colors.grey,
               ),
               label: 'Home',
             ),
@@ -120,15 +120,15 @@ class HomepageState extends ConsumerState<Homepage> {
               icon: Icon(
                 Icons.segment,
                 size: 30,
-                color: redViettel,
+                color: _selectedIndex == 1 ? redViettel : Colors.grey,
               ),
-              label: 'Articles',
+              label: 'Categories',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.search,
                 size: 30,
-                color: redViettel,
+                color: _selectedIndex == 2 ? redViettel : Colors.grey,
               ),
               label: 'Search',
             ),

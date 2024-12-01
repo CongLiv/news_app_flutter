@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
+import 'package:news_app_flutter_demo/screens/profile/reset_password_page.dart';
 import 'package:news_app_flutter_demo/screens/profile/sign_up_page.dart';
 
 import '../../helpers/check_connection.dart';
@@ -19,9 +20,6 @@ class SignInPage extends StatefulWidget {
 class SignInPageState extends State<SignInPage> {
   String email = '';
   String password = '';
-  bool isValid = true;
-
-  final String _noti = '';
 
   bool _isHiddenPassword = true;
 
@@ -79,7 +77,7 @@ class SignInPageState extends State<SignInPage> {
           backgroundColor: Theme.of(context).colorScheme.secondary,
           elevation: 0,
           centerTitle: true,
-          title: TitleName(text: appNameLogo),
+          title: const TitleName(text: appNameLogo),
         ),
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -120,37 +118,41 @@ class SignInPageState extends State<SignInPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(left: 35, right: 35),
+                          // margin: const EdgeInsets.only(left: 35, right: 35),
                           child: Column(
                             children: [
-                              TextField(
-                                onChanged: (value) {
-                                  email = value;
-                                },
-                                keyboardType: TextInputType.emailAddress,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onSurface,
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                                decoration: InputDecoration(
-                                  fillColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  filled: true,
-                                  hintText: "Email",
-                                  hintStyle: const TextStyle(
-                                    fontFamily: 'FS PFBeauSansPro',
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    email = value;
+                                  },
+                                  keyboardType: TextInputType.emailAddress,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .onSurface,
+                                          .onSurface),
+                                  decoration: InputDecoration(
+                                    fillColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    filled: true,
+                                    hintText: "Email",
+                                    hintStyle: const TextStyle(
+                                      fontFamily: 'FS PFBeauSansPro',
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -158,51 +160,75 @@ class SignInPageState extends State<SignInPage> {
                               const SizedBox(
                                 height: 30,
                               ),
-                              TextField(
-                                onChanged: (value) {
-                                  password = value;
-                                },
-                                obscureText: _isHiddenPassword,
-                                cursorColor:
-                                    Theme.of(context).colorScheme.onSurface,
-                                style: const TextStyle(),
-                                decoration: InputDecoration(
-                                  fillColor:
-                                      Theme.of(context).colorScheme.primary,
-                                  filled: true,
-                                  hintText: "Password",
-                                  hintStyle: const TextStyle(
-                                    fontFamily: 'FS PFBeauSansPro',
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    password = value;
+                                  },
+                                  obscureText: _isHiddenPassword,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                  style: const TextStyle(),
+                                  decoration: InputDecoration(
+                                    fillColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    filled: true,
+                                    hintText: "Password",
+                                    hintStyle: const TextStyle(
+                                      fontFamily: 'FS PFBeauSansPro',
                                     ),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    onPressed: _togglePasswordVisibility,
-                                    icon: _isHiddenPassword
-                                        ? const Icon(Icons.visibility_off)
-                                        : const Icon(Icons.visibility),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      onPressed: _togglePasswordVisibility,
+                                      icon: _isHiddenPassword
+                                          ? const Icon(Icons.visibility_off)
+                                          : const Icon(Icons.visibility),
+                                    ),
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                  height: 30,
-                                  child: Text(
-                                    _noti,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      fontFamily: 'FS PFBeauSansPro',
+                              const SizedBox(
+                                height: 7
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 25),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) => const ResetPasswordPage()),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Forget password?',
+                                      style: TextStyle(
+                                        color: redViettel,
+                                        fontFamily: 'FS PFBeauSansPro',
+                                        fontSize: 14,
+                                      ),
                                     ),
-                                  )),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
                               Column(
                                 children: [
                                   CircleAvatar(

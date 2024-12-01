@@ -70,4 +70,18 @@ class FirebaseAccount {
       return null;
     }
   }
+
+  static Future<void> forgetPassword({required String email, onSuccess, onError}) async {
+    try {
+      final auth = FirebaseAuth.instance;
+      await auth.sendPasswordResetEmail(email: email);
+      if (onSuccess != null) {
+        onSuccess();
+      }
+    } catch (e) {
+      if (onError != null) {
+        onError(e);
+      }
+    }
+  }
 }

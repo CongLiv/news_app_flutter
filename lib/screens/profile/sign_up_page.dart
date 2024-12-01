@@ -65,12 +65,7 @@ class SignUpPageState extends State<SignUpPage> {
       onSuccess: () {
         Navigator.pop(context);
         ToastLog.show('Sign up successfully');
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => const Homepage(),
-          ),
-        );
+        Navigator.popUntil(context, (route) => route.isFirst);
       },
       onError: (e) async {
         Navigator.pop(context);
@@ -104,7 +99,7 @@ class SignUpPageState extends State<SignUpPage> {
           backgroundColor: Theme.of(context).colorScheme.secondary,
           elevation: 0,
           centerTitle: true,
-          title: TitleName(text: appNameLogo),
+          title: const TitleName(text: appNameLogo),
         ),
         backgroundColor: Colors.transparent,
         body: Stack(

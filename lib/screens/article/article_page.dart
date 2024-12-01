@@ -28,8 +28,8 @@ class ArticlesPageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final List<Article> articles = isHomePage ? ref.watch(newsProvider).topNews : ref.watch(newsProvider).categoryNews;
+    int currentIndex = initialIndex;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: redViettel),
@@ -42,7 +42,7 @@ class ArticlesPageView extends ConsumerWidget {
             icon: const Icon(
               Icons.share,
             ),
-            onPressed: () => ShareArticle.shareArticle(articles[initialIndex].webUrl),
+            onPressed: () => ShareArticle.shareArticle(articles[currentIndex].webUrl),
           ),
         ],
       ),
@@ -50,6 +50,7 @@ class ArticlesPageView extends ConsumerWidget {
         controller: PageController(initialPage: initialIndex),
         itemCount: articles.length,
         onPageChanged: (index) async {
+          currentIndex = index;
           if (index > articles.length - 8 && isHomePage) {
             await ref.read(newsProvider.notifier).appendTopNews();
           }

@@ -186,10 +186,11 @@ class News extends StateNotifier<NewsState> {
 
   /// FETCH TOP NEWS BY NEWSAPI
 
-  // final String newsApiKey =
-  //     FirebaseRemoteConfig.instance.getString('newsApiKey1');
+  // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey1');
 
-  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApikey2'); // key 2
+  // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey2'); // key 2
+
+  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApiKey3'); // key 3
 
   final newsApiUrl = "https://newsapi.org/v2";
 
@@ -230,6 +231,7 @@ class News extends StateNotifier<NewsState> {
         state = state.copyWith(topNews: loadedItems);
       }
     } catch (error) {
+      print("Error: $error");
       ToastLog.show('Error: Bad request');
     }
   }
