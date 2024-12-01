@@ -9,12 +9,13 @@ import 'package:news_app_flutter_demo/firebase_tools/firestore_articles.dart';
 import 'package:news_app_flutter_demo/helpers/check_connection.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
+import 'package:news_app_flutter_demo/providers/recommender.dart';
 import 'package:news_app_flutter_demo/widgets/liked_news_item.dart';
 import '../models/article.dart';
 import '../models/searchedArticle.dart';
 
 final newsProvider = StateNotifierProvider<News, NewsState>((ref) {
-  return News();
+  return News(ref);
 });
 
 class NewsState {
@@ -22,32 +23,41 @@ class NewsState {
   final List<SearchedArticle> searchedNews;
   final List<Article> categoryNews;
   final List<LikedNewsItem> likedNews;
+  final bool isNewTimeOpenApp;
+  final bool inAppendProgress;
 
   NewsState({
     required this.topNews,
     required this.searchedNews,
     required this.categoryNews,
     required this.likedNews,
+    this.isNewTimeOpenApp = true,
+    this.inAppendProgress = false,
   });
 
   NewsState copyWith({
     List<Article>? topNews,
-    List<Article>? worldNews,
     List<SearchedArticle>? searchedNews,
     List<Article>? categoryNews,
     List<LikedNewsItem>? likedNews,
+    bool? isNewTimeOpenApp,
+    bool? inAppendProgress,
   }) {
     return NewsState(
       topNews: topNews ?? this.topNews,
       searchedNews: searchedNews ?? this.searchedNews,
       categoryNews: categoryNews ?? this.categoryNews,
       likedNews: likedNews ?? this.likedNews,
+      isNewTimeOpenApp: isNewTimeOpenApp ?? this.isNewTimeOpenApp,
+      inAppendProgress: inAppendProgress ?? this.inAppendProgress,
     );
   }
 }
 
 class News extends StateNotifier<NewsState> {
-  News()
+  final Ref ref;
+
+  News(this.ref)
       : super(NewsState(
           topNews: [],
           searchedNews: [],
@@ -62,7 +72,7 @@ class News extends StateNotifier<NewsState> {
     return formattedDate;
   }
 
-  // FETCH DATA BY NYT API
+  /// FETCH DATA BY NYT API
   final String nytApiKey = FirebaseRemoteConfig.instance.getString('nytApiKey');
   final nytUrl = "https://api.nytimes.com/svc";
 
@@ -174,26 +184,12 @@ class News extends StateNotifier<NewsState> {
     }
   }
 
-  // FETCH DATA BY NEWSAPI
-  List<String> sources = [
-    'bbc-news',
-    'cnn',
-    'fox-news',
-    'reuters',
-    'the-wall-street-journal',
-    'the-washington-post',
-    'axios',
-    'the-verge',
-    'espn',
-    'abc-news',
-    'nfl-news',
-    'fox-news',
-  ];
+  /// FETCH TOP NEWS BY NEWSAPI
 
-  final String newsApiKey =
-      FirebaseRemoteConfig.instance.getString('newsApiKey1');
+  // final String newsApiKey =
+  //     FirebaseRemoteConfig.instance.getString('newsApiKey1');
 
-  // final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApikey2'); // key 2
+  final String newsApiKey = FirebaseRemoteConfig.instance.getString('newsApikey2'); // key 2
 
   final newsApiUrl = "https://newsapi.org/v2";
 
@@ -203,45 +199,260 @@ class News extends StateNotifier<NewsState> {
       return;
     }
     try {
-      List<Article> loadedItems = [];
-      // pick 2 sources randomly
-      List<String> tmpSource = [];
-      for (int i = 0; i < 2; i++) {
-        String randomSource;
-        do {
-          randomSource = sources[DateTime.now().microsecond % sources.length];
-        } while (tmpSource.contains(randomSource));
-        tmpSource.add(randomSource);
-        final url =
-            '$newsApiUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
-        Response response = await Dio().get(url);
-        var jsonResponse = response.data;
-        List extractedData = jsonResponse['articles'];
-        for (var item in extractedData) {
-          if (item['title'] != null &&
-              item['author'] != null &&
-              item['description'] != null &&
-              item['urlToImage'] != null) {
-            loadedItems.add(Article(
-              headline: item['title'],
-              source: item['author'],
-              description: item['description'],
-              date: formatter(item['publishedAt']),
-              imageUrl: item['urlToImage'],
-              webUrl: item['url'],
-            ));
+      if (!FirebaseAccount.isSignedIn()) {
+        final loadedItems = await getHeadlines();
+        state = state.copyWith(topNews: loadedItems);
+        print('getHeadlines');
+      } else {
+        state = state.copyWith(topNews: []);
+        final lastRead = await _firestore
+            .collection('news_mark')
+            .doc(FirebaseAccount.getEmail())
+            .collection('last_read')
+            .get();
+        List<Article> loadedItems = [];
+        if (lastRead.docs.length < 15) {
+          loadedItems = await getHeadlines();
+          print('getHeadlines');
+        } else {
+          if (state.isNewTimeOpenApp) {
+            loadedItems = await getGroupRecommend();
+            List<Article> loadedItems2 = await getHeadlines();
+            loadedItems.addAll(loadedItems2);
+            loadedItems.shuffle();
+            state = state.copyWith(isNewTimeOpenApp: false);
+            print('getGroupRecommend + getHeadlines');
+          } else {
+            loadedItems = await getUserRecommend();
+            print('getUserRecommend');
           }
         }
+        state = state.copyWith(topNews: loadedItems);
       }
-
-      // mix _loadedItems
-      loadedItems.shuffle();
-
-      state = state.copyWith(topNews: loadedItems);
     } catch (error) {
       ToastLog.show('Error: Bad request');
     }
   }
+
+  Future<void> appendTopNews() async {
+    if (state.inAppendProgress) {
+      return;
+    }
+    if (!await CheckConnection.isInternet()) {
+      ToastLog.show('No internet connection');
+      return;
+    } else if (state.topNews.length >= 100) {
+      return;
+    }
+    try {
+      state = state.copyWith(inAppendProgress: true);
+      if (!FirebaseAccount.isSignedIn()) {
+        final loadedItems = await getHeadlines();
+        _appendTopNews(loadedItems);
+        print('getHeadlines');
+      } else {
+        final lastRead = await _firestore
+            .collection('news_mark')
+            .doc(FirebaseAccount.getEmail())
+            .collection('last_read')
+            .get();
+
+        List<Article> loadedItems = [];
+        if (lastRead.docs.length < 15) {
+          loadedItems = await getHeadlines();
+          print('getHeadlines');
+        } else {
+          // random user or group
+          if (DateTime.now().microsecond % 2 == 0) {
+            loadedItems = await getUserRecommend();
+            print('getUserRecommend');
+          } else {
+            loadedItems = await getGroupRecommend();
+            print('getGroupRecommend');
+          }
+        }
+        _appendTopNews(loadedItems);
+      }
+      state = state.copyWith(inAppendProgress: false);
+    } catch (error) {
+      state = state.copyWith(inAppendProgress: false);
+    }
+  }
+
+  Future<List<Article>> getHeadlines() async {
+    List<String> sources = [
+      'bbc-news',
+      'cnn',
+      'fox-news',
+      'reuters',
+      'the-wall-street-journal',
+      'the-washington-post',
+      'the-verge',
+      'espn',
+      'abc-news',
+      'nfl-news',
+      'fox-news',
+    ];
+    List<Article> loadedItems = [];
+    // pick 2 sources randomly
+    List<String> tmpSource = [];
+    for (int i = 0; i < 2; i++) {
+      String randomSource;
+      do {
+        randomSource = sources[DateTime.now().microsecond % sources.length];
+      } while (tmpSource.contains(randomSource));
+      tmpSource.add(randomSource);
+      final url =
+          '$newsApiUrl/top-headlines?sources=$randomSource&apiKey=$newsApiKey';
+      Response response = await Dio().get(url);
+      var jsonResponse = response.data;
+      List extractedData = jsonResponse['articles'];
+      for (var item in extractedData) {
+        if (item['title'] != null &&
+            item['author'] != null &&
+            item['description'] != null &&
+            item['urlToImage'] != null) {
+          loadedItems.add(Article(
+            headline: item['title'],
+            source: item['author'],
+            description: item['description'],
+            date: formatter(item['publishedAt']),
+            imageUrl: item['urlToImage'],
+            webUrl: item['url'],
+          ));
+        }
+      }
+    }
+
+    // mix _loadedItems
+    loadedItems.shuffle();
+
+    // check duplicate
+    List<Article> itemsToRemove = [];
+    for (var item in loadedItems) {
+      if (state.topNews.contains(item)) {
+        itemsToRemove.add(item);
+      }
+    }
+    loadedItems.removeWhere((item) => itemsToRemove.contains(item));
+
+    return loadedItems;
+  }
+
+  Future<List<Article>> getUserRecommend() async {
+    await ref.read(recommenderProvider.notifier).getUserRecommendations(FirebaseAccount.getEmail());
+    List<String> keywords = ref.read(recommenderProvider).userRecommendations;
+
+    // pick 1 keywords randomly
+    List<Article> loadedItems = [];
+    List<String> tmpKeyword = [];
+    for (int i = 0; i < 1; i++) {
+      String randomKeyword;
+      do {
+        randomKeyword = keywords[DateTime.now().microsecond % keywords.length];
+      } while (tmpKeyword.contains(randomKeyword));
+      tmpKeyword.add(randomKeyword);
+      final url =
+          '$newsApiUrl/everything?q=$randomKeyword&apiKey=$newsApiKey';
+      print(url);
+      Response response = await Dio().get(url);
+      var jsonResponse = response.data;
+      List extractedData = jsonResponse['articles'];
+      for (var item in extractedData) {
+        if (item['title'] != null &&
+            item['author'] != null &&
+            item['description'] != null &&
+            item['urlToImage'] != null
+        ) {
+          loadedItems.add(Article(
+            headline: item['title'],
+            source: item['author'],
+            description: item['description'],
+            date: formatter(item['publishedAt']),
+            imageUrl: item['urlToImage'],
+            webUrl: item['url'],
+          ));
+        }
+      }
+    }
+
+    // mix _loadedItems
+    loadedItems.shuffle();
+
+    // get 20 fist items
+    loadedItems = loadedItems.sublist(0, loadedItems.length > 20 ? 20 : loadedItems.length - 1);
+
+    // check duplicate
+    List<Article> itemsToRemove = [];
+    for (var item in loadedItems) {
+      if (state.topNews.contains(item)) {
+        itemsToRemove.add(item);
+      }
+    }
+    loadedItems.removeWhere((item) => itemsToRemove.contains(item));
+
+    return loadedItems;
+  }
+
+  Future<List<Article>> getGroupRecommend() async {
+    await ref.read(recommenderProvider.notifier).getGroupRecommendations(FirebaseAccount.getEmail());
+    List<String> keywords = ref.read(recommenderProvider).groupRecommendations;
+
+    // pick 1 keywords randomly
+    List<Article> loadedItems = [];
+    List<String> tmpKeyword = [];
+    for (int i = 0; i < 1; i++) {
+      String randomKeyword;
+      do {
+        randomKeyword = keywords[DateTime.now().microsecond % keywords.length];
+      } while (tmpKeyword.contains(randomKeyword));
+      tmpKeyword.add(randomKeyword);
+      final url =
+          '$newsApiUrl/everything?q=$randomKeyword&apiKey=$newsApiKey';
+      print(url);
+      Response response = await Dio().get(url);
+      var jsonResponse = response.data;
+      List extractedData = jsonResponse['articles'];
+      for (var item in extractedData) {
+        if (item['title'] != null &&
+            item['author'] != null &&
+            item['description'] != null &&
+            item['urlToImage'] != null) {
+          loadedItems.add(Article(
+            headline: item['title'],
+            source: item['author'],
+            description: item['description'],
+            date: formatter(item['publishedAt']),
+            imageUrl: item['urlToImage'],
+            webUrl: item['url'],
+          ));
+        }
+      }
+    }
+    // mix _loadedItems
+    loadedItems.shuffle();
+    // get 20 fist items
+    loadedItems = loadedItems.sublist(0, loadedItems.length > 20 ? 20 : loadedItems.length - 1);
+
+    // check duplicate
+    List<Article> itemsToRemove = [];
+    for (var item in loadedItems) {
+      if (state.topNews.contains(item)) {
+        itemsToRemove.add(item);
+      }
+    }
+    loadedItems.removeWhere((item) => itemsToRemove.contains(item));
+
+    return loadedItems;
+  }
+
+  void _appendTopNews(List<Article> articles) {
+    List<Article> loadedItems = state.topNews;
+    loadedItems.addAll(articles);
+    state = state.copyWith(topNews: loadedItems);
+  }
+
+  /// FIREBASE
 
   final _firestore = FirebaseFirestore.instance;
 

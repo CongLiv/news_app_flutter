@@ -130,7 +130,6 @@ class CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen>
                           webUrl: newsData.categoryNews[index].webUrl,
                           imageUrl: newsData.categoryNews[index].imageUrl,
                           date: newsData.categoryNews[index].date,
-                          articles: newsData.categoryNews,
                           currentIndex: index,
                         ),
                       ),

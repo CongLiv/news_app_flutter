@@ -35,9 +35,7 @@ class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(recommenderProvider.notifier).getUserRecommendations('U424171');
-    });
+
     newsNoti = ref.read(newsProvider.notifier);
 
     homeAnimController = AnimationController(
@@ -55,6 +53,11 @@ class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
     homeScrollController = ScrollController()
       ..addListener(() {
+        // Check if the scroll is near the end of the list
+        if (homeScrollController.position.pixels >= homeScrollController.position.maxScrollExtent - 1000) {
+          ref.read(newsProvider.notifier).appendTopNews();
+        }
+
         if (homeScrollController.offset >= 400) {
           if (!_showBackToTop) {
             setState(() {
@@ -154,8 +157,8 @@ class HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                           webUrl: newsData.topNews[index].webUrl,
                           imageUrl: newsData.topNews[index].imageUrl,
                           date: newsData.topNews[index].date,
-                          articles: newsData.topNews,
                           currentIndex: index,
+                          isHomePage: true,
                         ),
                       ),
                     ))

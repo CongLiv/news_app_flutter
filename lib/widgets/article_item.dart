@@ -9,8 +9,8 @@ class ArticleItem extends StatelessWidget {
   final String webUrl;
   final String imageUrl;
   final String date;
-  final List<dynamic> articles;
   final int currentIndex;
+  final bool isHomePage;
 
   const ArticleItem({super.key,
     required this.headline,
@@ -19,8 +19,8 @@ class ArticleItem extends StatelessWidget {
     required this.webUrl,
     required this.imageUrl,
     required this.date,
-    required this.articles,
     required this.currentIndex,
+    this.isHomePage = false,
   });
 
   @override
@@ -31,8 +31,8 @@ class ArticleItem extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (ctx) => ArticlesPageView(
-              articles: articles,
               initialIndex: currentIndex,
+              isHomePage: isHomePage,
             ),
           ),
         );

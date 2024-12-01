@@ -29,12 +29,12 @@ class Recommender extends StateNotifier<RecommenderState> {
           print('No data received');
           state = state.copyWith(
             loadStatus: LoadStatus.error,
-            userRecommendations: [],
+            userRecommendations: ['news'],
           );
         }
       });
     } catch (e) {
-      state = state.copyWith(loadStatus: LoadStatus.error);
+      state = state.copyWith(loadStatus: LoadStatus.error, userRecommendations: ['news']);
     }
   }
 
@@ -54,12 +54,12 @@ class Recommender extends StateNotifier<RecommenderState> {
           print('No data received');
           state = state.copyWith(
             loadStatus: LoadStatus.error,
-            groupRecommendations: [],
+            groupRecommendations: ['news'],
           );
         }
       });
     } catch (e) {
-      state = state.copyWith(loadStatus: LoadStatus.error);
+      state = state.copyWith(loadStatus: LoadStatus.error, groupRecommendations: ['news']);
     }
   }
 
@@ -79,22 +79,26 @@ class RecommenderState {
   final LoadStatus loadStatus;
   final List<String> userRecommendations;
   final List<String> groupRecommendations;
+  final int readNewsCount;
 
   RecommenderState({
     this.loadStatus = LoadStatus.initial,
     this.userRecommendations = const [],
     this.groupRecommendations = const [],
+    this.readNewsCount = 0,
   });
 
   RecommenderState copyWith({
     LoadStatus? loadStatus,
     List<String>? userRecommendations,
     List<String>? groupRecommendations,
+    int? readNewsCount,
   }) {
     return RecommenderState(
       loadStatus: loadStatus ?? this.loadStatus,
       userRecommendations: userRecommendations ?? this.userRecommendations,
       groupRecommendations: groupRecommendations ?? this.groupRecommendations,
+      readNewsCount: readNewsCount ?? this.readNewsCount,
     );
   }
 }

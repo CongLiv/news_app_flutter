@@ -14,4 +14,13 @@ class Article {
     required this.imageUrl,
     required this.date,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Article && other.webUrl == webUrl;
+  }
+
+  @override
+  int get hashCode => webUrl.hashCode;
 }

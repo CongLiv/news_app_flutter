@@ -8,23 +8,28 @@ import 'package:news_app_flutter_demo/helpers/const_data.dart';
 import 'package:news_app_flutter_demo/firebase_tools/firebase_account.dart';
 import 'package:news_app_flutter_demo/helpers/toast_log.dart';
 import 'package:news_app_flutter_demo/providers/categories.dart';
+import 'package:news_app_flutter_demo/providers/news.dart';
+import 'package:news_app_flutter_demo/providers/recommender.dart';
 import 'package:news_app_flutter_demo/widgets/title_name.dart';
 import '../../helpers/share_article.dart';
+import '../../models/article.dart';
 import 'webview_container.dart';
 
 
-class ArticlesPageView extends StatelessWidget {
-  final List<dynamic> articles;
+class ArticlesPageView extends ConsumerWidget {
   final int initialIndex;
+  final bool isHomePage;
 
   const ArticlesPageView({
     super.key,
-    required this.articles,
     required this.initialIndex,
+    this.isHomePage = false,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final List<Article> articles = isHomePage ? ref.watch(newsProvider).topNews : ref.watch(newsProvider).categoryNews;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: redViettel),
@@ -44,6 +49,11 @@ class ArticlesPageView extends StatelessWidget {
       body: PageView.builder(
         controller: PageController(initialPage: initialIndex),
         itemCount: articles.length,
+        onPageChanged: (index) async {
+          if (index > articles.length - 8 && isHomePage) {
+            await ref.read(newsProvider.notifier).appendTopNews();
+          }
+        },
         itemBuilder: (ctx, index) {
           final article = articles[index];
           return ArticlePage(
@@ -92,9 +102,11 @@ class _ArticlePageState extends ConsumerState<ArticlePage> {
     // check if article is already marked
     if (FirebaseAccount.isSignedIn()) {
       FireStoreArticles.checkArticleMarked(widget.webUrl).then((value) {
-        setState(() {
-          isMarked = value;
-        });
+        if (mounted) {
+          setState(() {
+            isMarked = value;
+          });
+        }
       });
     }
   }
@@ -215,6 +227,14 @@ class _ArticlePageState extends ConsumerState<ArticlePage> {
                         children: [
                           GestureDetector(
                             onTap: () async => {
+                              if (FirebaseAccount.isSignedIn())
+                                {
+                                  ref
+                                      .read(recommenderProvider.notifier)
+                                      .addLastReadNews(
+                                          FirebaseAccount.getEmail(),
+                                          widget.headline)
+                                },
                               FirebaseAnalyst.logReadNewsEvent(widget.webUrl),
                               Navigator.push(
                                 context,
